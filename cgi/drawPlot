@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+
+import matplotlib
+matplotlib.use('Agg')
+
+import os,sys
+import json
+import random
+import time
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates
+from pylab import date2num
+from datetime import datetime, timedelta
+
+length = int(os.environ["CONTENT_LENGTH"])
+post = sys.stdin.read(length)
+data = json.loads(post)
+
+print "Content-type: text/plain"
+print
+
+dates = []
+for dt in np.asarray(data['t']):
+  dates.append(datetime.utcfromtimestamp(dt))
+dates = date2num(dates)
+
+fig = plt.figure()
+fig.set_figheight(7)
+ax = fig.add_subplot(111)
+ax.xaxis.set_major_formatter(
+  matplotlib.dates.DateFormatter('%d %b\n%H:%M')
+)
+
+for z in data['v']['z']:
+  plt.quiver(dates,np.ones_like(data['t']) * float(z), np.asarray(data['v']['u'][z]), np.asarray(data['v']['v'][z]), units='y', scale=0.09,width=0.25)
+
+plt.ylabel('depth (ft)')
+plt.ylim(plt.ylim()[::-1])
+
+f = "/tmp/%s.%s.png" % (time.time(),random.random())
+plt.savefig(f);
+
+print json.dumps({'id' : data['id'],'provider' : data['provider'],'descr' : data['descr'],'varName' : data['varName'],'varUnits' : data['varUnits'],'f' : f,'w' : 800,'h' : 700})

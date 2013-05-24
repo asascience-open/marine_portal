@@ -1,0 +1,564 @@
+#!/usr/bin/perl -w
+
+use strict;
+use CGI qw(:standard);
+use Image::Magick;
+use Math::Trig;
+use Encode;
+
+my $query = new CGI;
+my $session = time().rand();
+
+my $fonts_base = '/usr/local/obs';
+my $icons_base = '/usr/local/obs';
+
+my @cpt = (
+   '0,238,238'
+  ,'30,144,255'
+  ,'0,205,0'
+  ,'255,255,0'
+  ,'255,0,0'
+  ,'255,0,255'
+  ,'155,48,255'
+  ,'192,255,62'
+  ,'255,218,255'
+);
+my @txt = (
+   '0,0,0'
+  ,'255,255,255'
+  ,'0,0,0'
+  ,'0,0,0'
+  ,'0,0,0'
+  ,'0,0,0'
+  ,'255,255,255'
+  ,'0,0,0'
+);
+
+print $query->header('image/png');
+my @size = (115,115);
+my @sizeIco = (sprintf("%d",$size[0] * 0.65),sprintf("%d",$size[1] * 0.66));
+if (defined $query->param('center')) {
+  @size = @sizeIco;
+}
+
+my $image = Image::Magick->new;
+$image->Set(size=>(sprintf("%dx%d",@size)));
+$image->ReadImage('xc:transparent');
+
+# obs=min,max,spd,dir
+my $hits = 0;
+my @wind;
+if (defined $query->param('wind')) {
+  if (!($query->param('wind') =~ /undefined/)) {
+    @wind = split(/,|%2C/,$query->param('wind'));
+    $hits++;
+  }
+}
+my @wave;
+if (defined $query->param('wave')) {
+  if (!($query->param('wave') =~ /undefined/)) {
+    @wave = split(/,|%2C/,$query->param('wave'));
+    $hits++;
+  }
+}
+my @current;
+if (defined $query->param('current')) {
+  if (!($query->param('current') =~ /undefined/)) {
+    @current = split(/,|%2C/,$query->param('current'));
+    $hits++;
+  }
+}
+my @temperature;
+if (defined $query->param('temperature')) {
+  if (!($query->param('temperature') =~ /undefined/)) {
+    @temperature = split(/,|%2C/,$query->param('temperature'));
+    $hits++;
+  }
+}
+my @wl;
+if (defined $query->param('wl')) {
+  if (!($query->param('wl') =~ /undefined/)) {
+    @wl = split(/,|%2C/,$query->param('wl'));
+    $hits++;
+  }
+}
+my @ss;
+if (defined $query->param('ss')) {
+  if (!($query->param('ss') =~ /undefined/)) {
+    @ss = split(/,|%2C/,$query->param('ss'));
+    $hits++;
+  }
+}
+
+my @gravity = ('Northwest','Northeast','Southwest','Southeast');
+if ($hits == 3) {
+  @gravity = ('South','Northwest','Northeast');
+}
+if ($hits == 2) {
+  @gravity = ('West','East');
+}
+if ($hits == 1) {
+  @gravity = ('North');
+}
+if (defined $query->param('center')) {
+  for (my $i = 0; $i <= $#gravity; $i++) {
+    $gravity[$i] = 'center';
+  }
+}
+$hits = 0;
+
+if (@current) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($current[2] > 0) {
+    $imageObs->Annotate(
+       text        => encode('utf-8',chr(176))
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => $sizeIco[0] * 0.65
+      ,x           => $sizeIco[0]/2 - 5 * cos(deg2rad($current[3]))
+      ,y           => $sizeIco[1]/2 - 5 * sin(deg2rad($current[3]))
+      ,font        => "$fonts_base/ESRICartography.ttf"
+      ,rotate      => $current[3]
+    );
+    $imageObs->Annotate(
+       text      => encode('utf-8',chr(176))
+      ,fill      => sprintf("rgb(%s)",getRGB($current[2],$current[0],$current[1]))
+      ,stroke    => sprintf("rgb(%s)",getRGB($current[2],$current[0],$current[1]))
+      ,pointsize => $sizeIco[0] * 0.65
+      ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($current[3]))
+      ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($current[3]))
+      ,font      => "$fonts_base/ESRICartography.ttf"
+      ,rotate    => $current[3]
+    );
+    my $imageObs0 = Image::Magick->new;
+    $imageObs0->Read("$icons_base/Currents.png");
+    $imageObs->Composite(
+       gravity => 'center'
+      ,image   => $imageObs0
+      ,compose => 'over'
+    );
+
+    $imageObs->Annotate(
+       text        => labelTxt($current[2]).' m/s'
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,gravity     => 'Center'
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,geometry    => sprintf("%+d%+d",cos(deg2rad($current[3]-55)) * $sizeIco[0] * 0.29,sin(deg2rad($current[3]-55)) * $sizeIco[1] * 0.29)
+    );
+    $imageObs->Annotate(
+       text      => labelTxt($current[2]).' m/s'
+      ,fill      => 'white' # 'yellow'
+      ,gravity   => 'Center'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,geometry    => sprintf("%+d%+d",cos(deg2rad($current[3]-55)) * $sizeIco[0] * 0.29,sin(deg2rad($current[3]-55)) * $sizeIco[1] * 0.29)
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Currents\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Currents\nunavailable"
+      ,fill      => 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if (@wind) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($wind[2] >= 5) {
+    $imageObs->Annotate(
+       text      => encode('utf-8',chr(33 + ($wind[2] - 5) / 5))
+      ,stroke    => 'black'
+      ,strokewidth => 3
+      ,gravity   => 'Center'
+      ,pointsize => $sizeIco[0] * 0.85
+      ,font      => "$fonts_base/ESRIWeather.ttf"
+      ,rotate    => $wind[3]
+    );
+    $imageObs->Annotate(
+       text      => encode('utf-8',chr(33 + ($wind[2] - 5) / 5))
+      ,fill      => 'white'
+      ,stroke    => 'white'
+      ,gravity   => 'Center'
+      ,pointsize => $sizeIco[0] * 0.85
+      ,font      => "$fonts_base/ESRIWeather.ttf"
+      ,rotate    => $wind[3]
+    );
+    if (!defined $query->param('hideLabels')) {
+      $imageObs->Annotate(
+         text        => labelTxt($wind[2]).' m/s'
+        ,stroke      => 'black'
+        ,strokewidth => 3
+        ,pointsize   => 10
+        ,font        => "$fonts_base/arial.ttf"
+        ,gravity     => 'center'
+        ,geometry    => sprintf("%+d%+d",cos(deg2rad($wind[3]-55)) * $sizeIco[0] * 0.15,sin(deg2rad($wind[3]-55)) * $sizeIco[1] * 0.15)
+      );
+      $imageObs->Annotate(
+         text      => labelTxt($wind[2]).' m/s'
+        ,fill      => 'white' # 'yellow'
+        ,pointsize => 10
+        ,font      => "$fonts_base/arial.ttf"
+        ,gravity   => 'center'
+        ,geometry  => sprintf("%+d%+d",cos(deg2rad($wind[3]-55)) * $sizeIco[0] * 0.15,sin(deg2rad($wind[3]-55)) * $sizeIco[1] * 0.15)
+      );
+    }
+  }
+  elsif ($wind[2] >= 0) {
+    $imageObs->Annotate(
+       text        => "Calm\nwinds"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Calm\nwinds"
+      ,fill      => 'white' # 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Wind\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Wind\nunavailable"
+      ,fill      => 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if (@wave) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($wave[2] > 0) {
+    if ($wave[3] > -999) {
+      $imageObs->Annotate(
+         text        => encode('utf-8',chr(176))
+        ,stroke      => 'black'
+        ,strokewidth => 3
+        ,pointsize   => $sizeIco[0] * 0.65
+        ,x           => $sizeIco[0]/2 - 5 * cos(deg2rad($wave[3]))
+        ,y           => $sizeIco[1]/2 - 5 * sin(deg2rad($wave[3]))
+        ,font        => "$fonts_base/ESRICartography.ttf"
+        ,rotate      => $wave[3]
+      );
+      $imageObs->Annotate(
+         text      => encode('utf-8',chr(176))
+        ,fill      => "rgb(255,255,255)"
+        ,stroke    => "rgb(255,255,255)"
+        ,pointsize => $sizeIco[0] * 0.65
+        ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($wave[3]))
+        ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($wave[3]))
+        ,font      => "$fonts_base/ESRICartography.ttf"
+        ,rotate    => $wave[3]
+      );
+    }
+    my $imageObs0 = Image::Magick->new;
+    $imageObs0->Set(size=>(sprintf("%dx%d",@sizeIco)));
+    $imageObs0->ReadImage('xc:transparent');
+    $imageObs0->Annotate(
+       text      => encode('utf-8',chr(78))
+      ,fill      => sprintf("rgb(%s)",getRGB($wave[2],$wave[0],$wave[1]))
+      ,stroke    => "rgb(0,0,0)"
+      ,pointsize => $sizeIco[0] * 0.65
+      ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($wave[3]))
+      ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($wave[3]))
+      ,font      => "$fonts_base/ESRICartography.ttf"
+    );
+    $imageObs0->Trim();
+    $imageObs->Composite(
+       gravity => 'center'
+      ,image   => $imageObs0
+      ,compose => 'over'
+    );
+    $imageObs->Annotate(
+       text        => labelTxt($wave[2],$wave[0],$wave[1]).$query->param('labelUnits')
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+      ,geometry    => sprintf("%+d%+d",cos(deg2rad($wave[3]-55)) * $sizeIco[0] * 0.29,sin(deg2rad($wave[3]-55)) * $sizeIco[1] * 0.29)
+    );
+    $imageObs->Annotate(
+       text      => labelTxt($wave[2],$wave[0],$wave[1]).$query->param('labelUnits')
+      ,fill      => 'white'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+      ,geometry  => sprintf("%+d%+d",cos(deg2rad($wave[3]-55)) * $sizeIco[0] * 0.29,sin(deg2rad($wave[3]-55)) * $sizeIco[1] * 0.29)
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Waves\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Waves\nunavailable"
+      ,fill      => 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if (@temperature) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($temperature[2] != -999999) {
+    $imageObs->Annotate(
+       text        => sprintf("%.1f%s",$temperature[2],encode('utf-8',chr(176)))
+      ,stroke      => 'black'
+      ,strokewidth => 5
+      ,gravity     => 'Center'
+      ,pointsize   => 12
+      ,font        => "$fonts_base/arial.ttf"
+    );
+    $imageObs->Blur('0x8');
+    $imageObs->Annotate(
+       text      => sprintf("%.1f%s",$temperature[2],encode('utf-8',chr(176)))
+      ,fill      => 'white' # 'yellow'
+      ,gravity   => 'Center'
+      ,pointsize => 12
+      ,font      => "$fonts_base/arial.ttf"
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Temperature\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Temperature\nunavailable"
+      ,fill      => 'white' # 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if (@wl) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($wl[2] != -999999) {
+    $imageObs->Annotate(
+       text        => sprintf("%.1f%s",$wl[2],$query->param('labelUnits'))
+      ,stroke      => 'black'
+      ,strokewidth => 5
+      ,gravity     => 'Center'
+      ,pointsize   => 12
+      ,font        => "$fonts_base/arial.ttf"
+    );
+    $imageObs->Blur('0x8');
+    $imageObs->Annotate(
+       text      => sprintf("%.1f%s",$wl[2],$query->param('labelUnits'))
+      ,fill      => 'white' # 'yellow'
+      ,gravity   => 'Center'
+      ,pointsize => 12
+      ,font      => "$fonts_base/arial.ttf"
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Water level\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Water level\nunavailable"
+      ,fill      => 'white' # 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if (@ss) {
+  my $imageObs = Image::Magick->new;
+  $imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs->ReadImage('xc:transparent');
+  if ($ss[2] != -999999) {
+    $imageObs->Annotate(
+       text        => sprintf("%.1f%s",$ss[2],$query->param('labelUnits'))
+      ,stroke      => 'black'
+      ,strokewidth => 5
+      ,gravity     => 'Center'
+      ,pointsize   => 12
+      ,font        => "$fonts_base/arial.ttf"
+    );
+    $imageObs->Blur('0x8');
+    $imageObs->Annotate(
+       text      => sprintf("%.1f%s",$ss[2],$query->param('labelUnits'))
+      ,fill      => 'white' # 'yellow'
+      ,gravity   => 'Center'
+      ,pointsize => 12
+      ,font      => "$fonts_base/arial.ttf"
+    );
+  }
+  else {
+    $imageObs->Annotate(
+       text        => "Observation\nunavailable"
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,pointsize   => 10
+      ,font        => "$fonts_base/arial.ttf"
+      ,gravity     => 'center'
+    );
+    $imageObs->Annotate(
+       text      => "Observation\nunavailable"
+      ,fill      => 'white' # 'yellow'
+      ,pointsize => 10
+      ,font      => "$fonts_base/arial.ttf"
+      ,gravity   => 'center'
+    );
+  }
+
+  $image->Composite(
+     gravity => $gravity[$hits++]
+    ,image   => $imageObs
+    ,compose => 'over'
+  );
+}
+
+if ($hits == 0 && !defined $query->param('hideMarkers')) {
+  my $imageObs0 = Image::Magick->new;
+  $imageObs0->Read("$icons_base/buoy-default.png");
+  $image->Composite(
+     gravity => 'center'
+    ,image   => $imageObs0
+    ,compose => 'over'
+  );
+  $image->Trim();
+}
+
+if (defined $query->param('trim')) {
+  $image->Trim();
+}
+
+if (defined $query->param('shadow')) {
+  my $shadow = $image->clone();
+  $shadow->Set('depth',8);
+  $shadow->Colorize(fill => $query->param('shadow') eq 'highlight' ? 'blue' : 'rgb(255,0,255)');
+  $shadow->Negate();
+  $shadow->Set('bordercolor','transparent');
+  $shadow->Border(geometry => '8x8');
+  $shadow->Blur(geometry => '0x2');
+  $shadow->Shave(geometry => '6x6');
+  
+  $shadow->Composite(
+     gravity => 'northwest'
+    ,image   => $image
+    ,compose => 'over'
+  );
+
+  $shadow->Crop(geometry=>(sprintf("%dx%d",@size)));
+  $shadow->Set(page=>'0x0+0+0');
+
+  binmode(STDOUT);
+  $shadow->Write('png:-');
+}
+else {
+  binmode(STDOUT);
+  $image->Write('png:-');
+}
+
+sub getRGB {
+  my $idx = sprintf "%d",$_[0] / (($_[2] - $_[1]) / $#cpt);
+  if ($idx > $#cpt) {
+    $idx = $#cpt;
+  }
+  return $cpt[$idx];
+}
+sub getTxt {
+  my $idx = sprintf "%d",$_[0] / (($_[2] - $_[1]) / $#cpt);
+  if ($idx > $#cpt) {
+    $idx = $#cpt;
+  }
+  return $txt[$idx];
+}
+sub labelTxt {
+  return sprintf("%.1f",$_[0]);
+  if ($_[0] > 1) {
+    return sprintf("%d",$_[0]);
+  }
+  else {
+    return sprintf("%.1f",$_[0]);
+  }
+}

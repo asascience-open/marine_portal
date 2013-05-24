@@ -1,0 +1,13 @@
+<query xmlns="http://basex.org/rest">
+  <text>
+    <![CDATA[ 
+        declare namespace gmi="http://www.isotc211.org/2005/gmi";
+        declare variable $efid as xs:string external;
+        for $val in //*:fileIdentifier
+            let $fid := $val/*:CharacterString/text()
+            where $fid eq $efid
+                return $val/..
+    ]]>
+  </text>
+  <variable name="efid" value="___ID___"/>
+</query>

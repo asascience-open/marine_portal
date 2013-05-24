@@ -1,0 +1,16 @@
+#head {
+  padding-top:0px;
+  width:100%;
+  margin-left:0px;
+  margin-right: 0px;
+  height:64px;
+  background-image    : url("../img/fish/maracoos_masthead.png");
+  background-repeat   : no-repeat;
+  background-position : left top;
+}
+
+#sessionButton {
+  position : absolute;
+  right    : 10px;
+  top      : 10px;
+}

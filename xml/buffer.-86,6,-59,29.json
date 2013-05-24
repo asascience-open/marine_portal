@@ -1,0 +1,6 @@
+{
+"type": "FeatureCollection",
+"features": [
+{ "type": "Feature", "properties": { "name": "MARACOOS" }, "geometry": { "type": "MultiPolygon", "coordinates": [ [ [ [ -86,6],[-59,6],[-59,29],[-86,29],[-86,6] ] ] ] } }
+]
+}

@@ -1,0 +1,494 @@
+#loading-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  z-index: 1;
+}
+#loading {
+  position: absolute;
+  top: 40%;
+  left: 45%;
+  z-index: 2;
+}
+#loading SPAN {
+  background: url('img/loader.gif') no-repeat left center;
+  padding: 5px 30px;
+  display: block;
+  font-family: "Lucida Grande", Arial, Helvetica, sans-serif;
+  color: #444444;
+  font-size: 12px;
+}
+
+.directionsText {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  text-align : justify;
+  padding    : 2px 2px 7px 2px;
+  color      : gray;
+}
+
+.directionsTextNoPadding {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  text-align : justify;
+  color      : gray;
+}
+
+.belowButtonsTextGray td {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  text-align : center;
+  color      : gray;
+}
+.belowButtonsTextBlack td {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  text-align : center;
+  color      : #333333;
+}
+.blackText {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  color      : #333333;
+}
+
+.formPanel {
+  padding  : 5px;
+}
+
+#weatherStationsDataGridPanel .x-grid3-row {
+  border-color   : #ffffff;
+}
+#weatherStationsDataGridPanel .x-grid3-row-selected {
+  background-color : transparent !important;
+}
+#weatherStationsDataGridPanel .x-grid3-body .x-grid3-row-selected .x-grid3-td-numberer, .x-grid3-body .x-grid3-row-selected .x-grid3-td-checker, .x-grid3-body .x-grid3-row-selected .x-grid3-td-expander {
+  background-image : url('img/blank.png');
+}
+#weatherStationsDataGridPanel .x-grid3-body .x-grid3-td-checker {
+  background-image : url('img/blank.png');
+}
+
+#forecastMapsDataText {
+  padding : 6;
+}
+
+#forecastMapsForecastText {
+  padding-left : 45px;
+  font         : 11px/13px tahoma,helvetica,sans-serif;
+  text-align   : center;
+}
+
+#forecastMapsLegendText {
+  padding : 6;
+}
+
+#forecastsPanel td {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+.custom-x-tip {
+    background:#E6EFFF;
+    border-right : 1px solid #8CA4CB;
+    border-left : 1px solid #8CA4CB;
+    border-bottom : 1px solid #8CA4CB;
+}
+
+.custom-x-tip-header {
+  font-family: tahoma,arial,verdana,sans-serif;
+  font-size: 11px;
+  font-weight : bold;
+  color : #15428B;
+  padding : 3px;
+  background-image : url("js/ext-3.3.0/resources/images/default/panel/white-top-bottom.gif");
+  border-bottom : 1px solid #8CA4CB;
+}
+
+.custom-x-tip-body {
+  background:#ffffff;
+}
+
+.x-tip-anchor {
+  background-image : url('img/blank.png');
+}
+
+.popup {
+  background : white;
+  width      : 275px;
+}
+.popup td {
+  padding : 0px 3px 0px 3px;
+  vertical-align : top;
+  font-family: Verdana,Arial,Helvetica;
+  font-size: 10px;
+}
+
+.hilite {
+  width : 275px;
+}
+.hilite td {
+  padding : 0px 3px 0px 3px;
+  vertical-align : top;
+  font-family: Verdana,Arial,Helvetica;
+  font-size: 10px;
+}
+
+#graph {
+  width  : 250px;
+  height : 90px;
+}
+
+.popupGraphWin {
+  z-index : 1000000;
+}
+
+#mapControlsResetMap {
+  position : absolute;
+  right    : 3px;
+  top      : 1px;
+  z-index  : 1001;
+}
+
+#mapControlsChangeBackground {
+  position : absolute;
+  right    : 101px;
+  top      : 1px;
+  z-index  : 1001;
+}
+
+#mapMessagesButtonGroup {
+  position : absolute;
+  left     : 50px;
+  top      : 3px;
+  z-index  : 1001;
+}
+
+.previewMapLegend {
+  position : absolute;
+  left     : 10px;
+  bottom   : 10px;
+  z-index  : 1001;
+  border   : 1px solid #99BBE8;
+}
+
+.maskText td {
+  font : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+.tickLabel {
+  font : 10px/13px tahoma,helvetica,sans-serif;
+}
+
+#tooltip {
+  font : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+.x-btn-group-header {
+  font : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+.x-btn-group-bwrap {
+  background : none;
+}
+
+.x-btn td {
+  font : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+#mapMessagesHtml {
+  background : white;
+  font       : 12px tahoma,helvetica,sans-serif;
+  padding    : 2px;
+  text-align : justify;
+}
+
+#mapPanel {
+  border-bottom: 1px solid #99BBE8;
+  padding : 0;
+}
+
+#forecastPanel {
+  padding : 0;
+}
+#forecastWindow .x-panel-body {
+  background : transparent;
+}
+
+.olControlAttribution {
+  font : 11px/13px tahoma,helvetica,sans-serif !important;
+  bottom : 22px !important;
+  background : rgba(255, 255, 255, 0.2);
+  border-radius : 4px;
+  padding : 2px;
+}
+
+.olControlAttribution a:link {
+  text-decoration : none !important;
+  color           : #0000ff;
+}
+
+.olControlAttribution a:visited {
+  text-decoration : none !important;
+  color           : #0000ff;
+}
+
+.mask td {
+  font : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+.forecastTable td {
+  vertical-align : top;
+  padding        : 4px;
+  border         : 1px solid #D2D8F0;
+}
+
+.forecastTableNoStyle td {
+  vertical-align : middle;
+  padding        : 0;
+  border         : none;
+}
+
+.forecastHeader {
+  background  : #F3F8FD;
+  font        : 11px/13px tahoma,helvetica,sans-serif;
+  color       : #3E6AAA;
+  text-align  : center;
+}
+
+.forecastData {
+  background : white;
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  text-align : center;
+}
+
+.forecastFooter {
+  background  : #F3F8FD;
+  font        : 11px/13px tahoma,helvetica,sans-serif;
+  color       : #3E6AAA;
+  text-align  : left;
+}
+
+.hazardData {
+  background : white;
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+}
+
+div.olControlMousePosition {
+  font  : 11px tahoma,helvetica,sans-serif !important;
+  top   : 28px;
+  right : 3px !important;
+  width : 191px;
+  height : 15px;
+  background: url('img/bg.png');
+  text-align : center;
+  border : 1px solid #9E9E9E;
+  color : #333333;
+}
+
+#dataFCRadioGroup .x-form-check-wrap {
+  width : 50px;
+}
+
+.x-fieldset {
+  padding : 0;
+}
+
+.olControlNavigationItemInactive {
+  visibility : hidden !important;
+  position : absolute;
+  left : -200;
+}
+.olControlNavigationItemActive {
+  visibility : hidden !important;
+  position : absolute;
+  left : -200;
+}
+.olControlNavToolbar {
+  top : 35px !important;
+  left : 5px !important;
+}
+.olControlNavToolbar .olControlZoomBoxItemInactive {
+  background-position: -128px -1px !important;
+  background-image: url("img/editing_tool_bar.png") !important;
+  background-repeat: no-repeat !important;
+  cursor: pointer !important;
+  height: 22px !important;
+  margin: 0 0 5px 5px !important;
+  width: 24px !important;
+  position : absolute;
+  top : 25px;
+}
+.olControlNavToolbar .olControlZoomBoxItemActive {
+  background-position: -128px -24px !important;
+  background-image: url("img/editing_tool_bar.png") !important;
+  background-repeat: no-repeat !important;
+  cursor: pointer !important;
+  height: 22px !important;
+  margin: 0 0 5px 5px !important;
+  width: 24px !important;
+  position : absolute;
+  top : 25px;
+}
+
+.olImageLoadError { display: none; }
+
+.chartIcon {
+  background-image: url(img/chart16.png)
+}
+.tableIcon {
+  background-image: url(img/table16.png)
+}
+.exportIcon {
+  background-image: url(img/export16.png)
+}
+
+.x-tab-panel-header, .x-tab-panel-footer {
+  background-color : white;
+  border-color : white;
+}
+
+.x-tab-strip-top .x-tab-right, .x-tab-strip-top .x-tab-left, .x-tab-strip-top .x-tab-strip-inner{
+  background-image: url(img/tabs-sprite.gif);
+}
+
+.x-tab-panel-header-plain .x-tab-strip-spacer, .x-tab-panel-footer-plain .x-tab-strip-spacer {
+  background-color : white;
+  border-color : white;
+}
+
+.gridBorderTop {
+  border-top: 1px solid #D0D0D0
+}
+
+.observationsTab {
+  background-image : url(img/color_wheel20.png);
+  height : 30px;
+}
+
+.forecastsTab {
+  background-image : url(img/monitor20.png);
+  height : 30px;
+}
+
+.weatherTab {
+  background-image : url(img/weather20.png);
+  height : 30px;
+}
+
+.satelliteTab {
+  background-image : url(img/satellite20.png);
+  height : 30px;
+}
+
+.remoteTab {
+  background-image : url(img/satellite20.png);
+  height : 30px;
+}
+
+.showByCatchTab {
+  background-image : url(img/fishcatch20.png);
+  height : 30px;
+}
+
+.hideByCatchTab {
+  background-image : url(img/fishcatchOff20.png);
+  height : 30px;
+}
+
+#mapTabPanel .x-tab-strip span.x-tab-strip-text {
+  font: 12px tahoma,helvetica,sans-serif;
+}
+
+#mapTabPanel .x-tab-strip-active span.x-tab-strip-text {
+  font-weight : bold;
+}
+
+.x-grid3-row-body p {
+    margin: 5px 5px 10px !important;
+}
+.x-grid3-td-title b {
+    font-family:tahoma, verdana;
+    display:block;
+}
+.x-grid3-td-title b i {
+    font-weight:normal;
+    font-style: normal;
+    color:#000;
+}
+.x-grid3-td-title .x-grid3-cell-inner {
+    white-space:normal;
+}
+#chatGridPanel .x-grid3-cell-inner, .x-grid3-hd-inner {
+    white-space:normal;
+}
+.x-grid3-td-title a {
+    color: #385F95;
+    text-decoration:none;
+}
+.x-grid3-td-title a:hover {
+    text-decoration:underline;
+}
+#searchResultsGridPanel .x-grid3-row td, .x-grid3-summary-row td {
+  padding : 3px 1px;
+}
+
+.chromeInput {
+  height : 22px !important;
+}
+.ext-chrome .chromeNoHorizontalScrollbar .x-grid3-scroller {
+    overflow-x: hidden;
+}
+
+#byCatchTabPanel .x-tab-panel-header-plain .x-tab-strip-top {
+  background-color : white !important;
+}
+
+#forecastsLegendPanel a:link {
+  text-decoration : none;
+  font            : 11px tahoma,helvetica,sans-serif;
+  color           : rgb(74,134,214);
+}
+#forecastsLegendPanel a:hover {
+  color : rgb(255,0,0);
+}
+
+#weatherLegendPanel a:link {
+  text-decoration : none;
+  font            : 11px tahoma,helvetica,sans-serif;
+  color           : rgb(74,134,214);
+}
+#weatherLegendPanel a:hover {
+  color : rgb(255,0,0);
+}
+
+#showByCatchLegendPanel a:link {
+  text-decoration : none;
+  font            : 11px tahoma,helvetica,sans-serif;
+  color           : rgb(74,134,214);
+}
+#showByCatchLegendPanel a:hover {
+  color : rgb(255,0,0);
+}
+
+#googleMapErrorLink {
+  visibility : hidden;
+}
+
+.leftAlignButton td {
+  text-align:left;
+}
+
+#startupToolTip {
+  z-index : 1001 !important;
+}
+
+#splash td {
+  font : 11px/13px tahoma,helvetica,sans-serif !important;
+  text-align : justify;
+  padding : 5px;
+}
+#splash .center {
+  text-align : center;
+  padding : 5px 0px 0px 0px;
+}
+#splash .imgBorder {
+  border : 1px solid #99BBE8;
+}

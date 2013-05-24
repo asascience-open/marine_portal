@@ -1,0 +1,21 @@
+div.olControlZoom {
+  background-image: url("img/zoomBoxBg.png") !important;
+}
+div.olControlZoom a {
+  background-image: url("img/zoomButtonBg.png") !important;
+}
+
+#mapTabPanel .x-tab-strip span.x-tab-strip-text {
+  font: 11px tahoma,helvetica,sans-serif;
+  color : gray;
+}
+
+#mapTabPanel .x-tab-strip-active span.x-tab-strip-text {
+  font-weight : normal;
+  color : #15428B;
+}
+
+#mapTabPanel ul.x-tab-strip-top {
+    background-color: #CEDFF5;
+    border-bottom-color: white;
+}

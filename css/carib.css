@@ -1,0 +1,10 @@
+#head {
+  padding-top:0px;
+  width:100%;
+  margin-left:5px;
+  margin-right: 0px;
+  height:60px;
+  background-image    : url(../img/carib/logo.png);
+  background-repeat   : no-repeat;
+  background-position : 0 5px 5px;
+}

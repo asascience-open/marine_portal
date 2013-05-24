@@ -1,0 +1,8 @@
+# select distinct us_counties.state || us_counties.county from usa,us_counties,us_buffer where us_counties.the_geom && SetSRID('BOX3D(-71.58 41.297,-70.97 41.679)'::box3d,-1) and ST_Intersects(us_counties.the_geom,us_buffer.st_buffer) and usa.name not in ('') and usa.fips = us_counties.state;
+
+ 25005
+ 44001
+ 44005
+ 44003
+ 25023
+ 44009

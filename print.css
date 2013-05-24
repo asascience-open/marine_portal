@@ -1,0 +1,31 @@
+table {
+  border-collapse : collapse;
+}
+
+td {
+  font           : 11px/13px tahoma,helvetica,sans-serif;
+  color          : #333333;
+  vertical-align : top;
+  padding        : 0;
+}
+
+th {
+  font           : 15px/17px tahoma,helvetica,sans-serif;
+  font-weight    : bold;
+  color          : #333333;
+  vertical-align : top;
+  padding        : 6;
+}
+
+.subtitle {
+  font           : 13px/15px tahoma,helvetica,sans-serif;
+  padding-bottom : 6px;
+}
+
+#legend {
+  width : 350px;
+}
+
+#map {
+  border : 1px solid #8CA4CB;
+}

@@ -1,0 +1,228 @@
+#!/usr/bin/perl
+
+use strict;
+use CGI qw(:standard);
+use Image::Magick;
+use Math::Trig;
+use Encode;
+
+my $query = new CGI;
+
+my $fonts_base = '/var/www/html/data.glos/explorer/cgi/support';
+
+my @cpt = (
+   '0,19,255'
+  ,'0,57,255'
+  ,'0,96,255'
+  ,'0,134,255'
+  ,'0,172,255'
+  ,'0,210,255'
+  ,'0,249,255'
+  ,'32,255,223'
+  ,'70,255,185'
+  ,'108,255,147'
+  ,'147,255,108'
+  ,'185,255,70'
+  ,'223,255,32'
+  ,'255,249,0'
+  ,'255,210,0'
+  ,'255,172,0'
+  ,'255,134,0'
+  ,'255,96,0'
+  ,'255,57,0'
+  ,'255,19,0'
+);
+
+print $query->header('image/png');
+my @size    = split(/,/,$query->param('size'));
+my @sizeIco = (sprintf("%d",$size[0] * 0.65),sprintf("%d",$size[1] * 0.66));
+@size       = @sizeIco;
+
+my $image = Image::Magick->new;
+$image->Set(size=>(sprintf("%dx%d",@size)));
+$image->ReadImage('xc:transparent');
+
+my @cptRange = split(/,/,$query->param('cpt'));
+my $mag      = $query->param('mag');
+my $dir      = $query->param('dir');
+my $noCircle = defined $query->param('noCircle');
+
+my $imageObs = Image::Magick->new;
+$imageObs->Set(size=>(sprintf("%dx%d",@sizeIco)));
+$imageObs->ReadImage('xc:transparent');
+
+# arrow
+if (defined $query->param('arrow') && $dir > -999) {
+  $imageObs->Annotate(
+     text        => encode('utf-8',chr(176))
+    ,stroke      => 'black'
+    ,strokewidth => 3
+    ,pointsize   => $sizeIco[0] * 0.65
+    ,x           => $sizeIco[0]/2 - 5 * cos(deg2rad($dir))
+    ,y           => $sizeIco[1]/2 - 5 * sin(deg2rad($dir))
+    ,font        => "$fonts_base/ESRICartography.ttf"
+    ,rotate      => $dir
+  );
+  $imageObs->Annotate(
+     text      => encode('utf-8',chr(176))
+    ,fill      => "rgb(255,255,255)"
+    ,stroke    => "rgb(255,255,255)"
+    ,pointsize => $sizeIco[0] * 0.65
+    ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($dir))
+    ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($dir))
+    ,font      => "$fonts_base/ESRICartography.ttf"
+    ,rotate    => $dir
+  );
+}
+
+# barb
+if (defined $query->param('barb') && $dir > -999) {
+  if ($mag >= 5) {
+    $imageObs->Annotate(
+       text        => encode('utf-8',chr(197 + ($mag - 5) / 5))
+      ,stroke      => 'black'
+      ,strokewidth => 3
+      ,gravity     => 'center'
+      ,pointsize   => $sizeIco[0] * 0.85
+      ,font        => "$fonts_base/ESRIWeather.ttf"
+      ,rotate      => $dir
+    );
+    $imageObs->Annotate(
+       text      => encode('utf-8',chr(197 + ($mag - 5) / 5))
+      ,fill      => sprintf("rgb(%s)",getRGB($mag,$cptRange[0],$cptRange[1]))
+      ,stroke    => sprintf("rgb(%s)",getRGB($mag,$cptRange[0],$cptRange[1]))
+      ,gravity   => 'center'
+      ,pointsize => $sizeIco[0] * 0.85
+      ,font      => "$fonts_base/ESRIWeather.ttf"
+      ,rotate    => $dir
+    );
+  }
+  else {
+    $noCircle = 0;
+  }
+}
+
+# circle
+if (!$noCircle) {
+  if ($mag > -999) {
+    my $imageObs0 = Image::Magick->new;
+    $imageObs0->Set(size=>(sprintf("%dx%d",@sizeIco)));
+    $imageObs0->ReadImage('xc:transparent');
+    $imageObs0->Annotate(
+       text      => encode('utf-8',chr(78))
+      ,fill      => sprintf("rgb(%s)",getRGB($mag,$cptRange[0],$cptRange[1]))
+      ,stroke    => "rgb(0,0,0)"
+      ,pointsize => $sizeIco[0] * 0.65
+      ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($dir))
+      ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($dir))
+      ,font      => "$fonts_base/ESRICartography.ttf"
+    );
+    $imageObs0->Trim();
+    $imageObs->Composite(
+       gravity => 'center'
+      ,image   => $imageObs0
+      ,compose => 'over'
+    );
+  }
+  else {
+    my $imageObs0 = Image::Magick->new;
+    $imageObs0->Set(size=>(sprintf("%dx%d",@sizeIco)));
+    $imageObs0->ReadImage('xc:transparent');
+    $imageObs0->Annotate(
+       text      => encode('utf-8',chr(78))
+      ,fill      => "rgb(255,255,255)"
+      ,stroke    => "rgb(0,0,0)"
+      ,pointsize => $sizeIco[0] * 0.65
+      ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($dir))
+      ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($dir))
+      ,font      => "$fonts_base/ESRICartography.ttf"
+    );
+    $imageObs0->Trim();
+    $imageObs->Composite(
+       gravity => 'center'
+      ,image   => $imageObs0
+      ,compose => 'over'
+    );
+  }
+}
+
+# scalar
+if (defined $query->param('label') && $mag > -999) {
+  $imageObs->Annotate(
+     text        => labelTxt($mag,$cptRange[0],$cptRange[1]).' '.$query->param('labelUnits')
+    ,stroke      => 'black'
+    ,strokewidth => 3
+    ,pointsize   => 10
+    ,font        => "$fonts_base/arial.ttf"
+    ,gravity     => 'center'
+    ,geometry    => (defined $query->param('arrow') || defined $query->param('barb')) ? sprintf("%+d%+d",cos(deg2rad($dir-55)) * $sizeIco[0] * 0.29,sin(deg2rad($dir-55)) * $sizeIco[1] * 0.29) : ''
+  );
+  $imageObs->Annotate(
+     text      => labelTxt($mag,$cptRange[0],$cptRange[1]).' '.$query->param('labelUnits')
+    ,fill      => 'white'
+    ,pointsize => 10
+    ,font      => "$fonts_base/arial.ttf"
+    ,gravity   => 'center'
+    ,geometry  => (defined $query->param('arrow') || defined $query->param('barb')) ? sprintf("%+d%+d",cos(deg2rad($dir-55)) * $sizeIco[0] * 0.29,sin(deg2rad($dir-55)) * $sizeIco[1] * 0.29) : ''
+  );
+}
+
+$image->Composite(
+   gravity => 'center'
+  ,image   => $imageObs
+  ,compose => 'over'
+);
+
+if (defined $query->param('shadow')) {
+  my $fill = 'rgb(255,0,255)';
+  if ($query->param('shadow') eq 'highlight') {
+    $fill = 'blue';
+  }
+  elsif ($query->param('shadow') eq 'white') {
+    $fill = 'black';
+  }
+  my $shadow = $image->clone();
+  $shadow->Set('depth',8);
+  $shadow->Colorize(fill => $fill);
+  $shadow->Negate();
+  $shadow->Set('bordercolor','transparent');
+  $shadow->Border(geometry => '8x8');
+  $shadow->Blur(geometry => '0x2');
+  $shadow->Shave(geometry => '6x6');
+  
+  $shadow->Composite(
+     gravity => 'northwest'
+    ,image   => $image
+    ,compose => 'over'
+  );
+
+  $shadow->Crop(geometry=>(sprintf("%dx%d",@size)));
+  $shadow->Set(page=>'0x0+0+0');
+
+  binmode(STDOUT);
+  $shadow->Write('png:-');
+}
+else {
+  binmode(STDOUT);
+  $image->Write('png:-');
+}
+
+sub getRGB {
+  my $idx = sprintf "%d",($_[0] - $_[1]) / (($_[2] - $_[1]) / $#cpt);
+  if ($idx > $#cpt) {
+    $idx = $#cpt;
+  }
+  elsif ($idx < 0) {
+    $idx = 0;
+  }
+  return $cpt[$idx];
+}
+
+sub labelTxt {
+  if ($_[0] > 1) {
+    return sprintf("%d",$_[0]);
+  }
+  else {
+    return sprintf("%.2f",$_[0]);
+  }
+}
