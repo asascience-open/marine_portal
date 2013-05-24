@@ -1,0 +1,7 @@
+SetEnv config glos
+SetEnv icons /var/www/icon_cache
+SetEnv tmpFs /tmp
+SetEnv dbUser postgres
+SetEnv dbPass ''
+SetEnv dbName glos
+SetEnv dbPort 5432
