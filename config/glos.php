@@ -2,7 +2,7 @@
   date_default_timezone_set('UTC');
 
   $title     = 'Great Lakes Observing System Data Portal';
-  $googleId  = 'UA-32882439-1x';
+  $googleId  = 'UA-32882439-1';
 
   $hasHelp = true;
 
