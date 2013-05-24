@@ -1,1 +1,4 @@
 .htaccess
+tmp
+icon_cache
+www_tmp
