@@ -480,6 +480,7 @@
   }
 
   foreach ($sosProviders as $provider => $xmlLoc) {
+    print $sosProviders[$provider]['getCaps']."\n";
     $xml = @simplexml_load_file($sosProviders[$provider]['getCaps']);
     $describeSensor = '';
     $getObservation = '';
@@ -540,7 +541,13 @@
         // If so, let swe2 win by skipping this one.
         $swe2Exists = false;
         for ($i = 0; $i < count($sites); $i++) {
+/*
+  For now, allow NDBC to win by commenting out the next line and applying the array_splice stuff below.
           $swe2Exists = $swe2Exists || (array_key_exists('siteId',$sites[$i]) && $sites[$i]['siteId'] == $id);
+*/
+          if (array_key_exists('siteId',$sites[$i]) && $sites[$i]['siteId'] == $id) {
+            array_splice($sites,$i,1);
+          }
         }
         if (!$swe2Exists) {
           array_push($sites,array(
