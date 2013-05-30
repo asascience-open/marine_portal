@@ -560,7 +560,7 @@
             $sites[$swe2Index]['alternateUrl'] = str_replace('___SITE___',$id,$sosProviders[$provider]['provUrl']);
           }
         }
-        if ($alternateUrl != '') {
+        if ($alternateUrl != '' || $swe2Index < 0) {
           array_push($sites,array(
              'descr'        => sprintf("%s%s",$id,$chld->{'description'} != 'GetCapabilities' ? ' - '.$chld->{'description'} : '')
             ,'provider'     => $provider
@@ -980,6 +980,7 @@
       $lon   = '';
       $lat   = ''; 
       $title = '';
+      print "http://www.ndbc.noaa.gov/data/latest_obs/$s.rss\n";
       $xml = @simplexml_load_file("http://www.ndbc.noaa.gov/data/latest_obs/$s.rss");
       if ($xml) {
         $title = sprintf(
@@ -1103,6 +1104,7 @@
       ));
       $i = count($sites) - 1;
       for ($j = 0; $j < count($stats); $j++) {
+        print $stats[$j]['Station_Code']."\n";
         $result = $wsdl->call('exportAllParamsDateRangeXMLNew',array(
            'tbl'       => $stats[$j]['Station_Code']
           ,'mindate'   => $d0
