@@ -36,7 +36,7 @@
 
   $sosProviders = array(
     'NDBC' => array(
-       'getCaps'   => 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
+       'getCaps'   => '/tmp/ndbc.xml' // 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
       ,'variables' => array(
          'winds'                 => 'WindSpeed'
         ,'waves'                 => 'SignificantWaveHeight'
@@ -47,7 +47,7 @@
       ,'siteType'  => 'buoy'
     )
     ,'COOPS' => array(
-       'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
+       'getCaps'   => '/tmp/coops.xml' // 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
       ,'variables' => array(
          'winds'                                      => 'WindSpeed'
         ,'sea_water_temperature'                      => 'WaterTemperature'
@@ -454,6 +454,7 @@
         // don't have any fresh data for this sensor so add a stub
         else if ($xml !== FALSE) {
           $i = count($sites) - 1;
+          $sites[$i]['isStub']          = true;
           $sites[$i]['topObs'][$n]['t'] = false;
           $sites[$i]['topObs'][$n]['v'] = array();
           $a = convertUnits(0,$swe2Providers[$provider]['sos']['procedures']['stations'][$station]['sensors'][$sensor]['uom'],$tUom == 'english');
@@ -537,19 +538,29 @@
             ));
           }
         }
-        // Check to see if there is already a hit for this id (e.g. a GLOS swe2 buoy w/ the same id).
-        // If so, let swe2 win by skipping this one.
-        $swe2Exists = false;
+        // Check to see if there is already a stub hit for this id (e.g. a GLOS swe2 buoy w/ the same id).
+        $swe2Index    = -1;
         for ($i = 0; $i < count($sites); $i++) {
-/*
-  For now, allow NDBC to win by commenting out the next line and applying the array_splice stuff below.
-          $swe2Exists = $swe2Exists || (array_key_exists('siteId',$sites[$i]) && $sites[$i]['siteId'] == $id);
-*/
           if (array_key_exists('siteId',$sites[$i]) && $sites[$i]['siteId'] == $id) {
-            array_splice($sites,$i,1);
+            $swe2Index = $i;
           }
         }
-        if (!$swe2Exists) {
+        $alternateUrl = '';
+        if ($swe2Index >= 0) {
+          // Update the swe2's record w/ this provider's description no matter what.
+          $sites[$swe2Index]['descr'] = sprintf("%s%s",$id,$chld->{'description'} != 'GetCapabilities' ? ' - '.$chld->{'description'} : '');
+          // If the swe2 record IS a stub, pull the data from this provider (later) but treat the swe2 as an alternate data source.
+          if (array_key_exists('isStub',$sites[$swe2Index])) {
+            $alternateUrl = $sites[$swe2Index]['url'];
+            // cull the swe2 record
+            array_splice($sites,$swe2Index,1);
+          }
+          // If we have a swe2 record and it is NOT a stub, add this provider as an alternate data source.
+          else {
+            $sites[$swe2Index]['alternateUrl'] = str_replace('___SITE___',$id,$sosProviders[$provider]['provUrl']);
+          }
+        }
+        if ($alternateUrl != '') {
           array_push($sites,array(
              'descr'        => sprintf("%s%s",$id,$chld->{'description'} != 'GetCapabilities' ? ' - '.$chld->{'description'} : '')
             ,'provider'     => $provider
@@ -561,6 +572,7 @@
             ,'timeSeries'   => array()
             ,'topObs'       => array()
             ,'url'          => str_replace('___SITE___',$id,$sosProviders[$provider]['provUrl'])
+            ,'alternateUrl' => $alternateUrl
             ,'siteType'     => $sosProviders[$provider]['siteType']
           ));
         }
@@ -570,7 +582,7 @@
 
   for ($i = 0; $i < count($sites); $i++) {
     if (!array_key_exists('getObs',$sites[$i])) {
-      continue;
+      // continue;
     }
     for ($j = 0; $j < count($sites[$i]['getObs']); $j++) {
       if ($sites[$i]['organization'] == '') {
@@ -1172,14 +1184,15 @@
         )
       )
       ,'properties'  => array(
-         'descr'      => $sites[$i]['descr']
-        ,'lon'        => $sites[$i]['lon']
-        ,'lat'        => $sites[$i]['lat']
-        ,'timeSeries' => !empty($sites[$i]['timeSeries']) ? $sites[$i]['timeSeries'] : null
-        ,'topObs'     => !empty($sites[$i]['topObs']) ? $sites[$i]['topObs'] : null
-        ,'url'        => $sites[$i]['url']
-        ,'siteType'   => $sites[$i]['siteType']
-        ,'provider'   => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
+         'descr'        => $sites[$i]['descr']
+        ,'lon'          => $sites[$i]['lon']
+        ,'lat'          => $sites[$i]['lat']
+        ,'timeSeries'   => !empty($sites[$i]['timeSeries']) ? $sites[$i]['timeSeries'] : null
+        ,'topObs'       => !empty($sites[$i]['topObs']) ? $sites[$i]['topObs'] : null
+        ,'url'          => $sites[$i]['url']
+        ,'alternateUrl' => (array_key_exists('alternateUrl',$sites[$i]) ? $sites[$i]['alternateUrl'] : '')
+        ,'siteType'     => $sites[$i]['siteType']
+        ,'provider'     => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
       )
     ));
   }
