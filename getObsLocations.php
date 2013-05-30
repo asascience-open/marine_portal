@@ -582,7 +582,7 @@
 
   for ($i = 0; $i < count($sites); $i++) {
     if (!array_key_exists('getObs',$sites[$i])) {
-      // continue;
+      continue;
     }
     for ($j = 0; $j < count($sites[$i]['getObs']); $j++) {
       if ($sites[$i]['organization'] == '') {
