@@ -36,7 +36,7 @@
 
   $sosProviders = array(
     'NDBC' => array(
-       'getCaps'   => '/tmp/ndbc.xml' // 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
+       'getCaps'   => 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
       ,'variables' => array(
          'winds'                 => 'WindSpeed'
         ,'waves'                 => 'SignificantWaveHeight'
@@ -47,7 +47,7 @@
       ,'siteType'  => 'buoy'
     )
     ,'COOPS' => array(
-       'getCaps'   => '/tmp/coops.xml' // 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
+       'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
       ,'variables' => array(
          'winds'                                      => 'WindSpeed'
         ,'sea_water_temperature'                      => 'WaterTemperature'
