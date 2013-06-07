@@ -890,79 +890,84 @@
       }
     }
     $sitesCache = array();
-    $url = sprintf(
-       "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&minLat=%f&minLon=%f&maxLat=%f&maxLon=%f&hoursBeforeNow=48"
-      ,$bbox[1]
-      ,$bbox[0]
-      ,$bbox[3]
-      ,$bbox[2]
-    );
-    echo "$url\n";
-    $xml = simplexml_load_file($url);
-    foreach ($xml->{'data'}[0]->{'METAR'} as $metar) {
-      $id    = array_key_exists(sprintf("%s",$metar->{'station_id'}),$metar2id) ? $metar2id[sprintf("%s",$metar->{'station_id'})] : sprintf("%s",$metar->{'station_id'});
-      $descr = $id;
-      $lon   = sprintf("%s",$metar->{'longitude'});
-      $lat   = sprintf("%s",$metar->{'latitude'});
-      $t     = strtotime(sprintf("%s",$metar->{'observation_time'}));
-      $txt   = sprintf("%s",$metar->{'raw_text'});
-      if (!array_key_exists($id,$sitesCache)) {
-        $sitesCache[$id] = array(
-           'descr'        => $descr
-          ,'provider'     => $provider
-          ,'organization' => ''
-          ,'lon'          => $lon
-          ,'lat'          => $lat
-          ,'timeSeries'   => array()
-          ,'topObs'       => array()
-          ,'url'          => str_replace('___SITE___',$metar->{'station_id'},$metarProviders[$provider]['provUrl'])
-          ,'siteType'     => $metarProviders[$provider]['siteType']
+    // Try avoid hitting the 1k limit by breaking up bbox into 2x2 DD squares.
+    for ($x = $bbox[0]; $x <= $bbox[2]; $x += 2) {
+      for ($y = $bbox[1]; $y <= $bbox[3]; $y += 2) {
+        $url = sprintf(
+           "http://www.aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=xml&minLat=%f&minLon=%f&maxLat=%f&maxLon=%f&hoursBeforeNow=48"
+          ,$y
+          ,$x
+          ,$y + 2
+          ,$x + 2
         );
-      }
-      foreach ($metar->children() as $node) {
-        if (array_key_exists($node->getName(),$metarProviders[$provider]['varMap'])) {
-          $n   = $node->getName();
-          $u   = array_pop(explode('_',$n));
-          $val = sprintf("%s",$node);
-          if ($u == 'kt') {
-            $u   = 'm/s';
-            $val = sprintf("%s",$val * 0.514);
-          }
-          else if ($u == 'degrees') {
-            $u = 'deg';
-          }
-          else if ($u == 'c') {
-            $u = 'C';
-          }
-          $a   = convertUnits($val,$u,$tUom == 'english');
-          $n   = $metarProviders[$provider]['varMap'][$n];
-          if (!array_key_exists($n,$sitesCache[$id]['timeSeries'])) {
-            $k = $a[0]['uom'];
-            $v = array(
-              $k => array()
-            );
-            if (count($a) == 2) {
-              $v[$a[1]['uom']] = array();
-            }
-            $sitesCache[$id]['timeSeries'][$n] = array(
-               'v' => $v
-              ,'t' => array()
-            );
-            $sitesCache[$id]['topObs'][$n] = array(
-               'v' => array()
-              ,'t' => 0
+        echo "$url\n";
+        $xml = simplexml_load_file($url);
+        foreach ($xml->{'data'}[0]->{'METAR'} as $metar) {
+          $id    = array_key_exists(sprintf("%s",$metar->{'station_id'}),$metar2id) ? $metar2id[sprintf("%s",$metar->{'station_id'})] : sprintf("%s",$metar->{'station_id'});
+          $descr = $id;
+          $lon   = sprintf("%s",$metar->{'longitude'});
+          $lat   = sprintf("%s",$metar->{'latitude'});
+          $t     = strtotime(sprintf("%s",$metar->{'observation_time'}));
+          $txt   = sprintf("%s",$metar->{'raw_text'});
+          if (!array_key_exists($id,$sitesCache)) {
+            $sitesCache[$id] = array(
+               'descr'        => $descr
+              ,'provider'     => $provider
+              ,'organization' => ''
+              ,'lon'          => $lon
+              ,'lat'          => $lat
+              ,'timeSeries'   => array()
+              ,'topObs'       => array()
+              ,'url'          => str_replace('___SITE___',$metar->{'station_id'},$metarProviders[$provider]['provUrl'])
+              ,'siteType'     => $metarProviders[$provider]['siteType']
             );
           }
-          array_push($sitesCache[$id]['timeSeries'][$n]['v'][$a[0]['uom']],$a[0]['val']);
-          if (count($a) == 2) {
-            array_push($sitesCache[$id]['timeSeries'][$n]['v'][$a[1]['uom']],$a[1]['val']);
-          }
-          array_push($sitesCache[$id]['timeSeries'][$n]['t'],$t);
-          if ($t >= $sitesCache[$id]['topObs'][$n]['t']) {
-            $sitesCache[$id]['topObs'][$n]['t'] = $t;
-            $sitesCache[$id]['topObs'][$n]['v'][$a[0]['uom']] = $a[0]['val'];
-            if (count($a) == 2) {
-              $sitesCache[$id]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
+          foreach ($metar->children() as $node) {
+            if (array_key_exists($node->getName(),$metarProviders[$provider]['varMap'])) {
+              $n   = $node->getName();
+              $u   = array_pop(explode('_',$n));
+              $val = sprintf("%s",$node);
+              if ($u == 'kt') {
+                $u   = 'm/s';
+                $val = sprintf("%s",$val * 0.514);
+              }
+              else if ($u == 'degrees') {
+                $u = 'deg';
+              }
+              else if ($u == 'c') {
+                $u = 'C';
+              }
+              $a   = convertUnits($val,$u,$tUom == 'english');
+              $n   = $metarProviders[$provider]['varMap'][$n];
+              if (!array_key_exists($n,$sitesCache[$id]['timeSeries'])) {
+                $k = $a[0]['uom'];
+                $v = array(
+                  $k => array()
+                );
+                if (count($a) == 2) {
+                  $v[$a[1]['uom']] = array();
+                }
+                $sitesCache[$id]['timeSeries'][$n] = array(
+                   'v' => $v
+                  ,'t' => array()
+                );
+                $sitesCache[$id]['topObs'][$n] = array(
+                   'v' => array()
+                  ,'t' => 0
+                );
+              }
+              array_push($sitesCache[$id]['timeSeries'][$n]['v'][$a[0]['uom']],$a[0]['val']);
+              if (count($a) == 2) {
+                array_push($sitesCache[$id]['timeSeries'][$n]['v'][$a[1]['uom']],$a[1]['val']);
+              }
+              array_push($sitesCache[$id]['timeSeries'][$n]['t'],$t);
+              if ($t >= $sitesCache[$id]['topObs'][$n]['t']) {
+                $sitesCache[$id]['topObs'][$n]['t'] = $t;
+                $sitesCache[$id]['topObs'][$n]['v'][$a[0]['uom']] = $a[0]['val'];
+                if (count($a) == 2) {
+                  $sitesCache[$id]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
+                }
+              }
             }
           }
         }
