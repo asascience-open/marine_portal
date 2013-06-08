@@ -1,4 +1,5 @@
 <?php
+  ini_set('memory_limit','256M');
   $dbUser = getenv('dbUser');
   $dbPass = getenv('dbPass');
   $dbName = getenv('dbName');
