@@ -1490,7 +1490,7 @@ function init() {
               ,id           : 'themeBuoys'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon  : 'img/water32.png'
+              ,icon  : 'img/signal32.png'
               ,handler : function() {
                 goTheme('Buoys');
               }
@@ -1560,7 +1560,7 @@ function init() {
               ,id           : 'obswinds'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon  : 'img/water16.png'
+              ,icon  : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'Winds'
               ,handler      : function(b) {
@@ -1581,7 +1581,7 @@ function init() {
               ,id           : 'obswaves'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'Waves'
               ,handler      : function(b) {
@@ -1602,7 +1602,7 @@ function init() {
               ,id           : 'obswaterTemp'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'WaterTemp'
               ,handler      : function(b) {
@@ -1622,7 +1622,7 @@ function init() {
               ,id           : 'obswaterLevel'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'WaterLevel'
               ,handler      : function(b) {
@@ -1643,7 +1643,7 @@ function init() {
               ,id           : 'obsdissolvedOxygen'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'DissolvedOxygen'
               ,handler      : function(b) {
@@ -1664,7 +1664,7 @@ function init() {
               ,id           : 'obsairTemperature'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'AirTemperature'
               ,handler      : function(b) {
@@ -1684,7 +1684,7 @@ function init() {
               ,id           : 'obsall'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/water16.png'
+              ,icon : 'img/signal16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'All'
               ,handler      : function(b) {
@@ -1729,7 +1729,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Chlorophyll concentration'
-                    ,html      : map.getLayersByName('Chlorophyll concentration')[0].moreInfo
+                    ,html      : map.getLayersByName('Chlorophyll concentration')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteChlorophyll concentration'
                     ,showDelay : 0
                     ,anchor    : 'right'
@@ -1756,7 +1756,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Cloud imagery'
-                    ,html      : map.getLayersByName('Cloud imagery')[0].moreInfo
+                    ,html      : map.getLayersByName('Cloud imagery')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteCloud imagery'
                     ,closable  : true
                     ,showDelay : 0
@@ -1783,7 +1783,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Ocean fronts'
-                    ,html      : map.getLayersByName('Ocean fronts')[0].moreInfo
+                    ,html      : map.getLayersByName('Ocean fronts')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteOcean fronts'
                     ,closable  : true
                     ,showDelay : 0
@@ -1811,7 +1811,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Weather RADAR'
-                    ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo
+                    ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteWeather RADAR'
                     ,closable  : true
                     ,showDelay : 0
@@ -1871,7 +1871,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Winds'
-                    ,html      : map.getLayersByName('Winds')[0].moreInfo
+                    ,html      : map.getLayersByName('Winds')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelWinds'
                     ,closable  : true
                     ,showDelay : 0
@@ -1904,7 +1904,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Waves'
-                    ,html      : map.getLayersByName('Waves')[0].moreInfo
+                    ,html      : map.getLayersByName('Waves')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelWaves'
                     ,closable  : true
                     ,showDelay : 0
@@ -1937,7 +1937,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Surface water temperature'
-                    ,html      : map.getLayersByName('Surface water temperature')[0].moreInfo
+                    ,html      : map.getLayersByName('Surface water temperature')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelSurface water temperature'
                     ,closable  : true
                     ,showDelay : 0
@@ -1969,7 +1969,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Currents (global)'
-                    ,html      : map.getLayersByName('Currents (global)')[0].moreInfo
+                    ,html      : map.getLayersByName('Currents (global)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (global)'
                     ,closable  : true
                     ,showDelay : 0
@@ -2002,7 +2002,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Currents (regional)'
-                    ,html      : map.getLayersByName('Currents (regional)')[0].moreInfo
+                    ,html      : map.getLayersByName('Currents (regional)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (regional)'
                     ,closable  : true
                     ,showDelay : 0
@@ -2035,7 +2035,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Bottom water temperature'
-                    ,html      : map.getLayersByName('Bottom water temperature')[0].moreInfo
+                    ,html      : map.getLayersByName('Bottom water temperature')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelBottom water temperature'
                     ,closable  : true
                     ,showDelay : 0
@@ -2067,7 +2067,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Currents (New York Harbor)'
-                    ,html      : map.getLayersByName('Currents (New York Harbor)')[0].moreInfo
+                    ,html      : map.getLayersByName('Currents (New York Harbor)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (New York Harbor)'
                     ,closable  : true
                     ,showDelay : 0
@@ -2138,7 +2138,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Bottom trawl Northeast/MA'
-                    ,html      : map.getLayersByName('Butterfish bottom trawl')[0].moreInfo
+                    ,html      : map.getLayersByName('Butterfish bottom trawl')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchBottom trawl Northeast/MA'
                     ,closable  : true
                     ,showDelay : 0
@@ -2169,7 +2169,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Bottom trawl Rhode Island'
-                    ,html      : map.getLayersByName('River herring bottom trawl')[0].moreInfo
+                    ,html      : map.getLayersByName('River herring bottom trawl')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchBottom trawl Rhode Island'
                     ,closable  : true
                     ,showDelay : 0
@@ -2199,7 +2199,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Mid-water trawl Area 2'
-                    ,html      : map.getLayersByName('River herring mid-water trawl Area 2')[0].moreInfo
+                    ,html      : map.getLayersByName('River herring mid-water trawl Area 2')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchMid-water trawl Area 2'
                     ,closable  : true
                     ,showDelay : 0
@@ -2230,7 +2230,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Mid-water trawl Cape Cod'
-                    ,html      : map.getLayersByName('River herring mid-water trawl Cape Cod')[0].moreInfo
+                    ,html      : map.getLayersByName('River herring mid-water trawl Cape Cod')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchMid-water trawl Cape Cod'
                     ,closable  : true
                     ,showDelay : 0
@@ -2260,7 +2260,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Closed area 1 Georges Bank'
-                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 1')[0].moreInfo
+                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 1')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchClosed area 1 Georges Bank'
                     ,closable  : true
                     ,showDelay : 0
@@ -2291,7 +2291,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Closed area 2 Georges Bank'
-                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 2')[0].moreInfo
+                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 2')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchClosed area 2 Georges Bank'
                     ,closable  : true
                     ,showDelay : 0
@@ -2321,7 +2321,7 @@ function init() {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Nantucket Lightship'
-                    ,html      : map.getLayersByName('Scallop/yellowtail Nantucket Lightship')[0].moreInfo
+                    ,html      : map.getLayersByName('Scallop/yellowtail Nantucket Lightship')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchNantucket Lightship'
                     ,closable  : true
                     ,showDelay : 0
