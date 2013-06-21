@@ -120,7 +120,7 @@ var mapLayersStore = new Ext.data.ArrayStore({
 });
 
 var forecastMapsStore = new Ext.data.ArrayStore({
-   fields : ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+   fields : ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendImage']
   ,data   : forecastMapsStoreData
 });
 if (startupFCLayer) {
@@ -149,7 +149,7 @@ if (startupFCLayer) {
 }
 
 var weatherMapsStore = new Ext.data.ArrayStore({
-   fields : ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+   fields : ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendImage']
   ,data   : weatherMapsStoreData
 });
 if (startupWXLayer) {
@@ -231,6 +231,11 @@ function init() {
   });
 
   Ext.QuickTips.init();
+
+  // don't remember window settings
+  Ext.override(Ext.Component,{
+    stateful : false
+  });
 
   cp = new Ext.state.CookieProvider({
     expires : new Date(new Date().getTime()+(1000*60*60*24*30)) //30 days
@@ -509,6 +514,9 @@ function init() {
                     }
                     ,select : function(combo,rec) {
                       hideAllByCatchLayers();
+                      if (!rec) {
+                        return;
+                      }
                       var layers = rec.get('wmsLayers');
                       for (var i = 0; i < layers.length; i++) {
                         map.getLayersByName(layers[i])[0].setVisibility(true);
@@ -585,6 +593,7 @@ function init() {
       }
       ,{
          region      : 'east'
+        ,hidden      : viewer == 'lite'
         ,width       : 315
         ,layout      : 'border'
         ,id          : 'mainControlPanel'
@@ -845,7 +854,7 @@ function init() {
                            columnWidth : 1
                           ,height      : 35
                           ,border      : false
-                          ,html        : makeObsLegend(defaultObs)
+                          ,html        : makeObsLegend(defaultObs).html
                         }
                       }
                     ]}
@@ -1082,7 +1091,7 @@ function init() {
           {
              region    : 'center'
             ,id        : 'mapPanel'
-            ,html      : '<div id="map"><div id="mapMessagesButtonGroup"></div><div id="mapControlsResetMap"></div><div id="mapControlsChangeBackground"></div></div>'
+            ,html      : '<div id="map"><div id="mapMessagesButtonGroup"></div><div id="mapControlsResetMap"></div><div id="mapControlsChangeBackground"></div>' + (viewer == 'lite' ? '<div id="activity"><img src="img/spinner.gif"></div>' : '') + '<div id="byCatchLegend"></div></div>'
             ,border    : false
             ,listeners : {
               afterrender : function(p) {
@@ -1106,9 +1115,1252 @@ function init() {
             }
           }
         ]
+        ,bbar : {hidden : viewer != 'lite',items : [
+          new Ext.Panel({id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
+             {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
+            ,{html : '<img width=10 src="img/blank.png">'}
+            ,{width : 180,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
+          ]})
+          ,{id : 'contrastSpacer',html : '&nbsp;',hidden : true}
+          ,new Ext.Panel({id : 'contrastControl',hidden : true,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'background:#DFE8F6;padding:6px',items : [
+             {html : 'Contrast<br>level'}
+            ,{html : '<img width=15 src="img/blank.png">'}
+            ,new Ext.Slider({
+               width          : 125
+              ,id             : 'contrastSlider'
+              ,minValue       : 0
+              ,maxValue       : 100
+              ,plugins        : new Ext.slider.Tip({
+                getText : function(thumb) {
+                  return String.format('{0}%',thumb.value);
+                }
+              })
+              ,listeners      : {'change' : function(slider,val) {
+                var layers = [];
+                if (Ext.getCmp('themeSatellite').pressed) {
+                  var sto = Ext.getCmp('weatherMapsTypeComboBox').getStore();
+                  layers  = sto.getAt(sto.findExact('id',Ext.getCmp('weatherMapsTypeComboBox').getValue())).get('wmsLayers');
+                }
+                else {
+                  var sto = Ext.getCmp('forecastMapsTypeComboBox').getStore();
+                  layers  = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
+                }
+                for (var i = 0; i < layers.length; i++) {
+                  map.getLayersByName(layers[i])[0].setOpacity(val / 100);
+                }
+              }}
+            })
+          ]})
+          ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
+          ,new Ext.Panel({id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
+             {html : 'Forecast<br>time'}
+            ,{html : '<img width=15 src="img/blank.png">'}
+            ,new Ext.Button({
+               icon    : 'img/ButtonLeft.png'
+              ,handler : function() {
+                var cb  = Ext.getCmp('timeComboBox');
+                var sto = cb.getStore();
+                var idx = sto.findExact('val',cb.getValue());
+                if (idx - 1 < 0) {
+                  return;
+                }
+                cb.setValue(sto.getAt(idx - 1).get('val'));
+                cb.fireEvent('select',cb,sto.getAt(idx - 1),idx - 1);
+              }
+            })
+            ,new Ext.form.ComboBox({
+              store          : new Ext.data.ArrayStore({
+                 fields : ['lab','val']
+              })
+              ,width          : 150
+              ,forceSelection : true
+              ,triggerAction  : 'all'
+              ,cls            : Ext.isChrome ? 'chromeInput' : ''
+              ,selectOnFocus  : true
+              ,mode           : 'local'
+              ,displayField   : 'lab'
+              ,valueField     : 'val'
+              ,id             : 'timeComboBox'
+              ,listeners      : {
+                render : function(cb) {
+                  var sto = cb.getStore();
+                  for (var i = 0; i <= 48; i += fcSliderIncrement) {
+                    sto.add(new sto.recordType({
+                       lab : dateToFriendlyString(new Date(dNow.getTime() + i * 3600000))
+                      ,val : makeTimeParam(new Date(dNow.getTime() + i * 3600 * 1000))
+                    }));
+                  }
+                  cb.setValue(sto.getAt(0).get('val'));
+                }
+                ,select : function(cb,rec,idx) {
+                  var sto    = Ext.getCmp('forecastMapsTypeComboBox').getStore();
+                  var layers = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
+                  for (var i = 0; i < layers.length; i++) {
+                    var lyr = map.getLayersByName(layers[i])[0];
+                    if (lyr.timeParam) {
+                      lyr.mergeNewParams({TIME : makeTimeParam(new Date(dNow.getTime() + idx * 3600 * 1000))});
+                    }
+                  }
+                }
+              }
+            })
+            ,new Ext.Button({
+               icon : 'img/ButtonRight.png'
+              ,handler : function() {
+                var cb  = Ext.getCmp('timeComboBox');
+                var sto = cb.getStore();
+                var idx = sto.findExact('val',cb.getValue());
+                if (idx + 1 > sto.getCount() - 1) {
+                  return;
+                }
+                cb.setValue(sto.getAt(idx + 1).get('val'));
+                cb.fireEvent('select',cb,sto.getAt(idx + 1),idx + 1);
+              }
+            })
+          ]})
+          ,{id : 'findBuoySpacer',html : '&nbsp;'}
+          ,new Ext.Panel({id : 'findBuoyControl',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
+             {html : 'Find a<br>station'}
+            ,{html : '<img width=15 src="img/blank.png">'}
+            ,new Ext.form.ComboBox({
+               width          : 250
+              ,listWidth      : 500
+              ,id             : 'stationQuickFindComboBox'
+              ,store          : new Ext.data.ArrayStore({
+                 fields : ['lbl','provider','descr']
+                ,filter : function(property,value) {
+                  if (value == '') {
+                    return true;
+                  }
+                  this.filterBy(function(record,id) {
+                    return record.get('lbl').toLowerCase().indexOf(value.toLowerCase()) >= 0
+                  });
+                }
+              })
+              ,forceSelection : true
+              ,triggerAction  : 'all'
+              ,emptyText      : 'Enter part of a station name.'
+              ,cls            : Ext.isChrome ? 'chromeInput' : ''
+              ,selectOnFocus  : true
+              ,mode           : 'local'
+              ,displayField   : 'lbl'
+              ,listeners      : {select : function(cb,rec,i) {
+                var tree = Ext.getCmp('weatherStationsTreePanel');
+                tree.getRootNode().cascade(function(n) {
+                  if (n.attributes.provider == rec.get('provider') && n.attributes.text == rec.get('descr')) {
+                    tree.selectPath(n.getPath());
+                    n.ui.focus();
+                    Ext.getCmp('obsall').toggle(true);
+                    selectWeatherStationType('all',{provider : n.attributes.provider,descr : n.attributes.text});
+                    return false;
+                  }
+                });
+              }}
+              ,doQuery : function(q, forceAll){
+                q = Ext.isEmpty(q) ? '' : q;
+                var qe = {
+                  query: q,
+                  forceAll: forceAll,
+                  combo: this,
+                  cancel:false
+                };
+                if(this.fireEvent('beforequery', qe)===false || qe.cancel){
+                  return false;
+                }
+                q = qe.query;
+                forceAll = qe.forceAll;
+                if(forceAll === true || (q.length >= this.minChars)){
+                  if(this.lastQuery !== q){
+                    this.lastQuery = q;
+                    if(this.mode == 'local'){
+                      this.selectedIndex = -1;
+                      if(forceAll){
+                        this.store.clearFilter();
+                      }else{
+                        this.store.filter(this.displayField, q, true); // supply the anyMatch option
+                      }
+                      this.onLoad();
+                    }else{
+                      this.store.baseParams[this.queryParam] = q;
+                      this.store.load({
+                        params: this.getParams(q)
+                      });
+                      this.expand();
+                    }
+                  }else{
+                    this.selectedIndex = -1;
+                    this.onLoad();
+                  }
+                }
+              }
+            })
+          ]})
+          ,'->'
+          ,{
+             text     : 'Ocean<br>conditions'
+            ,id       : 'oceanConditionsButton'
+            ,icon     : 'img/world32.png'
+            ,scale    : 'large'
+            ,width    : 110
+            ,pressed      : true
+            ,enableToggle : true
+            ,allowDepress : true
+            ,handler      : function(b) {
+              if (b.pressed) {
+                Ext.getCmp('browseOceanConditionDataWindow').show();
+              }
+              else {
+                Ext.getCmp('browseOceanConditionDataWindow').hide();
+              }
+            }
+          }
+          ,'-'
+          ,{
+             text     : 'By-catch<br>data'
+            ,id       : 'byCatchButton'
+            ,icon     : 'img/fishcatch32.png'
+            ,scale    : 'large'
+            ,width    : 110
+            ,pressed      : false
+            ,enableToggle : true
+            ,allowDepress : true
+            ,pressed      : startupbyCatchLayer
+            ,handler      : function(b) {
+              if (b.pressed) {
+                Ext.getCmp('browseByCatchDataWindow').show();
+              }
+              else {
+                Ext.getCmp('browseByCatchDataWindow').hide();
+              }
+            }
+          }
+          ,'-'
+          ,{
+             text     : 'Map<br>settings'
+            ,icon     : 'img/cog32.png'
+            ,scale    : 'large'
+            ,menu     : {items : [
+              {
+                 text        : '<b>Select a map background</b>'
+                ,canActivate : false
+                ,cls         : 'menuHeader'
+              }
+              ,{
+                 text         : 'ESRI Ocean'
+                ,checked      : defaultBasemap == 'ESRI Ocean'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('ESRI Ocean')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,'-'
+              ,{
+                 text         : 'Google Hybrid'
+                ,checked      : defaultBasemap == 'Google Hybrid'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Google Hybrid')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,{
+                 text         : 'Google Satellite'
+                ,checked      : defaultBasemap == 'Google Satellite'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Google Satellite')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,{
+                 text         : 'Google Terrain'
+                ,checked      : defaultBasemap == 'Google Terrain'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Google Terrain')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,'-'
+              ,{
+                 text         : 'Nautical Charts'
+                ,checked      : defaultBasemap == 'Nautical Charts'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Nautical Charts')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,'-'
+              ,{
+                 text         : 'Shaded Relief (ETOPO1)'
+                ,checked      : defaultBasemap == 'Shaded Relief (ETOPO1)'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Shaded Relief (ETOPO1)')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,{
+                 text         : 'Shaded Relief (GEBCO_08)'
+                ,checked      : defaultBasemap == 'Shaded Relief (GEBCO_08)'
+                ,group        : 'basemap'
+                ,handler      : function() {
+                  var lyr = map.getLayersByName('Shaded Relief (GEBCO_08)')[0];
+                  if (lyr.isBaseLayer) {
+                    map.setBaseLayer(lyr);
+                    lyr.redraw();
+                  }
+                }
+              }
+              ,{
+                 text        : '<b>Check the box to view bathymetry contours</b>'
+                ,canActivate : false
+                ,cls         : 'menuHeader'
+              }
+              ,new Ext.form.Checkbox({
+                 checked  : startupBathyContours
+                ,boxLabel : '&nbsp;&nbsp;&nbsp;Bathymetry contours (m)'
+                ,handler  : function(cbox) {
+                  map.getLayersByName('Bathymetry contours')[0].setVisibility(cbox.checked);
+                }
+              })
+            ]}
+          }
+        ]}
       }
     ]
   });
+
+  if (viewer != 'lite') {
+    return;
+  }
+
+  document.getElementById('byCatchLegend').style.visibility = startupbyCatchLayer ? 'visible' : 'hidden';
+
+  var win = new Ext.Window({
+     title     : 'Browse ocean condition data'
+    ,id        : 'browseOceanConditionDataWindow'
+    ,height    : 340
+    ,width     : 370
+    ,x         : Ext.getCmp('mapPanel').getWidth() - 370
+    ,y         : banner.height
+    ,resizable : false
+    ,constrainHeader : true
+    ,closeAction : 'hide'
+    ,defaults  : {border : false}
+    ,hideNotice : false
+    ,items     : {
+       bodyStyle : 'padding:6px'
+      ,layout    : 'anchor'
+      ,items     : [
+        new Ext.form.FieldSet({
+           title        : '&nbsp;Select a data source&nbsp;'
+          ,layout       : 'table'
+          ,height       : 155
+          ,layoutConfig : {
+            columns : 3
+          } 
+          ,defaults : {border : false}
+          ,bodyStyle : 'padding:6px'
+          ,items  : [
+            new Ext.Button({ 
+               scale : 'large'
+              ,width : 50
+              ,toggleGroup  : 'themeGroup'
+              ,id           : 'themeBuoys'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/water32.png'
+              ,handler : function() {
+                goTheme('Buoys');
+              }
+              ,pressed : startupMode == 'observations'
+              ,listeners : {render : function() {if (startupMode == 'observations') {goTheme('Buoys')}}}
+            }) 
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink' 
+              ,html : '<a href="javascript:goTheme(\'Buoys\')"><b>BUOYS & STATIONS</b><br>View real-time data from buoy and land stations.</a>'
+            }
+            ,{html : '<img height=5 src="img/blank.png">',colspan : 3}
+            ,new Ext.Button({
+               scale : 'large'
+              ,width : 50
+              ,toggleGroup  : 'themeGroup'
+              ,id           : 'themeSatellite'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/satellite32.png'
+              ,handler : function() {
+                goTheme('Satellite');
+              }
+              ,pressed : startupMode == 'weather'
+              ,listeners : {render : function() {if (startupMode == 'weather') {goTheme('Satellite')}}}
+            }) 
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goTheme(\'Satellite\')"><b>SATELLITE & RADAR</b><br>View real-time data across the region.</a>'
+            }
+            ,{html : '<img height=5 src="img/blank.png">',colspan : 3}
+            ,new Ext.Button({
+               scale : 'large'
+              ,width : 50
+              ,toggleGroup  : 'themeGroup'
+              ,id           : 'themeModels'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/globe32.png'
+              ,handler : function() {
+                goTheme('Models');
+              }
+              ,pressed : startupMode == 'forecasts'
+              ,listeners : {render : function() {if (startupMode == 'forecasts') {goTheme('Models')}}}
+            }) 
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goTheme(\'Models\')"><b>MODEL FORECASTS</b><br>View model forecasts and create condition reports.</a>'
+            }
+          ]
+        })
+        ,new Ext.form.FieldSet({
+           title        : '&nbsp;Select a data type&nbsp;'
+          ,id           : 'fieldSetBuoys'
+          ,layout       : 'table'
+          ,height       : 130
+          ,layoutConfig : {
+            columns : 11
+          }
+          ,defaults : {border : false}
+          ,bodyStyle : 'padding:6px'
+          ,items  : [
+            new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obswinds'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'Winds'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('winds');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'Winds') {selectWeatherStationType('winds')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'winds\')"><b>Winds</b></a>'
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obswaves'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'Waves'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('waves');  
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'Waves') {selectWeatherStationType('waves')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'waves\')"><b>Waves</b></a>'
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obswaterTemp'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'WaterTemp'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('waterTemp');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'WaterTemp') {selectWeatherStationType('waterTemp')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'waterTemp\')"><b>Water temp</b></a>'
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obswaterLevel'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'WaterLevel'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('waterLevel');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'WaterLevel') {selectWeatherStationType('waterLevel')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'waterLevel\')"><b>Water level</b></a>'
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obsdissolvedOxygen'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'DissolvedOxygen'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('dissolvedOxygen');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'DissolvedOxygen') {selectWeatherStationType('dissolvedOxygen')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'dissolvedOxygen\')"><b>Dissolved oxygen</b></a>'
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obsairTemperature'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'AirTemperature'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('airTemperature');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'AirTemperature') {selectWeatherStationType('airTemperature')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'airTemperature\')"><b>Air temp</b></a>'
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obsall'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/water16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'All'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('all');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'All') {selectWeatherStationType('all')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goObs(\'all\')"><b>All stations</b></a>'
+            }
+          ]
+        })
+        ,new Ext.form.FieldSet({
+           title        : '&nbsp;Select a data type&nbsp;'
+          ,id           : 'fieldSetSatellite'
+          ,layout       : 'table'
+          ,height       : 130
+          ,layoutConfig : {
+            columns : 7
+          }
+          ,defaults : {border : false}
+          ,bodyStyle : 'padding:6px'
+          ,items  : [
+            new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteChlorophyll concentration'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Chlorophyll concentration'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goSatellite(\'Chlorophyll concentration\')"><b>Chlorophyll<br>concentration</b></a> <img id="goSatelliteChlorophyll concentration" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Chlorophyll concentration'
+                    ,html      : map.getLayersByName('Chlorophyll concentration')[0].moreInfo
+                    ,target    : 'goSatelliteChlorophyll concentration'
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteCloud imagery'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goSatellite(\'Cloud imagery\')"><b>Cloud imagery</b></a> <img id="goSatelliteCloud imagery" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Cloud imagery'
+                    ,html      : map.getLayersByName('Cloud imagery')[0].moreInfo
+                    ,target    : 'goSatelliteCloud imagery'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteOcean fronts'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><b>Ocean fronts</b></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Ocean fronts'
+                    ,html      : map.getLayersByName('Ocean fronts')[0].moreInfo
+                    ,target    : 'goSatelliteOcean fronts'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteWeather RADAR'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goSatellite(\'Weather RADAR\')"><b>Weather RADAR</b></a> <img id="goSatelliteWeather RADAR" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Weather RADAR'
+                    ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo
+                    ,target    : 'goSatelliteWeather RADAR'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteWeather RADAR and cloud imagery'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goSatellite(\'Weather RADAR + cloud imagery\')"><b>Weather RADAR<br>& cloud imagery</b></a>'
+              ,colspan : 5
+            }
+          ]
+        })
+        ,new Ext.form.FieldSet({
+           title        : '&nbsp;Select a data type&nbsp;'
+          ,id           : 'fieldSetModels'
+          ,layout       : 'table'
+          ,height       : 130
+          ,layoutConfig : {
+            columns : 11
+          }
+          ,defaults : {border : false}
+          ,bodyStyle : 'padding:6px'
+          ,items  : [
+            new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelWinds'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Winds');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Winds'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Winds\')"><b>Winds</b></a> <img id="goModelWinds" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Winds'
+                    ,html      : map.getLayersByName('Winds')[0].moreInfo
+                    ,target    : 'goModelWinds'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelWaves'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Waves');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Waves'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Waves\')"><b>Waves</b></a> <img id="goModelWaves" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Waves'
+                    ,html      : map.getLayersByName('Waves')[0].moreInfo
+                    ,target    : 'goModelWaves'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup' 
+              ,id           : 'modelSurface water temperature'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Surface water temperature');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Surface water temperature'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Surface water temperature\')"><b>Water temp</b></a> <img id="goModelSurface water temperature" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Surface water temperature'
+                    ,html      : map.getLayersByName('Surface water temperature')[0].moreInfo
+                    ,target    : 'goModelSurface water temperature'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelCurrents (global)'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Currents (global)');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (global)'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Currents (global)\')"><b>Global currents</b></a> <img id="goModelCurrents (global)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Currents (global)'
+                    ,html      : map.getLayersByName('Currents (global)')[0].moreInfo
+                    ,target    : 'goModelCurrents (global)'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelCurrents (regional)'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Currents (regional)');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (regional)'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Currents (regional)\')"><b>Regional currents</b></a> <img id="goModelCurrents (regional)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Currents (regional)'
+                    ,html      : map.getLayersByName('Currents (regional)')[0].moreInfo
+                    ,target    : 'goModelCurrents (regional)'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '&nbsp;&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelBottom water temperature'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Bottom water temperature');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Bottom water temperature'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Bottom water temperature\')"><b>Bottom temp</b></a> <img id="goModelBottom water temperature" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Bottom water temperature'
+                    ,html      : map.getLayersByName('Bottom water temperature')[0].moreInfo
+                    ,target    : 'goModelBottom water temperature'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelCurrents (New York Harbor)'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('Currents (New York Harbor)');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (New York Harbor)'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goModel(\'Currents (New York Harbor)\')"><b>NY Harbor<br>currents</b></a> <img id="goModelCurrents (New York Harbor)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Currents (New York Harbor)'
+                    ,html      : map.getLayersByName('Currents (New York Harbor)')[0].moreInfo
+                    ,target    : 'goModelCurrents (New York Harbor)'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+              ,colspan : 9
+            }
+          ]
+        })
+      ]
+    }
+    ,listeners : {hide : function(w) {
+      if (!w.hideNotice) {
+        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Ocean conditions button in the toolbar below the map.");
+        w.hideNotice = true;
+      }
+      Ext.getCmp('oceanConditionsButton').toggle(false);
+    }}
+  });
+  win.show();
+
+  win = new Ext.Window({
+     title     : 'Browse by-catch data'
+    ,id        : 'browseByCatchDataWindow'
+    ,height    : 255
+    ,width     : 370
+    ,x         : Ext.getCmp('mapPanel').getWidth() - 370
+    ,y         : Number(banner.height) + 1 + win.getHeight()
+    ,resizable : false
+    ,constrainHeader : true
+    ,closeAction : 'hide'
+    ,defaults  : {border : false}
+    ,hideNotice : false
+    ,items     : {
+       bodyStyle : 'padding:6px'
+      ,layout    : 'anchor'
+      ,items     : [
+        new Ext.form.FieldSet({
+           title        : '&nbsp;Select a data type&nbsp;'
+          ,layout       : 'table'
+          ,height       : 210
+          ,layoutConfig : {
+            columns : 7
+          }
+          ,defaults : {border : false}
+          ,bodyStyle : 'padding:6px'
+          ,items  : [
+            new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchBottom trawl Northeast/MA'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Bottom trawl Northeast/MA'
+              ,handler      : function() {
+                goByCatch('Bottom trawl Northeast/MA');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Bottom trawl Northeast/MA\')"><b>Butterfish</b><br>Bottom trawl<br>Northeast/MA</a> <img id="goByCatchBottom trawl Northeast/MA" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Bottom trawl Northeast/MA'
+                    ,html      : map.getLayersByName('Butterfish bottom trawl')[0].moreInfo
+                    ,target    : 'goByCatchBottom trawl Northeast/MA'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '<img height=25 src="img/blank.png">'}
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchBottom trawl Rhode Island'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Bottom trawl Rhode Island'
+              ,handler      : function() {
+                goByCatch('Bottom trawl Rhode Island');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Bottom trawl Rhode Island\')"><b>River herring</b><br>Bottom trawl<br>Rhode Island</a> <img id="goByCatchBottom trawl Rhode Island" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Bottom trawl Rhode Island'
+                    ,html      : map.getLayersByName('River herring bottom trawl')[0].moreInfo
+                    ,target    : 'goByCatchBottom trawl Rhode Island'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchMid-water trawl Area 2'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Mid-water trawl Area 2'
+              ,handler      : function() {
+                goByCatch('Mid-water trawl Area 2');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Mid-water trawl Area 2\')"><b>River herring</b><br>Mid-water trawl<br>Area 2</a> <img id="goByCatchMid-water trawl Area 2" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Mid-water trawl Area 2'
+                    ,html      : map.getLayersByName('River herring mid-water trawl Area 2')[0].moreInfo
+                    ,target    : 'goByCatchMid-water trawl Area 2'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '<img height=25 src="img/blank.png">'}
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchMid-water trawl Cape Cod'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Mid-water trawl Cape Cod'
+              ,handler      : function() {
+                goByCatch('Mid-water trawl Cape Cod');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Mid-water trawl Cape Cod\')"><b>River herring</b><br>Mid-water trawl<br>Cape Cod</a> <img id="goByCatchMid-water trawl Cape Cod" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Mid-water trawl Cape Cod'
+                    ,html      : map.getLayersByName('River herring mid-water trawl Cape Cod')[0].moreInfo
+                    ,target    : 'goByCatchMid-water trawl Cape Cod'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchClosed area 1 Georges Bank'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Closed area 1 Georges Bank'
+              ,handler      : function() {
+                goByCatch('Closed area 1 Georges Bank');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Closed area 1 Georges Bank\')"><b>Scallop/yellowtail</b><br>Closed Area 1<br>Georges Bank</a> <img id="goByCatchClosed area 1 Georges Bank" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Closed area 1 Georges Bank'
+                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 1')[0].moreInfo
+                    ,target    : 'goByCatchClosed area 1 Georges Bank'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '<img height=25 src="img/blank.png">'}
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchClosed area 2 Georges Bank'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Closed area 2 Georges Bank'
+              ,handler      : function() {
+                goByCatch('Closed area 2 Georges Bank');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Closed area 2 Georges Bank\')"><b>Scallop/yellowtail</b><br>Closed Area 2<br>Georges Bank</a> <img id="goByCatchClosed area 2 Georges Bank" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Closed area 2 Georges Bank'
+                    ,html      : map.getLayersByName('Scallop/yellowtail closed area 2')[0].moreInfo
+                    ,target    : 'goByCatchClosed area 2 Georges Bank'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchNantucket Lightship'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : startupbyCatchLayer == 'Nantucket Lightship'
+              ,handler      : function() {
+                goByCatch('Nantucket Lightship');
+              }
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'Nantucket Lightship\')"><b>Scallop/yellowtail</b><br>Nantucket Lightship</a>  <img id="goByCatchNantucket Lightship" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Nantucket Lightship'
+                    ,html      : map.getLayersByName('Scallop/yellowtail Nantucket Lightship')[0].moreInfo
+                    ,target    : 'goByCatchNantucket Lightship'
+                    ,closable  : true
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,closable  : true
+                  });
+                }
+              }
+            }
+            ,{html : '<img height=25 src="img/blank.png">'}
+            ,new Ext.Button({
+               toggleGroup  : 'byCatchGroup'
+              ,id           : 'byCatchNone'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon  : 'img/fishCatch16.png'
+              ,scale : 'medium'
+              ,pressed      : !startupbyCatchLayer || startupbyCatchLayer == 'None'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsText grayLink'
+              ,html : '<a href="javascript:goByCatch(\'None\')"><b>None</b><br>Turn OFF by-catch</a>'
+            }
+          ]
+        })
+      ]
+    }
+    ,listeners : {hide : function(w) {
+      if (!w.hideNotice) {
+        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the By-catch button in the toolbar below the map.");
+        w.hideNotice = true;
+      }
+      Ext.getCmp('byCatchButton').toggle(false);
+    }}
+  });
+  if (startupbyCatchLayer) {
+    win.show();
+  }
 }
 
 function initMap() {
@@ -1248,15 +2500,6 @@ function initMap() {
     ]
   });
 
-  var mousePosCtl = new OpenLayers.Control.MousePosition({
-     displayProjection : proj4326
-    ,formatOutput      : function(lonlat) {
-      return convertDMS(lonlat.lat.toFixed(5), "LAT") + ' ' + convertDMS(lonlat.lon.toFixed(5), "LON");
-    }
-  });
-  map.addControl(mousePosCtl);
-  mousePosCtl.element.innerHTML = convertDMS(0, "LAT") + ' ' + convertDMS(0, "LON");
-
   mapLayersStore.each(function(rec) {
     var lyr;
     if (rec.get('type') == 'wms') {
@@ -1287,7 +2530,7 @@ function initMap() {
     lyr.events.register('visibilitychanged',this,function(e) {
       if (e.object.visibility) {
         Ext.defer(function() {
-          var slider = Ext.getCmp(e.object.panel + 'VisibilitySlider');
+          var slider = viewer == 'lite' ? Ext.getCmp('contrastSlider') : Ext.getCmp(e.object.panel + 'VisibilitySlider');
           if (slider) {
             slider.suspendEvents();
             slider.setValue(e.object.opacity * 100);
@@ -1430,7 +2673,7 @@ function initMap() {
 
   map.events.register('click',this,function(e) {
     if (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled)) {
-      mapClick(e.xy);
+      mapClick(e.xy,viewer == 'lite');
     }
   });
 
@@ -1445,151 +2688,6 @@ function initMap() {
   navToolbarControl.controls[1].events.register('deactivate',this,function(e) {
     highlightControl.activate();
     selectControl.activate();
-  });
-
-  new Ext.Button({
-     text     : 'Reset zoom'
-    ,renderTo : 'mapControlsResetMap'
-    ,width    : 95
-    ,height   : 26
-    ,icon     : 'img/zoom_extend16.png'
-    ,tooltip  : 'Reset the map to its original zoom'
-    ,handler  : function() {
-      map.setCenter(new OpenLayers.LonLat(center[0],center[1]).transform(proj4326,proj900913),zoom);
-    }
-  });
-
-  new Ext.Button({
-     text     : 'Background'
-    ,renderTo : 'mapControlsChangeBackground'
-    ,width    : 95
-    ,height   : 26
-    ,icon     : 'img/map16.png'
-    ,tooltip  : 'Select a different map background'
-    ,menu     : {items : [
-      {
-         text         : 'CloudMade'
-        ,checked      : defaultBasemap == 'CloudMade'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('CloudMade')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,'-'
-      ,{
-         text         : 'ESRI Ocean'
-        ,checked      : defaultBasemap == 'ESRI Ocean'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('ESRI Ocean')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,'-'
-      ,{
-         text         : 'Google Hybrid'
-        ,checked      : defaultBasemap == 'Google Hybrid'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Google Hybrid')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,{
-         text         : 'Google Satellite'
-        ,checked      : defaultBasemap == 'Google Satellite'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Google Satellite')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,{
-         text         : 'Google Terrain'
-        ,checked      : defaultBasemap == 'Google Terrain'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Google Terrain')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,'-'
-      ,{
-         text         : 'Nautical Charts'
-        ,checked      : defaultBasemap == 'Nautical Charts'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Nautical Charts')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,'-'
-      ,{
-         text         : 'OpenStreetMap'
-        ,checked      : defaultBasemap == 'OpenStreetMap'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('OpenStreetMap')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,'-'
-      ,{
-         text         : 'Shaded Relief (ETOPO1)'
-        ,checked      : defaultBasemap == 'Shaded Relief (ETOPO1)'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Shaded Relief (ETOPO1)')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-      ,{
-         text         : 'Shaded Relief (GEBCO_08)'
-        ,checked      : defaultBasemap == 'Shaded Relief (GEBCO_08)'
-        ,group        : 'basemap'
-        ,handler      : function() {
-          var lyr = map.getLayersByName('Shaded Relief (GEBCO_08)')[0];
-          if (lyr.isBaseLayer) {
-            map.setBaseLayer(lyr);
-            lyr.redraw();
-          }
-        }
-      }
-    ].concat(bathyContours ? [
-      '-'
-      ,new Ext.form.Checkbox({
-         checked  : startupBathyContours
-        ,boxLabel : '&nbsp;&nbsp;&nbsp;Bathymetry contours (m)'
-        ,handler  : function(cbox) {
-          map.getLayersByName('Bathymetry contours')[0].setVisibility(cbox.checked);
-        }
-      })
-    ] : [])}
   });
 
   new Ext.ButtonGroup({
@@ -1653,9 +2751,12 @@ function initMap() {
       }
     }
   });
-  syncMapLegends('forecastMapsTypeComboBox','forecastsLegendPanel');
-  syncMapLegends('weatherMapsTypeComboBox','weatherLegendPanel');
-  syncMapLegends('byCatchMapsTypeComboBox','showByCatchLegendPanel');
+
+  if (viewer != 'lite') {
+    syncMapLegends('forecastMapsTypeComboBox','forecastsLegendPanel');
+    syncMapLegends('weatherMapsTypeComboBox','weatherLegendPanel');
+    syncMapLegends('byCatchMapsTypeComboBox','showByCatchLegendPanel');
+  }
 
   Ext.getCmp('forecastWindow').addListener('resize',function(win,w,h) {
     var mp = Ext.getCmp('mapPanel');
@@ -1808,7 +2909,7 @@ function getIconData(lyr,buffer) {
     ,callback : function(r) {
       var data = [];
       var treeViewData = {};
-      var sto = Ext.getCmp('weatherStationsQuickFindComboBox').getStore();
+      var sto = viewer == 'lite' ? Ext.getCmp('stationQuickFindComboBox').getStore() : Ext.getCmp('weatherStationsQuickFindComboBox').getStore();
       var json = new OpenLayers.Format.JSON().read(r.responseText);
       var recs = [];
       for (var i = 0; i < json.length; i++) {
@@ -3018,14 +4119,20 @@ function checkZoomAlert(lyr) {
     }
   }
 
-  if (c.p == 0) {
-    document.getElementById('mapMessagesHtml').innerHTML = 'There are no available ' + c.o  + ' stations in this area.';
+  if (viewer == 'lite' && Ext.getCmp('timeControl') && Ext.getCmp('timeControl').isVisible()) {
+    document.getElementById('mapMessagesButtonGroup').style.visibility = 'visible';
+    zoomAlert.hits = 0;
   }
   else {
-    document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' out of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
+    if (c.p == 0) {
+      document.getElementById('mapMessagesHtml').innerHTML = 'There are no available ' + c.o  + ' stations in this area.';
+    }
+    else {
+      document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' hide of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
+    }
+    document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0) && lyr.visibility ? 'visible' : 'hidden';
+    zoomAlert.hits = 0;
   }
-  document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0) && lyr.visibility ? 'visible' : 'hidden';
-  zoomAlert.hits = 0;
 }
 
 function mapClick(xy,allMaps) {
@@ -3072,6 +4179,17 @@ function mapClick(xy,allMaps) {
     + '&maps='    + Ext.encode(maps)
     + '&dt='      + (allMaps ? 5 : 0)
   forecastUrls[url] = true;
+
+  if (viewer == 'lite') {
+    Ext.MessageBox.show({
+       title        : 'Please wait'
+      ,msg          : 'Creating condition report...'
+      ,width        : 300
+      ,wait         : true
+      ,waitConfig   : {interval : 200}
+    });
+  }
+
   OpenLayers.Request.issue({
      url      : url
     ,callback : OpenLayers.Function.bind(processForecastCallback,null,url)
@@ -3503,7 +4621,9 @@ function changeMode(id) {
   if (id == 'forecasts') {
     var combo = Ext.getCmp('forecastMapsTypeComboBox');
     combo.fireEvent('select',combo,combo.getStore().getAt(combo.getStore().findExact('id',combo.getValue())));
-    Ext.getCmp('forecastWindow').show();
+    if (viewer != 'lite') {
+      Ext.getCmp('forecastWindow').show();
+    }
   }
   else if (id == 'weather') {
     var combo = Ext.getCmp('weatherMapsTypeComboBox');
@@ -3537,6 +4657,14 @@ function syncMapLegends(cb,lp) {
   var sto    = Ext.getCmp(cb).getStore();
   var rec    = sto.getAt(sto.findExact('id',Ext.getCmp(cb).getValue()));
   var layers = rec.get('wmsLegends');
+
+  if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
+    if (/forecast|weather/.test(cb)) {
+      Ext.getCmp('bbarOceanConditionDataType').update(rec.get('liteLegendLabel'));
+      Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + rec.get('liteLegendImage') + '">');
+    }
+  }
+
   var lblTd  = [];
   var imgTd  = [];
   var infoTd = [];
@@ -3567,24 +4695,40 @@ function syncMapLegends(cb,lp) {
   }
   var el = Ext.getCmp(lp);
   if (el.rendered) {
-    el.update(
-      '<table class="blackText">'
+    el.update('<table class="blackText">'
       + (titles > 0 ? '<tr>' + lblTd.join('') + '</tr>' : '')
       + '<tr>' + imgTd.join('') + '</tr>'
       + '<tr>' + infoTd.join('') + '</tr>'
       + '</table>'
     );
+    if (viewer == 'lite') {
+      // don't want more-info link here
+      infoTd.pop();
+      document.getElementById('byCatchLegend').innerHTML = '<table class="blackText">'
+        + (titles > 0 ? '<tr>' + lblTd.join('') + '</tr>' : '')
+        + '<tr>' + imgTd.join('') + '</tr>'
+        + '<tr>' + infoTd.join('') + '</tr>'
+        + '</table>';
+    }
   }
   else {
-    el.contentToLoad = 
-      '<table class="blackText">'
+    var html = '<table class="blackText">'
       + (titles > 0 ? '<tr>' + lblTd.join('') + '</tr>' : '')
       + '<tr>' + imgTd.join('') + '</tr>'
       + '</table>';
+    el.contentToLoad = html;
+    if (viewer == 'lite') {
+      document.getElementById('byCatchLegend').innerHTML = html;
+    }
   }
 }
 
 function hideObsLegend() {
+  if (viewer == 'lite') {
+    Ext.getCmp('bbarOceanConditionBbarPanel').hide();
+    return;
+  }
+
   Ext.getCmp('obsLegendDivider').hide();
   Ext.getCmp('obsLegend').hide();
   Ext.getCmp('observationsPanel').get(0).setHeight(observationsPanelHeights.plain);
@@ -3595,7 +4739,14 @@ function hideObsLegend() {
 }
 
 function showObsLegend(o) {
-  Ext.getCmp('obsLegend').get(0).update(makeObsLegend(o));
+  if (viewer == 'lite') {
+    Ext.getCmp('bbarOceanConditionBbarPanel').show();
+    Ext.getCmp('bbarOceanConditionDataType').update(makeObsLegend(o).label);
+    Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + makeObsLegend(o).img + '">');
+    return; 
+  }
+
+  Ext.getCmp('obsLegend').get(0).update(makeObsLegend(o).html);
   Ext.getCmp('obsLegendDivider').show();
   Ext.getCmp('obsLegend').show();
   Ext.getCmp('observationsPanel').get(0).setHeight(observationsPanelHeights.plain + observationsPanelHeights.legendOffset);
@@ -3614,10 +4765,18 @@ function makeObsLegend(o) {
   };
 
   if (niceName[o.toLowerCase()]) {
-    return '<table class="blackText" style="width:100%"><tr><td style="width:90px" align=center>' + niceName[o.toLowerCase()] + '</td><td align=right><img width=204 height=34 src="' + obsLegendsPath + o.toLowerCase() + '.png"></td></tr></table>';
+    return {
+       html  : '<table class="blackText" style="width:100%"><tr><td style="width:90px" align=center>' + niceName[o.toLowerCase()] + '</td><td align=right><img width=204 height=34 src="' + obsLegendsPath + o.toLowerCase() + '.png"></td></tr></table>'
+      ,label : niceName[o.toLowerCase()]
+      ,img   : obsLegendsPath + o.toLowerCase() + '.png'
+    };
   }
   else {
-    return '<table class="blackText" style="width:100%"><tr><td style="width:90px" align=center>' + makeNiceTopObs(o).name + '</td></tr></table>';
+    return {
+       html  : '<table class="blackText" style="width:100%"><tr><td style="width:90px" align=center>' + makeNiceTopObs(o).name + '</td></tr></table>'
+      ,label : makeNiceTopObs(o).name
+      ,img   : '<img src="img/blank.png">'
+    };
   }
 }
 
@@ -3645,6 +4804,10 @@ function cullObs(features,activeWeatherStations) {
 }
 
 function mapLoadstartMask(name,panel) {
+  if (viewer == 'lite') {
+    document.getElementById('activity').style.visibility = 'visible';
+  }
+
   if (panel) {
     loadingLayers[panel][name] = true;
     Ext.getCmp(panel + 'LegendPanel').getEl().mask('<table><tr><td>Updating...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
@@ -3652,6 +4815,10 @@ function mapLoadstartMask(name,panel) {
 }
 
 function mapLoadendUnmask(name,panel) {
+  if (viewer == 'lite') {
+    document.getElementById('activity').style.visibility = 'hidden';
+  }
+
   if (panel) {
     delete loadingLayers[panel][name];
     var hits = 0;
@@ -3774,7 +4941,7 @@ function printMap(data,pLonLat) {
               ,s.h
             ]);
             if (!legends['obs']) {
-              legends['obs'] = makeObsLegend(s.leg).replace(obsLegendsPath,baseUrl + obsLegendsPath).replace(/style="width:90px" align=center|align=right/g,'');
+              legends['obs'] = makeObsLegend(s.leg).html.replace(obsLegendsPath,baseUrl + obsLegendsPath).replace(/style="width:90px" align=center|align=right/g,'');
             }
           }
         }
@@ -5122,57 +6289,48 @@ function viewConversation(id) {
   startChat(id);
 }
 
-function createSessionButton() {
-  new Ext.Button({
-     text     : '<table><tr><td style="text-align:center">Login /<br>register</td></tr></table>'
-    ,renderTo : 'sessionButton'
-    ,scale    : 'large'
-    ,icon     : 'img/user.png'
-    ,tooltip  : 'Register for an account or login'
-    ,handler  : function() {
-      Ext.MessageBox.show({
-         title     : 'Login / register'
-        ,msg       : 'Enter your email address:'
-        ,width     : 300
-        ,buttons   : Ext.MessageBox.OKCANCEL
-        ,prompt    : true
-        ,fn        : function(btn,text,cfg) {
-          if (btn == 'ok' && text == '') {
-            Ext.MessageBox.show(Ext.apply({},{msg : cfg.msg},cfg));
-          }
-          else if (btn == 'ok') {
-            OpenLayers.Request.issue({
-               url      : 'session.php?userId=' + encodeURIComponent(text)
-              ,async    : false
-              ,callback : function(r) {
-                var json = new OpenLayers.Format.JSON().read(r.responseText);
-                if (new RegExp(/^$|duplicate key/).test(json.err)) {
-                  userId = json.userId;
-                  var msgPermalink = json.permalink ? ' Click Yes to restore your last session, or click No to continue with your current session.' : '';
-                  var msgDuplicate = new RegExp(/duplicate key/).test(json.err) ? ' (If you thought you were creating a new account, then this email address is already taken, and you will need to select another one.)' : '';
-                  Ext.MessageBox.show({
-                     title     : 'Welcome'
-                    ,msg       : 'Welcome, ' + json.userId + '.' + msgPermalink + msgDuplicate
-                    ,width     : 300
-                    ,buttons   : json.permalink ? Ext.MessageBox.YESNO :  Ext.MessageBox.OK
-                    ,fn        : function(btn) {
-                      if (btn == 'yes') {
-                        document.location = json.permalink + '&userId=' + encodeURIComponent(json.userId);
-                      }
-                    }
-                  });
+function goSession() {
+  Ext.MessageBox.show({
+     title     : 'Login / register'
+    ,msg       : 'Enter your email address:'
+    ,width     : 300
+    ,buttons   : Ext.MessageBox.OKCANCEL
+    ,prompt    : true
+    ,fn        : function(btn,text,cfg) {
+      if (btn == 'ok' && text == '') {
+        Ext.MessageBox.show(Ext.apply({},{msg : cfg.msg},cfg));
+      }
+      else if (btn == 'ok') {
+        OpenLayers.Request.issue({
+           url      : 'session.php?userId=' + encodeURIComponent(text)
+          ,async    : false
+          ,callback : function(r) {
+            var json = new OpenLayers.Format.JSON().read(r.responseText);
+            if (new RegExp(/^$|duplicate key/).test(json.err)) {
+              userId = json.userId;
+              var msgPermalink = json.permalink ? ' Click Yes to restore your last session, or click No to continue with your current session.' : '';
+              var msgDuplicate = new RegExp(/duplicate key/).test(json.err) ? ' (If you thought you were creating a new account, then this email address is already taken, and you will need to select another one.)' : '';
+              Ext.MessageBox.show({
+                 title     : 'Welcome'
+                ,msg       : 'Welcome, ' + json.userId + '.' + msgPermalink + msgDuplicate
+                ,width     : 300
+                ,buttons   : json.permalink ? Ext.MessageBox.YESNO :  Ext.MessageBox.OK
+                ,fn        : function(btn) {
+                  if (btn == 'yes') {
+                    document.location = json.permalink + '&userId=' + encodeURIComponent(json.userId);
+                  }
                 }
-                else {
-                  userId = false;
-                  Ext.Msg.alert('Error','There was a problem with this email address.  Please try again.',function() {
-                    Ext.MessageBox.show(Ext.apply({},{msg : cfg.msg},cfg));
-                  });
-                }
-              }
-            });
+              });
+            }
+            else {
+              userId = false;
+              Ext.Msg.alert('Error','There was a problem with this email address.  Please try again.',function() {
+                Ext.MessageBox.show(Ext.apply({},{msg : cfg.msg},cfg));
+              });
+            }
           }
-        }
-      });
+        });
+      }
     }
   });
 }
@@ -5292,4 +6450,99 @@ function syncWatermark() {
   f.attributes.label = label;
   lyr.addFeatures([f]);
   lyr.redraw();
+}
+
+function goTheme(s) {
+  var a = ['Satellite','Models','Buoys'];
+  for (var i = 0; i < a.length; i++) {
+    s == a[i] ? Ext.getCmp('fieldSet' + a[i]).show() : Ext.getCmp('fieldSet' + a[i]).hide();
+    Ext.getCmp('theme' + a[i]).toggle(s == a[i],true);
+  }
+
+  if (s == 'Buoys') {
+    Ext.getCmp('findBuoySpacer').show();
+    Ext.getCmp('findBuoyControl').show();
+  }
+  else {
+    Ext.getCmp('findBuoySpacer').hide();
+    Ext.getCmp('findBuoyControl').hide();
+    Ext.getCmp('bbarOceanConditionBbarPanel').show();
+  }
+
+  if (s == 'Satellite' || s == 'Models') {
+    Ext.getCmp('contrastSpacer').show();
+    Ext.getCmp('contrastControl').show();
+  }
+  else {
+    Ext.getCmp('contrastSpacer').hide();
+    Ext.getCmp('contrastControl').hide();
+  }
+
+  if (s == 'Models') {
+    Ext.getCmp('timeSpacer').show();
+    Ext.getCmp('timeControl').show();
+    document.getElementById('mapMessagesHtml').innerHTML = 'Click anywhere on the map to create a condition report.';
+  }
+  else {
+    Ext.getCmp('timeSpacer').hide();
+    Ext.getCmp('timeControl').hide();
+    document.getElementById('mapMessagesButtonGroup').style.visibility = 'hidden';
+  }
+
+  if (s == 'Buoys') {
+    changeMode('observations');
+    for (var i in activeObs) {
+      if (activeObs[i]) {
+        goObs(i);
+      }
+    }
+  }
+  else if (s == 'Satellite') {
+    changeMode('weather');
+  }
+  else if (s == 'Models') {
+    changeMode('forecasts');
+  }
+}
+
+function goObs(s) {
+  var a = ['winds','waves','waterTemp','waterLevel','dissolvedOxygen','airTemperature','all'];
+  for (var i = 0; i < a.length; i++) {
+    Ext.getCmp('obs' + a[i]).toggle(s == a[i],true);
+  }
+  selectWeatherStationType(s);
+}
+
+function goSatellite(s) {
+  var a = ['Chlorophyll concentration','Cloud imagery','Ocean fronts','Weather RADAR','Weather RADAR and cloud imagery'];
+  for (var i = 0; i < a.length; i++) {
+    Ext.getCmp('satellite' + a[i]).toggle(s == a[i],true);
+  }
+  var combo = Ext.getCmp('weatherMapsTypeComboBox');
+  combo.setValue(s);
+  combo.fireEvent('select',combo,combo.getStore().getAt(combo.getStore().findExact('id',s)));
+}
+
+function goModel(s) {
+  var a = ['Winds','Waves','Surface water temperature','Currents (global)','Currents (regional)','Bottom water temperature','Currents (New York Harbor)'];
+  for (var i = 0; i < a.length; i++) {
+    Ext.getCmp('model' + a[i]).toggle(s == a[i],true);
+  }
+  var combo = Ext.getCmp('forecastMapsTypeComboBox');
+  combo.setValue(s);
+  combo.fireEvent('select',combo,combo.getStore().getAt(combo.getStore().findExact('id',s)));
+}
+
+function goByCatch(s) {
+  var a = ['Bottom trawl Northeast/MA','Bottom trawl Rhode Island','Mid-water trawl Area 2','Mid-water trawl Cape Cod','Closed area 1 Georges Bank','Closed area 2 Georges Bank','Nantucket Lightship','None'];
+  for (var i = 0; i < a.length; i++) {
+    Ext.getCmp('byCatch' + a[i]).toggle(s == a[i],true);
+  }
+  var combo = Ext.getCmp('byCatchMapsTypeComboBox');
+  combo.setValue(s);
+  map.zoomToByCatch = true;
+  combo.fireEvent('select',combo,combo.getStore().getAt(combo.getStore().findExact('id',s)));
+  map.zoomToByCatch = false;
+
+  document.getElementById('byCatchLegend').style.visibility = s != 'None' ? 'visible' : 'hidden';
 }

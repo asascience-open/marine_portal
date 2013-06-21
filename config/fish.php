@@ -1,11 +1,13 @@
 <?php
   $title     = 'MyMARACOOS Fishing';
-  $googleId  = 'UA-32877184-1';
+  $googleId  = 'UA-32877184-1x';
 
   $mapCenter = '-73,38.5';
   $mapZoom   = 6;
   $basemap   = 'ESRI Ocean';
-  $mode      = 'forecasts';
+  $mode      = 'observations';
+
+  $viewer = 'lite';
 
   $search        = 'off';
   $tbar          = 'on';
@@ -20,8 +22,18 @@
 
   $bannerHeight    = 64;
   $bannerHtml      = <<< EOHTML
-<div id="head"><a href="http://maracoos.org"><img src="img/blank.png" width="300" height=65" alt="MARACOOS" title="Go to the MARACOOS home page"/></a><div id="sessionButton"></div></div>
+<div id="head"><a href="http://maracoos.org"><img src="img/blank.png" width="300" height=65" alt="MARACOOS" title="Go to the MARACOOS home page"/></a></div>
+<div id="sessionControls">
+  <table><tr>
+    <td><a class="headerlinks" href="javascript:printMap()">Print</a></td>
+    <td><a class="headerlinks" href="javascript:linkMap()">Bookmark</a></td>
+    <td><a class="headerlinks" href="javascript:startChat()">Comments</a></td>
+    <td><a class="headerlinks" href="javascript:showSplash()">About</a></td>
+    <td><a class="headerlinks" href="javascript:goSession()">Login</a></td>
+  </tr></table>
+</div>
 EOHTML;
+  $bannerHtml = str_replace("\n",' ',$bannerHtml);
 
   $southPanelHeight    = 0;
   $southPanelHtml      = <<< EOHTML
@@ -55,29 +67,16 @@ EOHTML;
     ,array('USGS','all'           ,'getAllObs'   ,''              ,'' ,8)
   );
 
-  $defaultObs = 'Waves';
+  $defaultObs = 'Winds';
   $defaultFC  = 'on';
   $defaultWWA = 'off';
 
   $availableObs = array('Winds','Waves','WaterTemp','WaterLevel');
 
   $extraInitJS = <<< EOJS
-    createSessionButton();
-
     // don't want byCatch on by default
     if ('$byCatch' == 'on' && !startupbyCatchLayer) {
       Ext.getCmp('byCatchTabPanel').setActiveTab(1);
-    }
-    if (!startupBookmark) {
-      var pixel = map.getPixelFromLonLat(new OpenLayers.LonLat(-73,40.5).transform(proj4326,proj900913));
-      mapClick(pixel);
-      new Ext.ToolTip({
-         id           : 'startupToolTip'
-        ,title        : 'Point forecast'
-        ,html         : 'The graph below represents a forecast for this location.  Click anywhere on the map to generate a new one.'
-        ,closable     : true
-        ,dismissDelay : 10000
-      }).showAt([pixel.x + 10,pixel.y + 50]);
     }
 
     if (!cp.get('hideSplashOnStartupCheckbox')) {
@@ -712,6 +711,22 @@ EOJS;
     ]
     ,[
        'weather'
+      ,'wms'
+      ,'Ocean fronts'
+      ,'http://107.21.136.52:8080/wms/maracoos_fronts_2013_Agg/'
+      ,'M_WK_G'
+      ,'pcolor_average_jet_0.01_10_grid_Log'
+      ,'image/png'
+      ,true
+      ,1
+      ,false
+      ,true
+      ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
+      ,false
+      ,{slope : -999,offset : -999,format : '',image : 'http://icons-ak.wxug.com/graphics/wu2/key_gSat_Wide.gif'}
+    ]
+    ,[
+       'weather'
       ,'wunderground'
       ,'Cloud imagery'
       ,'http://api.wunderground.com/api/cd3aefa3b6d50f6a/satellite/image.png?GetMetadata=1&smooth=1&gtt=107&key=sat_ir4'
@@ -969,25 +984,39 @@ EOJS;
   ]
 ";
 
-  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+  // ['id','wmsLayers','wmsLegends','showLegendTitle','legendLiteTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendImage']
   $forecastMapsStoreDataJS = "[
-     ['Bottom water temperature'            ,['Bottom water temperature'],['Bottom water temperature'] ,false,false,false,true]
-    ,['Currents (global)'                   ,['Currents (global)']              ,['Currents (global)']        ,false,false,false,true]
-    ,['Currents (regional)'                 ,['Currents (regional)']            ,['Currents (regional)']      ,false,false,false,false]
-    ,['Currents (New York Harbor)'          ,['Currents (New York Harbor)']     ,['Currents (New York Harbor)']      ,false,false,false,false]
-    ,['Surface water temperature'           ,['Surface water temperature']      ,['Surface water temperature'],false,false,false,true]
-    ,['Winds & waves'                       ,['Waves','Winds']                  ,['Waves','Winds']            ,false,true,false,true]
+     ['Bottom water temperature'            ,['Bottom water temperature']       ,['Bottom water temperature']  ,false,false,false,true
+       ,'Temperature<br>(deg F)','$obsLegendsPath/BottomWaterTemp.png']
+    ,['Currents (global)'                   ,['Currents (global)']              ,['Currents (global)']         ,false,false,false,true
+      ,'Currents<br>(knots)','$obsLegendsPath/CurrentSpeed.png']
+    ,['Currents (regional)'                 ,['Currents (regional)']            ,['Currents (regional)']       ,false,false,false,false
+      ,'Currents<br>(knots)','$obsLegendsPath/CurrentSpeed.png']
+    ,['Currents (New York Harbor)'          ,['Currents (New York Harbor)']     ,['Currents (New York Harbor)'],false,false,false,false
+      ,'Currents<br>(knots)','$obsLegendsPath/CurrentSpeed.png']
+    ,['Surface water temperature'           ,['Surface water temperature']      ,['Surface water temperature'] ,false,false,false,true
+      ,'Temperature<br>(deg C)','$obsLegendsPath/SurfaceWaterTemp.png']
+    ,['Winds'                               ,['Winds']                          ,['Winds']                     ,false,true,false,true
+      ,'Wind speed<br>(knots)','$obsLegendsPath/WindSpeed.png']
+    ,['Waves'                               ,['Waves']                          ,['Waves']                     ,false,false,false,true
+      ,'Wave height<br>(feet)','$obsLegendsPath/WaveHeight.png']
   ]
 ";
 
-  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendLabel','liteLegendImage']
   $weatherMapsStoreDataJS = "[
      ['Satellite']
-    ,['Chlorophyll concentration',['Chlorophyll concentration'],['Chlorophyll concentration'],['Chlorophyll concentration<br>(mg m^-3)'],true,false,false]
-    ,['Cloud imagery',['Cloud imagery'],['Cloud imagery'],['Cloud imagery'],false,false,false]
+    ,['Chlorophyll concentration',['Chlorophyll concentration'],['Chlorophyll concentration'],['Chlorophyll concentration<br>(mg m^-3)'],true,false,false
+      ,'Chl. conc.<br>(mg m^-3)','$obsLegendsPath/Chlorophyll.png']
+    ,['Ocean fronts',['Ocean fronts'],['Ocean fronts'],false,true,false,false
+      ,'Ocean<br>fronts','$obsLegendsPath/OceanFronts.png']
+    ,['Cloud imagery',['Cloud imagery'],['Cloud imagery'],['Cloud imagery'],false,false,false
+      ,'Cloud<br>imagery','$obsLegendsPath/CloudImagery.gif']
     ,['RADAR']
-    ,['Weather RADAR',['Weather RADAR'],['Weather RADAR'],['Weather RADAR'],false,false,false]
-    ,['Weather RADAR + cloud imagery',['Weather RADAR','Cloud imagery'],['Weather RADAR','Cloud imagery'],['Weather RADAR','Cloud imagery'],false,false,false]
+    ,['Weather RADAR',['Weather RADAR'],['Weather RADAR'],['Weather RADAR'],false,false,false
+      ,'Weather<br>RADAR','$obsLegendsPath/WeatherRADAR.png']
+    ,['Weather RADAR and cloud imagery',['Weather RADAR','Cloud imagery'],['Weather RADAR','Cloud imagery'],['Weather RADAR','Cloud imagery'],false,false,false
+      ,'Weather<br>RADAR','$obsLegendsPath/WeatherRADAR.png']
   ]
 ";
 

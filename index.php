@@ -1,7 +1,7 @@
 <?php
   session_start();
   include_once('config/'.getenv('config').'.php');
-  $version = 0.24;
+  $version = 0.25;
 ?>
 <html>
   <head>
@@ -67,6 +67,7 @@
         ,html      : '<?php echo $southPanelHtml?>'
       };
       var extraInitJS  = <?php echo json_encode($extraInitJS)?>;
+      var viewer       = <?php echo json_encode($viewer)?>;
       var byCatch      = <?php echo json_encode($byCatch == 'on')?>;
       var chat         = <?php echo json_encode($chat == 'on' ? getenv('config') : false)?>;
       var search       = <?php echo json_encode($search == 'on')?>;

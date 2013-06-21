@@ -28,6 +28,14 @@
   padding    : 2px 2px 7px 2px;
   color      : gray;
 }
+.grayLink a:link {
+  text-decoration : none !important;
+  color           : gray;
+}
+.grayLink a:visited {
+  text-decoration : none !important;
+  color           : gray;
+}
 
 .directionsTextNoPadding {
   font       : 11px/13px tahoma,helvetica,sans-serif;
@@ -491,4 +499,54 @@ div.olControlMousePosition {
 }
 #splash .imgBorder {
   border : 1px solid #99BBE8;
+}
+
+.menuHeader {
+  background : #C2D8F0;
+}
+
+.bbarLegend img {
+  width : 175px;
+}
+
+#activity {
+  z-Index : 1003;
+  position : absolute;
+  left : 8px;
+  top  : 95px;
+  background : rgba(255, 255, 255, 0.4);
+  border-radius : 4px;
+  padding : 2px;
+}
+#activity img {
+  display: block;
+  height: 32px;
+  width: 32px;
+  margin: 1px;
+  padding: 0;
+}
+
+#byCatchLegend {
+  z-Index : 1003;
+  position : absolute;
+  left : 8px;
+  bottom  : 30px;
+  background : rgba(255, 255, 255, 0.9);
+  border-radius : 4px;
+  padding : 2px;
+}
+
+#sessionControls {
+  position : absolute;
+  top      : 35px;
+  right    : 5px;
+}
+
+.headerlinks {
+    color: white;
+    display: block;
+    float: left;
+    font-family: tahoma,helvetica,sans-serif;
+    font-size: 12px;
+    margin: 0 4px;
 }
