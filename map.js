@@ -1157,6 +1157,7 @@ function init() {
             ,{html : '<img width=15 src="img/blank.png">'}
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
+              ,width   : 18
               ,handler : function() {
                 var cb  = Ext.getCmp('timeComboBox');
                 var sto = cb.getStore();
@@ -1206,6 +1207,7 @@ function init() {
             })
             ,new Ext.Button({
                icon : 'img/ButtonRight.png'
+              ,width   : 18
               ,handler : function() {
                 var cb  = Ext.getCmp('timeComboBox');
                 var sto = cb.getStore();
