@@ -26,7 +26,7 @@
 <div id="sessionControls">
   <table><tr>
     <td><a class="headerlinks" href="javascript:printMap()">Print</a></td>
-    <!-- <td><a class="headerlinks" href="javascript:linkMap()">Bookmark</a></td> -->
+    <td><a class="headerlinks" href="javascript:linkMap()">Bookmark</a></td>
     <td><a class="headerlinks" href="javascript:startChat()">Comments</a></td>
     <td><a class="headerlinks" href="javascript:showSplash()">About</a></td>
     <td><a class="headerlinks" href="javascript:goSession()">Login</a></td>

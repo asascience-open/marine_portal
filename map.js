@@ -4842,7 +4842,7 @@ function linkMap(linkOnly) {
 
   if (activeMode == 'forecasts') {
     h['fcLayer']    = Ext.getCmp('forecastMapsTypeComboBox').getValue().replace('&','%26');
-    h['fcContrast'] = Ext.getCmp('forecastsVisibilitySlider').getValue();
+    h['fcContrast'] = Ext.getCmp(viewer == 'lite' ? 'contrastSlider' : 'forecastsVisibilitySlider').getValue();
   }
   else if (activeMode == 'weather') {
     h['wxLayer']    = Ext.getCmp('weatherMapsTypeComboBox').getValue().replace('&','%26');
@@ -4859,7 +4859,10 @@ function linkMap(linkOnly) {
     }
   }
 
-  if (Ext.getCmp('byCatchTabPanel') && Ext.getCmp('byCatchTabPanel').getActiveTab().id == 'showByCatchPanel') {
+  if (
+    (Ext.getCmp('byCatchTabPanel') && Ext.getCmp('byCatchTabPanel').getActiveTab().id == 'showByCatchPanel') 
+    || (viewer == 'lite' && document.getElementById('byCatchLegend').style.visibility == 'visible')
+  ) {
     h['byCatchLayer'] = Ext.getCmp('byCatchMapsTypeComboBox').getValue().replace('&','%26');
   }
 
