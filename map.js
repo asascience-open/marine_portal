@@ -2500,6 +2500,21 @@ function initMap() {
     ]
   });
 
+  var mousePosCtl = new OpenLayers.Control.MousePosition({
+     displayProjection : proj4326
+    ,formatOutput      : function(lonlat) {
+      return convertDMS(lonlat.lat.toFixed(5), "LAT") + ' ' + convertDMS(lonlat.lon.toFixed(5), "LON");
+    }
+  });
+  map.addControl(mousePosCtl);
+  mousePosCtl.element.innerHTML = convertDMS(0, "LAT") + ' ' + convertDMS(0, "LON");
+  if (viewer != 'lite') {
+    mousePosCtl.element.style.top = '28px';
+  }
+  else {
+    mousePosCtl.element.style.bottom = '22px';
+  }
+
   mapLayersStore.each(function(rec) {
     var lyr;
     if (rec.get('type') == 'wms') {
@@ -2689,6 +2704,153 @@ function initMap() {
     highlightControl.activate();
     selectControl.activate();
   });
+
+  if (viewer != 'lite') {
+    new Ext.Button({
+       text     : 'Reset zoom'
+      ,renderTo : 'mapControlsResetMap'
+      ,width    : 95
+      ,height   : 26
+      ,icon     : 'img/zoom_extend16.png'
+      ,tooltip  : 'Reset the map to its original zoom'
+      ,handler  : function() {
+        map.setCenter(new OpenLayers.LonLat(center[0],center[1]).transform(proj4326,proj900913),zoom);
+      }
+    });
+
+    new Ext.Button({
+       text     : 'Background'
+      ,renderTo : 'mapControlsChangeBackground'
+      ,width    : 95
+      ,height   : 26
+      ,icon     : 'img/map16.png'
+      ,tooltip  : 'Select a different map background'
+      ,menu     : {items : [
+        {
+           text         : 'CloudMade'
+          ,checked      : defaultBasemap == 'CloudMade'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('CloudMade')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,'-'
+        ,{
+           text         : 'ESRI Ocean'
+          ,checked      : defaultBasemap == 'ESRI Ocean'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('ESRI Ocean')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,'-'
+        ,{
+           text         : 'Google Hybrid'
+          ,checked      : defaultBasemap == 'Google Hybrid'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Google Hybrid')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,{
+           text         : 'Google Satellite'
+          ,checked      : defaultBasemap == 'Google Satellite'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Google Satellite')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,{
+           text         : 'Google Terrain'
+          ,checked      : defaultBasemap == 'Google Terrain'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Google Terrain')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,'-'
+        ,{
+           text         : 'Nautical Charts'
+          ,checked      : defaultBasemap == 'Nautical Charts'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Nautical Charts')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,'-'
+        ,{
+           text         : 'OpenStreetMap'
+          ,checked      : defaultBasemap == 'OpenStreetMap'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('OpenStreetMap')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,'-'
+        ,{
+           text         : 'Shaded Relief (ETOPO1)'
+          ,checked      : defaultBasemap == 'Shaded Relief (ETOPO1)'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Shaded Relief (ETOPO1)')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+        ,{
+           text         : 'Shaded Relief (GEBCO_08)'
+          ,checked      : defaultBasemap == 'Shaded Relief (GEBCO_08)'
+          ,group        : 'basemap'
+          ,handler      : function() {
+            var lyr = map.getLayersByName('Shaded Relief (GEBCO_08)')[0];
+            if (lyr.isBaseLayer) {
+              map.setBaseLayer(lyr);
+              lyr.redraw();
+            }
+          }
+        }
+      ].concat(bathyContours ? [
+        '-'
+        ,new Ext.form.Checkbox({
+           checked  : startupBathyContours
+          ,boxLabel : '&nbsp;&nbsp;&nbsp;Bathymetry contours (m)'
+          ,handler  : function(cbox) {
+            map.getLayersByName('Bathymetry contours')[0].setVisibility(cbox.checked);
+          }
+        })
+      ] : [])}
+    });
+  }
 
   new Ext.ButtonGroup({
      renderTo  : 'mapMessagesButtonGroup'
