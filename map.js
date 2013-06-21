@@ -1119,7 +1119,7 @@ function init() {
           new Ext.Panel({id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
              {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
             ,{html : '<img width=10 src="img/blank.png">'}
-            ,{width : 180,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
+            ,{width : 180,height : 28,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
           ]})
           ,{id : 'contrastSpacer',html : '&nbsp;',hidden : true}
           ,new Ext.Panel({id : 'contrastControl',hidden : true,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'background:#DFE8F6;padding:6px',items : [
@@ -1220,7 +1220,7 @@ function init() {
           ]})
           ,{id : 'findBuoySpacer',html : '&nbsp;'}
           ,new Ext.Panel({id : 'findBuoyControl',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             {html : 'Find a<br>station'}
+             {html : 'Find a<br>&nbsp;station&nbsp;'}
             ,{html : '<img width=15 src="img/blank.png">'}
             ,new Ext.form.ComboBox({
                width          : 250
