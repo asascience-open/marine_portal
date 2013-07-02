@@ -6814,7 +6814,6 @@ function goTheme(s) {
   if (s == 'Models') {
     Ext.getCmp('timeSpacer').show();
     Ext.getCmp('timeControl').show();
-    document.getElementById('mapMessagesHtml').innerHTML = 'Click anywhere on the map to create a condition report.';
   }
   else {
     Ext.getCmp('timeSpacer').hide();
