@@ -1226,8 +1226,8 @@ function init() {
                   if (n.attributes.provider == rec.get('provider') && n.attributes.text == rec.get('descr')) {
                     tree.selectPath(n.getPath());
                     n.ui.focus();
-                    Ext.getCmp('obsall').toggle(true);
                     selectWeatherStationType('all',{provider : n.attributes.provider,descr : n.attributes.text});
+                    goObs('all');
                     return false;
                   }
                 });
@@ -1273,11 +1273,12 @@ function init() {
           ]})
           ,'->'
           ,{
-             text     : 'Ocean<br>conditions'
+             text     : 'Ocean<br>Conditions'
             ,id       : 'oceanConditionsButton'
             ,icon     : 'img/world32.png'
             ,scale    : 'large'
             ,width    : 110
+            ,tooltip  : 'Browse ocean condition data'
             ,pressed      : true
             ,enableToggle : true
             ,allowDepress : true
@@ -1292,11 +1293,12 @@ function init() {
           }
           ,'-'
           ,{
-             text     : 'Bycatch<br>data'
+             text     : 'Bycatch<br>Reports'
             ,id       : 'byCatchButton'
             ,icon     : 'img/fishcatch32.png'
             ,scale    : 'large'
             ,width    : 110
+            ,tooltip  : 'Browse bycatch data'
             ,pressed      : false
             ,enableToggle : true
             ,allowDepress : true
@@ -1312,11 +1314,12 @@ function init() {
           }
           ,'-'
           ,{
-             text     : 'Create<br>report'
+             text     : 'Conditions<br>Report'
             ,id       : 'conditionsReportButton'
             ,icon     : 'img/pdf32.png'
             ,scale    : 'large'
             ,width    : 100
+            ,tooltip  : 'Create a conditions report'
             ,pressed      : false
             ,enableToggle : true
             ,allowDepress : true
@@ -1325,7 +1328,7 @@ function init() {
                 highlightControl.deactivate();
                 selectControl.deactivate();
                 if (!b.notified) {
-                  Ext.Msg.alert('Create report',"While the Create report button is pressed, you may click anywhere on the map to create a conditions report. Press the button again to return to normal click behavior.");
+                  Ext.Msg.alert('Conditions Report',"While the Conditions Report button is pressed, you may click anywhere on the map to create a conditions report. Press the button again to return to normal click behavior.");
                   b.notified = true;
                 }
               }
@@ -1339,9 +1342,10 @@ function init() {
           }
           ,'-'
           ,{
-             text     : 'Map<br>settings'
+             text     : 'Map<br>Settings'
             ,icon     : 'img/cog32.png'
             ,scale    : 'large'
+            ,tooltip  : 'Change map settings'
             ,menu     : {items : [
               {
                  text        : '<b>Select a map background</b>'
@@ -1505,7 +1509,7 @@ function init() {
   document.getElementById('byCatchLegend').style.visibility = startupbyCatchLayer ? 'visible' : 'hidden';
 
   var win = new Ext.Window({
-     title     : 'Browse ocean condition data'
+     title     : 'Browse Ocean Condition Data'
     ,id        : 'browseOceanConditionDataWindow'
     ,height    : 340
     ,width     : 370
@@ -1523,7 +1527,7 @@ function init() {
       ,layout    : 'anchor'
       ,items     : [
         new Ext.form.FieldSet({
-           title        : '&nbsp;Select a data source&nbsp;'
+           title        : '&nbsp;Select a Data Source&nbsp;'
           ,layout       : 'table'
           ,height       : 155
           ,layoutConfig : {
@@ -1594,7 +1598,7 @@ function init() {
           ]
         })
         ,new Ext.form.FieldSet({
-           title        : '&nbsp;Select a data type&nbsp;'
+           title        : '&nbsp;Select a Data Type&nbsp;'
           ,id           : 'fieldSetBuoys'
           ,layout       : 'table'
           ,height       : 130
@@ -1664,7 +1668,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'waterTemp\')"><span id="obswaterTempTitle"' + (defaultObs == 'WaterTemp' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water temp</span></a>'
+              ,html : '<a href="javascript:goObs(\'waterTemp\')"><span id="obswaterTempTitle"' + (defaultObs == 'WaterTemp' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water Temp</span></a>'
             }
             ,new Ext.Button({
                toggleGroup  : 'obsGroup'
@@ -1684,7 +1688,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'waterLevel\')"><span id="obswaterLevelTitle"' + (defaultObs == 'WaterLevel' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water level</span></a>'
+              ,html : '<a href="javascript:goObs(\'waterLevel\')"><span id="obswaterLevelTitle"' + (defaultObs == 'WaterLevel' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water Level</span></a>'
             }
             ,{html : '&nbsp;&nbsp;'}
             ,new Ext.Button({
@@ -1705,7 +1709,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'dissolvedOxygen\')"><span id="obsdissolvedOxygenTitle"' + (defaultObs == 'DissolvedOxygen' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Dissolved oxygen</span></a>'
+              ,html : '<a href="javascript:goObs(\'dissolvedOxygen\')"><span id="obsdissolvedOxygenTitle"' + (defaultObs == 'DissolvedOxygen' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Dissolved Oxygen</span></a>'
             }
             ,{html : '&nbsp;&nbsp;'}
             ,new Ext.Button({
@@ -1726,7 +1730,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'airTemperature\')"><span id="obsairTemperatureTitle"' + (defaultObs == 'AirTemperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Air temp</span></a>'
+              ,html : '<a href="javascript:goObs(\'airTemperature\')"><span id="obsairTemperatureTitle"' + (defaultObs == 'AirTemperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Air<br>Temp</span></a>'
             }
             ,new Ext.Button({
                toggleGroup  : 'obsGroup'
@@ -1746,7 +1750,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'all\')"><span id="obsallTitle"' + (defaultObs == 'All' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show all observations</span></a>'
+              ,html : '<a href="javascript:goObs(\'all\')"><span id="obsallTitle"' + (defaultObs == 'All' ? ' style="font-weight:bold;color : #15428b"' : '') + '>View All Stations</span></a>'
             }
             ,{html : '&nbsp;'}
             ,new Ext.Button({
@@ -1767,12 +1771,12 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'none\')"><span id="obsnoneTitle"' + (defaultObs == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
+              ,html : '<a href="javascript:goObs(\'none\')"><span id="obsnoneTitle"' + (defaultObs == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show None</span></a>'
             }
           ]
         })
         ,new Ext.form.FieldSet({
-           title        : '&nbsp;Select a data type&nbsp;'
+           title        : '&nbsp;Select a Data Type&nbsp;'
           ,id           : 'fieldSetSatellite'
           ,layout       : 'table'
           ,height       : 130
@@ -1799,7 +1803,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Chlorophyll concentration\')"><span id="satelliteChlorophyll concentrationTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Chlorophyll concentration' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Chlorophyll<br>concentration</span></a> <img id="goSatelliteChlorophyll concentration" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Chlorophyll concentration\')"><span id="satelliteChlorophyll concentrationTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Chlorophyll concentration' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Chlorophyll<br>Concentration</span></a> <img id="goSatelliteChlorophyll concentration" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -1831,7 +1835,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Cloud imagery\')"><span id="satelliteCloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Cloud imagery</span></a> <img id="goSatelliteCloud imagery" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Cloud imagery\')"><span id="satelliteCloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Cloud Imagery</span></a> <img id="goSatelliteCloud imagery" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -1863,7 +1867,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>Fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -1928,7 +1932,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><span id="satelliteWeather RADAR and cloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR<br>& cloud imagery</span></a>'
+              ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><span id="satelliteWeather RADAR and cloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR<br>& Cloud Imagery</span></a>'
             }
             ,{html : '&nbsp;'}
             ,new Ext.Button({
@@ -1948,12 +1952,12 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'None\')"><span id="satelliteNoneTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
+              ,html : '<a href="javascript:goSatellite(\'None\')"><span id="satelliteNoneTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show None</span></a>'
             }
           ]
         })
         ,new Ext.form.FieldSet({
-           title        : '&nbsp;Select a data type&nbsp;'
+           title        : '&nbsp;Select a Data Type&nbsp;'
           ,id           : 'fieldSetModels'
           ,layout       : 'table'
           ,height       : 130
@@ -2078,7 +2082,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'Currents (global)\')"><span id="modelCurrents (global)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (global)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Global currents</span></a> <img id="goModelCurrents (global)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goModel(\'Currents (global)\')"><span id="modelCurrents (global)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (global)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Global Currents</span></a> <img id="goModelCurrents (global)" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -2111,7 +2115,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'Currents (regional)\')"><span id="modelCurrents (regional)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (regional)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Regional currents</span></a> <img id="goModelCurrents (regional)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goModel(\'Currents (regional)\')"><span id="modelCurrents (regional)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (regional)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Regional Currents</span></a> <img id="goModelCurrents (regional)" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -2144,7 +2148,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'Bottom water temperature\')"><span id="modelBottom water temperatureTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Bottom water temperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Bottom temp</span></a> <img id="goModelBottom water temperature" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goModel(\'Bottom water temperature\')"><span id="modelBottom water temperatureTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Bottom water temperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Bottom Temp</span></a> <img id="goModelBottom water temperature" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -2176,7 +2180,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'Currents (New York Harbor)\')"><span id="modelCurrents (New York Harbor)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (New York Harbor)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>NY Harbor<br>currents</span></a> <img id="goModelCurrents (New York Harbor)" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goModel(\'Currents (New York Harbor)\')"><span id="modelCurrents (New York Harbor)Title"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Currents (New York Harbor)' ? ' style="font-weight:bold;color : #15428b"' : '') + '>NY Harbor<br>Currents</span></a> <img id="goModelCurrents (New York Harbor)" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -2209,7 +2213,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'None\')"><span id="modelNoneTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
+              ,html : '<a href="javascript:goModel(\'None\')"><span id="modelNoneTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show None</span></a>'
             }
           ]
         })
@@ -2217,7 +2221,7 @@ function init() {
     }
     ,listeners : {minimize : function(w) {w.hide()},hide : function(w) {
       if (!w.hideNotice) {
-        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Ocean conditions button in the toolbar below the map.");
+        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Ocean Conditions button in the toolbar below the map.");
         w.hideNotice = true;
       }
       Ext.getCmp('oceanConditionsButton').toggle(false);
@@ -2226,7 +2230,7 @@ function init() {
   win.show();
 
   win = new Ext.Window({
-     title     : 'Browse bycatch data'
+     title     : 'Browse Bycatch Reports'
     ,id        : 'browseByCatchDataWindow'
     ,height    : 255
     ,width     : 370
@@ -2244,7 +2248,7 @@ function init() {
       ,layout    : 'anchor'
       ,items     : [
         new Ext.form.FieldSet({
-           title        : '&nbsp;Select a data type&nbsp;'
+           title        : '&nbsp;Select a Data Type&nbsp;'
           ,layout       : 'table'
           ,height       : 210
           ,layoutConfig : {
@@ -2487,7 +2491,7 @@ function init() {
     }
     ,listeners : {minimize : function(w) {w.hide()},hide : function(w) {
       if (!w.hideNotice) {
-        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Bycatch button in the toolbar below the map.");
+        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Bycatch Reports button in the toolbar below the map.");
         w.hideNotice = true;
       }
       Ext.getCmp('byCatchButton').toggle(false);
@@ -4959,11 +4963,11 @@ function syncMapLegends(cb,lp) {
   var layers = rec ? rec.get('wmsLegends') : [];
 
   if (viewer == 'lite' && layers.length == 0) {
-    Ext.getCmp('bbarOceanConditionDataType').update('No data<br>type selected');
-    Ext.getCmp('bbarOceanConditionLegend').update('');
+    Ext.getCmp('bbarOceanConditionBbarPanel').hide();
   }
   else if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
     if (/forecast|weather/.test(cb)) {
+      Ext.getCmp('bbarOceanConditionBbarPanel').show();
       Ext.getCmp('bbarOceanConditionDataType').update(rec.get('liteLegendLabel'));
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + rec.get('liteLegendImage') + '">');
     }
@@ -5044,9 +5048,14 @@ function hideObsLegend() {
 
 function showObsLegend(o) {
   if (viewer == 'lite') {
-    Ext.getCmp('bbarOceanConditionBbarPanel').show();
-    Ext.getCmp('bbarOceanConditionDataType').update(makeObsLegend(o).label);
-    Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + makeObsLegend(o).img + '">');
+    if (o == 'none') {
+      Ext.getCmp('bbarOceanConditionBbarPanel').hide();
+    }
+    else {
+      Ext.getCmp('bbarOceanConditionBbarPanel').show();
+      Ext.getCmp('bbarOceanConditionDataType').update(makeObsLegend(o).label);
+      Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + makeObsLegend(o).img + '">');
+    }
     return; 
   }
 
