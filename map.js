@@ -1639,7 +1639,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goObs(\'waves\')"><span id="obswavesTitle"' + (defaultObs == 'Waves' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Winds</span></a>'
+              ,html : '<a href="javascript:goObs(\'waves\')"><span id="obswavesTitle"' + (defaultObs == 'Waves' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Waves</span></a>'
             }
             ,{html : '&nbsp;&nbsp;'}
             ,new Ext.Button({
