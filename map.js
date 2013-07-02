@@ -1120,35 +1120,40 @@ function init() {
              {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
             ,{html : '<img width=10 src="img/blank.png">'}
             ,{width : 180,height : 28,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
-          ]})
-          ,{id : 'contrastSpacer',html : '&nbsp;',hidden : true}
-          ,new Ext.Panel({id : 'contrastControl',hidden : true,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'background:#DFE8F6;padding:6px',items : [
-             {html : 'Contrast<br>level'}
-            ,{html : '<img width=15 src="img/blank.png">'}
-            ,new Ext.Slider({
-               width          : 125
-              ,id             : 'contrastSlider'
-              ,minValue       : 0
-              ,maxValue       : 100
-              ,plugins        : new Ext.slider.Tip({
-                getText : function(thumb) {
-                  return String.format('{0}%',thumb.value);
+            ,new Ext.Button({
+               id       : 'contrastMenu'
+              ,menu     : {items : [
+                {
+                   text        : '<b>Layer contrast</b>'
+                  ,canActivate : false
+                  ,cls         : 'menuHeader'
                 }
-              })
-              ,listeners      : {'change' : function(slider,val) {
-                var layers = [];
-                if (Ext.getCmp('themeSatellite').pressed) {
-                  var sto = Ext.getCmp('weatherMapsTypeComboBox').getStore();
-                  layers  = sto.getAt(sto.findExact('id',Ext.getCmp('weatherMapsTypeComboBox').getValue())).get('wmsLayers');
-                }
-                else {
-                  var sto = Ext.getCmp('forecastMapsTypeComboBox').getStore();
-                  layers  = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
-                }
-                for (var i = 0; i < layers.length; i++) {
-                  map.getLayersByName(layers[i])[0].setOpacity(val / 100);
-                }
-              }}
+                ,new Ext.Slider({
+                   width          : 150
+                  ,id             : 'contrastSlider'
+                  ,minValue       : 0
+                  ,maxValue       : 100
+                  ,plugins        : new Ext.slider.Tip({
+                    getText : function(thumb) {
+                      return String.format('{0}%',thumb.value);
+                    }
+                  })
+                  ,listeners      : {'change' : function(slider,val) {
+                    var layers = [];
+                    if (Ext.getCmp('themeSatellite').pressed) {
+                      var sto = Ext.getCmp('weatherMapsTypeComboBox').getStore();
+                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('weatherMapsTypeComboBox').getValue())).get('wmsLayers');
+                    }
+                    else {
+                      var sto = Ext.getCmp('forecastMapsTypeComboBox').getStore();
+                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
+                    }
+                    for (var i = 0; i < layers.length; i++) {
+                      map.getLayersByName(layers[i])[0].setOpacity(val / 100);
+                    }
+                  }}
+                })
+              ]}
             })
           ]})
           ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
@@ -6637,12 +6642,10 @@ function goTheme(s) {
   }
 
   if (s == 'Satellite' || s == 'Models') {
-    Ext.getCmp('contrastSpacer').show();
-    Ext.getCmp('contrastControl').show();
+    Ext.getCmp('contrastMenu').show();
   }
   else {
-    Ext.getCmp('contrastSpacer').hide();
-    Ext.getCmp('contrastControl').hide();
+    Ext.getCmp('contrastMenu').hide();
   }
 
   if (s == 'Models') {
