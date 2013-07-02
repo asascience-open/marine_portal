@@ -1128,7 +1128,7 @@ function init() {
           ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
           ,new Ext.Panel({id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
              {html : 'Forecast<br>time',width : 40}
-            ,{html : '<img width=15 src="img/blank.png">',width : 17}
+            ,{html : '<img height=15 width=15 src="img/blank.png">',width : 17}
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
               ,width   : 18
@@ -1197,7 +1197,7 @@ function init() {
           ,{id : 'findBuoySpacer',html : '&nbsp;',hidden : true}
           ,new Ext.Panel({id : 'findBuoyControl',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',hidden : true,items : [
              {html : 'Find a<br>&nbsp;station&nbsp;',width : 40}
-            ,{html : '<img width=15 src="img/blank.png">',width : 17}
+            ,{html : '<img height=15 width=15 src="img/blank.png">',width : 17}
             ,new Ext.form.ComboBox({
                width          : 200
               ,listWidth      : 500
