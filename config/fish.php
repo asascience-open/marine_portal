@@ -5,7 +5,7 @@
   $mapCenter = '-73,38.5';
   $mapZoom   = 6;
   $basemap   = 'ESRI Ocean';
-  $mode      = 'observations';
+  $mode      = 'none';
 
   $viewer = 'lite';
 

@@ -1119,16 +1119,16 @@ function init() {
             }
           }
         ]
-        ,bbar : {hidden : viewer != 'lite',items : [
-          new Ext.Panel({id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
+        ,bbar : {id : 'bbar',height : 45,hidden : viewer != 'lite',items : [
+          new Ext.Panel({hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
              {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
-            ,{html : '<img width=10 src="img/blank.png">'}
+            ,{widht : 12,height : 28,html : '<img width=10 src="img/blank.png">'}
             ,{width : 180,height : 28,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
           ]})
           ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
           ,new Ext.Panel({id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             {html : 'Forecast<br>time'}
-            ,{html : '<img width=15 src="img/blank.png">'}
+             {html : 'Forecast<br>time',width : 40}
+            ,{html : '<img width=15 src="img/blank.png">',width : 17}
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
               ,width   : 18
@@ -1194,10 +1194,10 @@ function init() {
               }
             })
           ]})
-          ,{id : 'findBuoySpacer',html : '&nbsp;'}
-          ,new Ext.Panel({id : 'findBuoyControl',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             {html : 'Find a<br>&nbsp;station&nbsp;'}
-            ,{html : '<img width=15 src="img/blank.png">'}
+          ,{id : 'findBuoySpacer',html : '&nbsp;',hidden : true}
+          ,new Ext.Panel({id : 'findBuoyControl',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',hidden : true,items : [
+             {html : 'Find a<br>&nbsp;station&nbsp;',width : 40}
+            ,{html : '<img width=15 src="img/blank.png">',width : 17}
             ,new Ext.form.ComboBox({
                width          : 200
               ,listWidth      : 500
@@ -1511,7 +1511,7 @@ function init() {
   var win = new Ext.Window({
      title     : 'Browse Ocean Condition Data'
     ,id        : 'browseOceanConditionDataWindow'
-    ,height    : 340
+    ,height    : 200 // 340
     ,width     : 370
     ,x         : Ext.getCmp('mapPanel').getWidth() - 370
     ,y         : banner.height
@@ -2235,7 +2235,7 @@ function init() {
     ,height    : 255
     ,width     : 370
     ,x         : Ext.getCmp('mapPanel').getWidth() - 370
-    ,y         : Number(banner.height) + 1 + win.getHeight()
+    ,y         : Number(banner.height) + 1 + 340
     ,resizable : false
     ,minimizable : true
     ,closable    : false
@@ -4917,6 +4917,10 @@ function changeMode(id) {
       Ext.getCmp('mapTabPanel').setActiveTab(i);
     }
   }
+  if (!Ext.getCmp(id + 'Panel')) {
+    // no active mode (on init)
+    return;
+  }
   Ext.getCmp(id + 'Panel').show();
   // obs
   var lyr = map.getLayersByName('icon')[0].bbox = false;
@@ -4964,6 +4968,7 @@ function syncMapLegends(cb,lp) {
 
   if (viewer == 'lite' && layers.length == 0) {
     Ext.getCmp('bbarOceanConditionBbarPanel').hide();
+    Ext.getCmp('bbar').doLayout();
   }
   else if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
     if (/forecast|weather/.test(cb)) {
@@ -6769,6 +6774,7 @@ function syncWatermark() {
 }
 
 function goTheme(s) {
+  Ext.getCmp('browseOceanConditionDataWindow').setHeight(340);
   var a = ['Satellite','Models','Buoys'];
   for (var i = 0; i < a.length; i++) {
     s == a[i] ? Ext.getCmp('fieldSet' + a[i]).show() : Ext.getCmp('fieldSet' + a[i]).hide();
