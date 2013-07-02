@@ -1526,7 +1526,7 @@ function init() {
               ,id           : 'themeBuoys'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon  : 'img/signal32.png'
+              ,icon  : 'img/buoy_icon32.png'
               ,handler : function() {
                 goTheme('Buoys');
               }
@@ -1596,7 +1596,7 @@ function init() {
               ,id           : 'obswinds'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon  : 'img/signal16.png'
+              ,icon  : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'Winds'
               ,handler      : function(b) {
@@ -1617,7 +1617,7 @@ function init() {
               ,id           : 'obswaves'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'Waves'
               ,handler      : function(b) {
@@ -1638,7 +1638,7 @@ function init() {
               ,id           : 'obswaterTemp'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'WaterTemp'
               ,handler      : function(b) {
@@ -1658,7 +1658,7 @@ function init() {
               ,id           : 'obswaterLevel'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'WaterLevel'
               ,handler      : function(b) {
@@ -1679,7 +1679,7 @@ function init() {
               ,id           : 'obsdissolvedOxygen'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'DissolvedOxygen'
               ,handler      : function(b) {
@@ -1700,7 +1700,7 @@ function init() {
               ,id           : 'obsairTemperature'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'AirTemperature'
               ,handler      : function(b) {
@@ -1720,7 +1720,7 @@ function init() {
               ,id           : 'obsall'
               ,enableToggle : true
               ,allowDepress : false
-              ,icon : 'img/signal16.png'
+              ,icon : 'img/buoy_icon16.png'
               ,scale : 'medium'
               ,pressed      : defaultObs == 'All'
               ,handler      : function(b) {
