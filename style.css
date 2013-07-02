@@ -28,9 +28,18 @@
   padding    : 2px 2px 7px 2px;
   color      : gray;
 }
+.directionsTextNoAlign {
+  font       : 11px/13px tahoma,helvetica,sans-serif;
+  padding    : 2px 2px 7px 2px;
+  color      : gray;
+}
 .grayLink a:link {
   text-decoration : none !important;
   color           : gray;
+}
+.grayLink a:hover {
+  text-decoration : none !important;
+  color           : black;
 }
 .grayLink a:visited {
   text-decoration : none !important;
