@@ -4423,20 +4423,14 @@ function checkZoomAlert(lyr) {
     }
   }
 
-  if (viewer == 'lite' && Ext.getCmp('timeControl') && Ext.getCmp('timeControl').isVisible()) {
-    document.getElementById('mapMessagesButtonGroup').style.visibility = 'visible';
-    zoomAlert.hits = 0;
+  if (c.p == 0) {
+    document.getElementById('mapMessagesHtml').innerHTML = 'There are no available ' + c.o  + ' stations in this area.';
   }
   else {
-    if (c.p == 0) {
-      document.getElementById('mapMessagesHtml').innerHTML = 'There are no available ' + c.o  + ' stations in this area.';
-    }
-    else {
-      document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' hide of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
-    }
-    document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0) && lyr.visibility ? 'visible' : 'hidden';
-    zoomAlert.hits = 0;
+    document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' hide of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
   }
+  document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0) && lyr.visibility ? 'visible' : 'hidden';
+  zoomAlert.hits = 0;
 }
 
 function mapClick(xy,allMaps) {
@@ -6818,7 +6812,6 @@ function goTheme(s) {
   else {
     Ext.getCmp('timeSpacer').hide();
     Ext.getCmp('timeControl').hide();
-    document.getElementById('mapMessagesButtonGroup').style.visibility = 'hidden';
   }
 
   if (s == 'Buoys') {
