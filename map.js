@@ -1458,8 +1458,8 @@ function init() {
                 ,cls         : 'menuHeader'
                 ,id          : 'contrastHeader'
               }
-              ,new Ext.Panel({id : 'contrastSliderWrapper',border : false,icon : 'img/blank.png',layout : 'column',defaults : {border : false},items : [
-                 {html : '0%&nbsp;',bodyStyle : 'padding-top:6px'}
+              ,new Ext.Panel({id : 'contrastSliderWrapper',bodyStyle : 'background:transparent',border : false,icon : 'img/blank.png',layout : 'column',defaults : {border : false},items : [
+                 {html : '0%&nbsp;',bodyStyle : 'padding-top:6px;background:transparent'}
                 ,new Ext.Slider({
                    width          : 115
                   ,id             : 'contrastSlider'
@@ -1486,7 +1486,7 @@ function init() {
                     }
                   }}
                 })
-              ,{html : '&nbsp;100%',bodyStyle : 'padding-top:6px'}]})
+              ,{html : '&nbsp;100%',bodyStyle : 'padding-top:6px;background:transparent'}]})
             ]}
           }
         ]}
@@ -1743,6 +1743,7 @@ function init() {
             ,{
                cls  : 'directionsTextNoAlign grayLink'
               ,html : '<a href="javascript:goObs(\'all\')"><span id="obsallTitle"' + (defaultObs == 'All' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show all observations</span></a>'
+              ,colspan : 2
             }
           ]
         })
@@ -1838,7 +1839,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean fronts"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean fronts"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
