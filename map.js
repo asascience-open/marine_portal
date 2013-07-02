@@ -1304,27 +1304,6 @@ function init() {
           ]})
           ,'->'
           ,{
-             text     : 'Create<br>report'
-            ,id       : 'conditionsReportButton'
-            ,icon     : 'img/pdf32.png'
-            ,scale    : 'large'
-            ,width    : 110
-            ,pressed      : false
-            ,enableToggle : true
-            ,allowDepress : true
-            ,handler      : function(b) {
-              if (b.pressed) {
-                if (!b.notified) {
-                  Ext.Msg.alert('Create report',"While the Create report button is pressed, you may click anywhere on the map to create a conditions report.");
-                  b.notified = true;
-                }
-              }
-              else {
-              }
-            }
-          }
-          ,'-'
-          ,{
              text     : 'Ocean<br>conditions'
             ,id       : 'oceanConditionsButton'
             ,icon     : 'img/world32.png'
@@ -1359,6 +1338,33 @@ function init() {
               }
               else {
                 Ext.getCmp('browseByCatchDataWindow').hide();
+              }
+            }
+          }
+          ,'-'
+          ,{
+             text     : 'Create<br>report'
+            ,id       : 'conditionsReportButton'
+            ,icon     : 'img/pdf32.png'
+            ,scale    : 'large'
+            ,width    : 110
+            ,pressed      : false
+            ,enableToggle : true
+            ,allowDepress : true
+            ,handler      : function(b) {
+              if (b.pressed) {
+                highlightControl.deactivate();
+                selectControl.deactivate();
+                if (!b.notified) {
+                  Ext.Msg.alert('Create report',"While the Create report button is pressed, you may click anywhere on the map to create a conditions report. Press the button again to return to normal click behavior.");
+                  b.notified = true;
+                }
+              }
+              else {
+                highlightControl.activate();
+                selectControl.activate();
+                var l = map.getLayersByName('queryPt')[0];
+                l.removeFeatures(l.features);
               }
             }
           }
@@ -1495,6 +1501,8 @@ function init() {
     ,resizable : false
     ,constrainHeader : true
     ,closeAction : 'hide'
+    ,minimizable : true
+    ,closable    : false
     ,defaults  : {border : false}
     ,hideNotice : false
     ,items     : {
@@ -2110,7 +2118,7 @@ function init() {
         })
       ]
     }
-    ,listeners : {hide : function(w) {
+    ,listeners : {minimize : function(w) {w.hide()},hide : function(w) {
       if (!w.hideNotice) {
         Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Ocean conditions button in the toolbar below the map.");
         w.hideNotice = true;
@@ -2121,13 +2129,15 @@ function init() {
   win.show();
 
   win = new Ext.Window({
-     title     : 'Browse by-catch data'
+     title     : 'Browse bycatch data'
     ,id        : 'browseByCatchDataWindow'
     ,height    : 255
     ,width     : 370
     ,x         : Ext.getCmp('mapPanel').getWidth() - 370
     ,y         : Number(banner.height) + 1 + win.getHeight()
     ,resizable : false
+    ,minimizable : true
+    ,closable    : false
     ,constrainHeader : true
     ,closeAction : 'hide'
     ,defaults  : {border : false}
@@ -2378,7 +2388,7 @@ function init() {
         })
       ]
     }
-    ,listeners : {hide : function(w) {
+    ,listeners : {minimize : function(w) {w.hide()},hide : function(w) {
       if (!w.hideNotice) {
         Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Bycatch button in the toolbar below the map.");
         w.hideNotice = true;
@@ -2718,7 +2728,7 @@ function initMap() {
     if (viewer == 'lite' && Ext.getCmp('conditionsReportButton').pressed) {
       mapClick(e.xy,true);
     }
-    else if (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled)) {
+    else if (viewer != 'lite' && (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled))) {
       mapClick(e.xy);
     }
   });
