@@ -1755,6 +1755,11 @@ function init() {
               ,allowDepress : false
               ,icon  : 'img/satellite16.png'
               ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('Chlorophyll concentration');
+                }
+              }
               ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Chlorophyll concentration'
             })
             ,{html : '&nbsp;'}
@@ -1782,6 +1787,11 @@ function init() {
               ,allowDepress : false
               ,icon : 'img/satellite16.png'
               ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('Cloud imagery');
+                }
+              }
               ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery'
             })
             ,{html : '&nbsp;'}
@@ -1809,6 +1819,11 @@ function init() {
               ,allowDepress : false
               ,icon  : 'img/satellite16.png'
               ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('Ocean fronts');
+                }
+              }
               ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts'
             })
             ,{html : '&nbsp;'}
@@ -1837,6 +1852,11 @@ function init() {
               ,allowDepress : false
               ,icon : 'img/satellite16.png'
               ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('Weather RADAR');
+                }
+              }
               ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR'
             })
             ,{html : '&nbsp;'}
@@ -1864,12 +1884,17 @@ function init() {
               ,allowDepress : false
               ,icon : 'img/satellite16.png'
               ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('Weather RADAR and cloud imagery');
+                }
+              }
               ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery'
             })
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsText grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Weather RADAR + cloud imagery\')"><b>Weather RADAR<br>& cloud imagery</b></a>'
+              ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><b>Weather RADAR<br>& cloud imagery</b></a>'
               ,colspan : 5
             }
           ]
