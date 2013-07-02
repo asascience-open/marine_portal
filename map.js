@@ -1230,7 +1230,7 @@ function init() {
              {html : 'Find a<br>&nbsp;station&nbsp;'}
             ,{html : '<img width=15 src="img/blank.png">'}
             ,new Ext.form.ComboBox({
-               width          : 250
+               width          : 200
               ,listWidth      : 500
               ,id             : 'stationQuickFindComboBox'
               ,store          : new Ext.data.ArrayStore({
@@ -1304,6 +1304,27 @@ function init() {
           ]})
           ,'->'
           ,{
+             text     : 'Create<br>report'
+            ,id       : 'conditionsReportButton'
+            ,icon     : 'img/pdf32.png'
+            ,scale    : 'large'
+            ,width    : 110
+            ,pressed      : false
+            ,enableToggle : true
+            ,allowDepress : true
+            ,handler      : function(b) {
+              if (b.pressed) {
+                if (!b.notified) {
+                  Ext.Msg.alert('Create report',"While the Create report button is pressed, you may click anywhere on the map to create a conditions report.");
+                  b.notified = true;
+                }
+              }
+              else {
+              }
+            }
+          }
+          ,'-'
+          ,{
              text     : 'Ocean<br>conditions'
             ,id       : 'oceanConditionsButton'
             ,icon     : 'img/world32.png'
@@ -1323,7 +1344,7 @@ function init() {
           }
           ,'-'
           ,{
-             text     : 'By-catch<br>data'
+             text     : 'Bycatch<br>data'
             ,id       : 'byCatchButton'
             ,icon     : 'img/fishcatch32.png'
             ,scale    : 'large'
@@ -2359,7 +2380,7 @@ function init() {
     }
     ,listeners : {hide : function(w) {
       if (!w.hideNotice) {
-        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the By-catch button in the toolbar below the map.");
+        Ext.Msg.alert('Map controls',"This window can be reactivated by clicking on the Bycatch button in the toolbar below the map.");
         w.hideNotice = true;
       }
       Ext.getCmp('byCatchButton').toggle(false);
@@ -2694,8 +2715,11 @@ function initMap() {
   },1000);
 
   map.events.register('click',this,function(e) {
-    if (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled)) {
-      mapClick(e.xy,viewer == 'lite');
+    if (viewer == 'lite' && Ext.getCmp('conditionsReportButton').pressed) {
+      mapClick(e.xy,true);
+    }
+    else if (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled)) {
+      mapClick(e.xy);
     }
   });
 
