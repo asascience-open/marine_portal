@@ -897,10 +897,12 @@ function init() {
                           ,'</tpl>'
                         )
                         ,listeners      : {select : function(combo,rec) {
-                          hideAllLayers();
-                          var layers = rec.get('wmsLayers');
-                          for (var i = 0; i < layers.length; i++) {
-                            map.getLayersByName(layers[i])[0].setVisibility(true);
+                          hideAllLayers(); 
+                          if (rec) {
+                            var layers = rec.get('wmsLayers');
+                            for (var i = 0; i < layers.length; i++) {
+                              map.getLayersByName(layers[i])[0].setVisibility(true);
+                            }
                           }
                           syncMapLegends('weatherMapsTypeComboBox','weatherLegendPanel');
                         }}
@@ -996,9 +998,11 @@ function init() {
                         ,width          : 218
                         ,listeners      : {select : function(combo,rec) {
                           hideAllLayers();
-                          var layers = rec.get('wmsLayers');
-                          for (var i = 0; i < layers.length; i++) {
-                            map.getLayersByName(layers[i])[0].setVisibility(true);
+                          if (rec) {
+                            var layers = rec.get('wmsLayers');
+                            for (var i = 0; i < layers.length; i++) {
+                              map.getLayersByName(layers[i])[0].setVisibility(true);
+                            }
                           }
                           syncMapLegends('forecastMapsTypeComboBox','forecastsLegendPanel');
                         }}
@@ -1743,7 +1747,27 @@ function init() {
             ,{
                cls  : 'directionsTextNoAlign grayLink'
               ,html : '<a href="javascript:goObs(\'all\')"><span id="obsallTitle"' + (defaultObs == 'All' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show all observations</span></a>'
-              ,colspan : 2
+            }
+            ,{html : '&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'obsGroup'
+              ,id           : 'obsnone'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/buoy_icon16.png'
+              ,scale : 'medium'
+              ,pressed      : defaultObs == 'None'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goObs('none');
+                }
+              }
+              ,listeners    : {render : function() {if (activeMode == 'forecasts' && defaultObs == 'None') {selectWeatherStationType('none')}}}
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsTextNoAlign grayLink'
+              ,html : '<a href="javascript:goObs(\'none\')"><span id="obsnoneTitle"' + (defaultObs == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
             }
           ]
         })
@@ -1839,7 +1863,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean fronts"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -1905,7 +1929,26 @@ function init() {
             ,{
                cls  : 'directionsTextNoAlign grayLink'
               ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><span id="satelliteWeather RADAR and cloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR<br>& cloud imagery</span></a>'
-              ,colspan : 5
+            }
+            ,{html : '&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'satelliteGroup'
+              ,id           : 'satelliteNone'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/satellite16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goSatellite('None');
+                }
+              }
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'None'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsTextNoAlign grayLink'
+              ,html : '<a href="javascript:goSatellite(\'None\')"><span id="satelliteNoneTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
             }
           ]
         })
@@ -2147,7 +2190,26 @@ function init() {
                   });
                 }
               }
-              ,colspan : 9
+            }
+            ,{html : '&nbsp;'}
+            ,new Ext.Button({
+               toggleGroup  : 'modelGroup'
+              ,id           : 'modelNone'
+              ,enableToggle : true
+              ,allowDepress : false
+              ,icon : 'img/globe16.png'
+              ,scale : 'medium'
+              ,handler      : function(b) {
+                if (b.pressed) {
+                  goModel('None');
+                }
+              }
+              ,pressed : Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'None'
+            })
+            ,{html : '&nbsp;'}
+            ,{
+               cls  : 'directionsTextNoAlign grayLink'
+              ,html : '<a href="javascript:goModel(\'None\')"><span id="modelNoneTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'None' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Show none</span></a>'
             }
           ]
         })
@@ -4894,9 +4956,13 @@ function syncMapLegends(cb,lp) {
   }
   var sto    = Ext.getCmp(cb).getStore();
   var rec    = sto.getAt(sto.findExact('id',Ext.getCmp(cb).getValue()));
-  var layers = rec.get('wmsLegends');
+  var layers = rec ? rec.get('wmsLegends') : [];
 
-  if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
+  if (viewer == 'lite' && layers.length == 0) {
+    Ext.getCmp('bbarOceanConditionDataType').update('No data<br>type selected');
+    Ext.getCmp('bbarOceanConditionLegend').update('');
+  }
+  else if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
     if (/forecast|weather/.test(cb)) {
       Ext.getCmp('bbarOceanConditionDataType').update(rec.get('liteLegendLabel'));
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + rec.get('liteLegendImage') + '">');
@@ -5079,11 +5145,11 @@ function linkMap(linkOnly) {
   };
 
   if (activeMode == 'forecasts') {
-    h['fcLayer']    = Ext.getCmp('forecastMapsTypeComboBox').getValue().replace('&','%26');
+    h['fcLayer']    = Ext.getCmp('forecastMapsTypeComboBox').getValue() != 'None' ? Ext.getCmp('forecastMapsTypeComboBox').getValue().replace('&','%26') : '';
     h['fcContrast'] = Ext.getCmp(viewer == 'lite' ? 'contrastSlider' : 'forecastsVisibilitySlider').getValue();
   }
   else if (activeMode == 'weather') {
-    h['wxLayer']    = Ext.getCmp('weatherMapsTypeComboBox').getValue().replace('&','%26');
+    h['wxLayer']    = Ext.getCmp('weatherMapsTypeComboBox').getValue() != 'None' ? Ext.getCmp('weatherMapsTypeComboBox').getValue().replace('&','%26') : '';
     h['wxContrast'] = Ext.getCmp('weatherVisibilitySlider').getValue();
     h['wwa']        = Ext.getCmp('wwaRadioGroupYes').getValue() ? 'on' : 'off';
   }
@@ -6758,7 +6824,7 @@ function goTheme(s) {
 }
 
 function goObs(s) {
-  var a = ['winds','waves','waterTemp','waterLevel','dissolvedOxygen','airTemperature','all'];
+  var a = ['winds','waves','waterTemp','waterLevel','dissolvedOxygen','airTemperature','all','none'];
   for (var i = 0; i < a.length; i++) {
     Ext.getCmp('obs' + a[i]).toggle(s == a[i],true);
     var el = document.getElementById('obs' + a[i] + 'Title');
@@ -6777,7 +6843,7 @@ function goObs(s) {
 }
 
 function goSatellite(s) {
-  var a = ['Chlorophyll concentration','Cloud imagery','Ocean fronts','Weather RADAR','Weather RADAR and cloud imagery'];
+  var a = ['Chlorophyll concentration','Cloud imagery','Ocean fronts','Weather RADAR','Weather RADAR and cloud imagery','None'];
   for (var i = 0; i < a.length; i++) {
     Ext.getCmp('satellite' + a[i]).toggle(s == a[i],true);
     var el = document.getElementById('satellite' + a[i] + 'Title');
@@ -6798,7 +6864,7 @@ function goSatellite(s) {
 }
 
 function goModel(s) {
-  var a = ['Winds','Waves','Surface water temperature','Currents (global)','Currents (regional)','Bottom water temperature','Currents (New York Harbor)'];
+  var a = ['Winds','Waves','Surface water temperature','Currents (global)','Currents (regional)','Bottom water temperature','Currents (New York Harbor)','None'];
   for (var i = 0; i < a.length; i++) {
     Ext.getCmp('model' + a[i]).toggle(s == a[i],true);
     var el = document.getElementById('model' + a[i] + 'Title');
