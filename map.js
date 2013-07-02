@@ -1120,41 +1120,6 @@ function init() {
              {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
             ,{html : '<img width=10 src="img/blank.png">'}
             ,{width : 180,height : 28,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
-            ,new Ext.Button({
-               id       : 'contrastMenu'
-              ,menu     : {items : [
-                {
-                   text        : '<b>Layer contrast</b>'
-                  ,canActivate : false
-                  ,cls         : 'menuHeader'
-                }
-                ,new Ext.Slider({
-                   width          : 150
-                  ,id             : 'contrastSlider'
-                  ,minValue       : 0
-                  ,maxValue       : 100
-                  ,plugins        : new Ext.slider.Tip({
-                    getText : function(thumb) {
-                      return String.format('{0}%',thumb.value);
-                    }
-                  })
-                  ,listeners      : {'change' : function(slider,val) {
-                    var layers = [];
-                    if (Ext.getCmp('themeSatellite').pressed) {
-                      var sto = Ext.getCmp('weatherMapsTypeComboBox').getStore();
-                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('weatherMapsTypeComboBox').getValue())).get('wmsLayers');
-                    }
-                    else {
-                      var sto = Ext.getCmp('forecastMapsTypeComboBox').getStore();
-                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
-                    }
-                    for (var i = 0; i < layers.length; i++) {
-                      map.getLayersByName(layers[i])[0].setOpacity(val / 100);
-                    }
-                  }}
-                })
-              ]}
-            })
           ]})
           ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
           ,new Ext.Panel({id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
@@ -1347,7 +1312,7 @@ function init() {
             ,id       : 'conditionsReportButton'
             ,icon     : 'img/pdf32.png'
             ,scale    : 'large'
-            ,width    : 110
+            ,width    : 100
             ,pressed      : false
             ,enableToggle : true
             ,allowDepress : true
@@ -1467,17 +1432,61 @@ function init() {
                 }
               }
               ,{
-                 text        : '<b>Check the box to view bathymetry contours</b>'
+                 text        : '<b>Bathymetry options</b>'
                 ,canActivate : false
                 ,cls         : 'menuHeader'
               }
-              ,new Ext.form.Checkbox({
-                 checked  : startupBathyContours
-                ,boxLabel : '&nbsp;&nbsp;&nbsp;Bathymetry contours (m)'
+              ,{
+                 checked  : !startupBathyContours
+                ,text     : 'Hide bathymetry contour lines (m)'
+                ,group    : 'bathy'
                 ,handler  : function(cbox) {
-                  map.getLayersByName('Bathymetry contours')[0].setVisibility(cbox.checked);
+                  map.getLayersByName('Bathymetry contours')[0].setVisibility(false);
                 }
-              })
+              }
+              ,{
+                 checked  : startupBathyContours
+                ,text     : 'Show bathymetry contour lines (m)'
+                ,group    : 'bathy'
+                ,handler  : function(cbox) {
+                  map.getLayersByName('Bathymetry contours')[0].setVisibility(true);
+                }
+              }
+              ,{
+                 text        : '<b>Layer contrast</b>'
+                ,canActivate : false
+                ,cls         : 'menuHeader'
+                ,id          : 'contrastHeader'
+              }
+              ,new Ext.Panel({id : 'contrastSliderWrapper',border : false,icon : 'img/blank.png',layout : 'column',defaults : {border : false},items : [
+                 {html : '0%&nbsp;',bodyStyle : 'padding-top:6px'}
+                ,new Ext.Slider({
+                   width          : 115
+                  ,id             : 'contrastSlider'
+                  ,icon           : 'img/blank.png'
+                  ,minValue       : 0
+                  ,maxValue       : 100
+                  ,plugins        : new Ext.slider.Tip({
+                    getText : function(thumb) {
+                      return String.format('{0}%',thumb.value);
+                    }
+                  })
+                  ,listeners      : {'change' : function(slider,val) {
+                    var layers = [];
+                    if (Ext.getCmp('themeSatellite').pressed) {
+                      var sto = Ext.getCmp('weatherMapsTypeComboBox').getStore();
+                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('weatherMapsTypeComboBox').getValue())).get('wmsLayers');
+                    }
+                    else {
+                      var sto = Ext.getCmp('forecastMapsTypeComboBox').getStore();
+                      layers  = sto.getAt(sto.findExact('id',Ext.getCmp('forecastMapsTypeComboBox').getValue())).get('wmsLayers');
+                    }
+                    for (var i = 0; i < layers.length; i++) {
+                      map.getLayersByName(layers[i])[0].setOpacity(val / 100);
+                    }
+                  }}
+                })
+              ,{html : '&nbsp;100%',bodyStyle : 'padding-top:6px'}]})
             ]}
           }
         ]}
@@ -6701,10 +6710,12 @@ function goTheme(s) {
   }
 
   if (s == 'Satellite' || s == 'Models') {
-    Ext.getCmp('contrastMenu').show();
+    Ext.getCmp('contrastHeader').show();
+    Ext.getCmp('contrastSliderWrapper').show();
   }
   else {
-    Ext.getCmp('contrastMenu').hide();
+    Ext.getCmp('contrastHeader').hide();
+    Ext.getCmp('contrastSliderWrapper').hide();
   }
 
   if (s == 'Models') {

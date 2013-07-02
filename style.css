@@ -549,3 +549,35 @@ div.olControlMousePosition {
     font-size: 12px;
     margin: 0 4px;
 }
+
+#splash td {
+  font : 11px/13px tahoma,helvetica,sans-serif !important;
+  text-align : justify;
+  padding : 5px;
+}
+#splash .center {
+  text-align : center;
+  padding : 5px 0px 0px 0px;
+}
+#splash .imgBorder {
+  border : 1px solid #99BBE8;
+}
+.boldText{
+        font-weight:bold;
+}
+.splashlist{
+        font-style: normal;
+        line-height: 2em;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        text-decoration: none;
+        text-indent: 5px;
+        list-style-position: outside;
+        list-style-type: inside;
+        padding: 6px;
+        margin: 2px;
+}
+.splashTable{
+        font-size:14px;
+}
