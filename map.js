@@ -1327,10 +1327,6 @@ function init() {
               if (b.pressed) {
                 highlightControl.deactivate();
                 selectControl.deactivate();
-                if (!b.notified) {
-                  Ext.Msg.alert('Conditions Report',"While the Conditions Report button is pressed, you may click anywhere on the map to create a conditions report. Press the button again to return to normal click behavior.");
-                  b.notified = true;
-                }
               }
               else {
                 highlightControl.activate();
@@ -1593,7 +1589,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goTheme(\'Models\')"><span id="themeModelsTitle"' + (startupMode == 'forecasts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>MODEL FORECASTS</span><br>View model forecasts and create condition reports.</a>'
+              ,html : '<a href="javascript:goTheme(\'Models\')"><span id="themeModelsTitle"' + (startupMode == 'forecasts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>MODEL FORECASTS</span><br>View model forecasts of ocean conditions.</a>'
             }
           ]
         })
@@ -1812,7 +1808,7 @@ function init() {
                     ,target    : 'goSatelliteChlorophyll concentration'
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -1842,10 +1838,9 @@ function init() {
                      title     : 'Cloud imagery'
                     ,html      : map.getLayersByName('Cloud imagery')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteCloud imagery'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -1874,10 +1869,9 @@ function init() {
                      title     : 'Ocean fronts'
                     ,html      : map.getLayersByName('Ocean fronts')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteOcean fronts'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -1907,10 +1901,9 @@ function init() {
                      title     : 'Weather RADAR'
                     ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goSatelliteWeather RADAR'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -1991,10 +1984,9 @@ function init() {
                      title     : 'Winds'
                     ,html      : map.getLayersByName('Winds')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelWinds'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2024,10 +2016,9 @@ function init() {
                      title     : 'Waves'
                     ,html      : map.getLayersByName('Waves')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelWaves'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2050,17 +2041,16 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goModel(\'Surface water temperature\')"><span id="modelSurface water temperatureTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Surface water temperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water temp</span></a> <img id="goModelSurface water temperature" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goModel(\'Surface water temperature\')"><span id="modelSurface water temperatureTitle"' + (Ext.getCmp('forecastMapsTypeComboBox').getValue() == 'Surface water temperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water Temp</span></a> <img id="goModelSurface water temperature" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
                      title     : 'Surface water temperature'
                     ,html      : map.getLayersByName('Surface water temperature')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelSurface water temperature'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2089,10 +2079,9 @@ function init() {
                      title     : 'Currents (global)'
                     ,html      : map.getLayersByName('Currents (global)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (global)'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2122,10 +2111,9 @@ function init() {
                      title     : 'Currents (regional)'
                     ,html      : map.getLayersByName('Currents (regional)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (regional)'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2155,10 +2143,9 @@ function init() {
                      title     : 'Bottom water temperature'
                     ,html      : map.getLayersByName('Bottom water temperature')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelBottom water temperature'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2187,10 +2174,9 @@ function init() {
                      title     : 'Currents (New York Harbor)'
                     ,html      : map.getLayersByName('Currents (New York Harbor)')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goModelCurrents (New York Harbor)'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2279,10 +2265,9 @@ function init() {
                      title     : 'Bottom trawl Northeast/MA'
                     ,html      : map.getLayersByName('Butterfish bottom trawl')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchBottom trawl Northeast/MA'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2310,10 +2295,9 @@ function init() {
                      title     : 'Bottom trawl Rhode Island'
                     ,html      : map.getLayersByName('River herring bottom trawl')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchBottom trawl Rhode Island'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2340,10 +2324,9 @@ function init() {
                      title     : 'Mid-water trawl Area 2'
                     ,html      : map.getLayersByName('River herring mid-water trawl Area 2')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchMid-water trawl Area 2'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2371,10 +2354,9 @@ function init() {
                      title     : 'Mid-water trawl Cape Cod'
                     ,html      : map.getLayersByName('River herring mid-water trawl Cape Cod')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchMid-water trawl Cape Cod'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2401,10 +2383,9 @@ function init() {
                      title     : 'Closed area 1 Georges Bank'
                     ,html      : map.getLayersByName('Scallop/yellowtail closed area 1')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchClosed area 1 Georges Bank'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2432,10 +2413,9 @@ function init() {
                      title     : 'Closed area 2 Georges Bank'
                     ,html      : map.getLayersByName('Scallop/yellowtail closed area 2')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchClosed area 2 Georges Bank'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2462,10 +2442,9 @@ function init() {
                      title     : 'Nantucket Lightship'
                     ,html      : map.getLayersByName('Scallop/yellowtail Nantucket Lightship')[0].moreInfo.split('For more info')[0]
                     ,target    : 'goByCatchNantucket Lightship'
-                    ,closable  : true
                     ,showDelay : 0
                     ,anchor    : 'right'
-                    ,closable  : true
+                    ,dismissDelay : 0
                   });
                 }
               }
@@ -2828,6 +2807,9 @@ function initMap() {
   map.events.register('click',this,function(e) {
     if (viewer == 'lite' && Ext.getCmp('conditionsReportButton').pressed) {
       mapClick(e.xy,true);
+      Ext.getCmp('conditionsReportButton').toggle(false);
+      highlightControl.activate();
+      selectControl.activate();
     }
     else if (viewer != 'lite' && (activeMode == 'forecasts' || (activeMode == 'weather' && !Ext.getCmp('wwaLegendPanel').disabled))) {
       mapClick(e.xy);

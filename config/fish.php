@@ -622,7 +622,7 @@ EOJS;
       ,''
       ,'image/png'
       ,true
-      ,0.5
+      ,1
       ,true
       ,true
       ,'Wave Watch III (WW3) is a third generation wave model developed at NCEP. WW3 forecasts are produced every six hours at 00, 06, 12 and 18 UTC. The WW3 graphics are based model fields of 1.00 x 1.250 to 50 x 50 and are available at six hour increments out to 87 hours. WW3 solves the spectral action density balance equation for wave number-direction spectra. Assumptions for the model equations imply that the model can generally be applied on spatial scales (grid increments) larger than 1 to 10 km, and outside the surf zone.'
@@ -641,7 +641,7 @@ EOJS;
       ,1
       ,false
       ,false
-      ,'Information currently unavailable.'
+      ,'Chlorophyll data is calculated using the ocean color information coming from the MODIS Aqua satellite system. This data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. The layer is a 3-day data composite which reduces gaps in spatial coverage due to cloud cover, although gaps are still occasionally present. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more Infomration click <a href=\'http://orb.ceoe.udel.edu\' target=_blank>here</a>.'
       ,false
       ,{slope : 1,offset : 0,format : '%d',log : true}
     ]
@@ -702,7 +702,7 @@ EOJS;
       ,'WINDS_VERY_SPARSE_GRADIENT-False-1-0-45-Low'
       ,'image/png'
       ,true
-      ,0.5
+      ,1
       ,true
       ,true
       ,'The NAM model is a regional mesoscale data assimilation and forecast model system based on the WRF common modeling infrastructure, currently running at 12 km resolution and 60 layers. NAM forecasts are produced every six hours at 00, 06, 12 and 18 UTC. The NAM graphics are available at three hour increments out to 84 hours. The NAM has non-hydrostatic dynamics and a full suite of physical parameterizations and a land surface model.'
@@ -995,7 +995,7 @@ EOJS;
     ,['Currents (New York Harbor)'          ,['Currents (New York Harbor)']     ,['Currents (New York Harbor)'],false,false,false,false
       ,'Currents<br>(knots)','$obsLegendsPath/CurrentSpeed.png']
     ,['Surface water temperature'           ,['Surface water temperature']      ,['Surface water temperature'] ,false,false,false,true
-      ,'Temperature<br>(deg C)','$obsLegendsPath/SurfaceWaterTemp.png']
+      ,'Temperature<br>(deg F)','$obsLegendsPath/SurfaceWaterTemp.png']
     ,['Winds'                               ,['Winds']                          ,['Winds']                     ,false,true,false,true
       ,'Wind speed<br>(knots)','$obsLegendsPath/WindSpeed.png']
     ,['Waves'                               ,['Waves']                          ,['Waves']                     ,false,false,false,true
