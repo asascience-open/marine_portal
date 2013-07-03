@@ -1120,15 +1120,15 @@ function init() {
           }
         ]
         ,bbar : {id : 'bbar',height : 45,hidden : viewer != 'lite',items : [
-          new Ext.Panel({hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
-             {width : 75,html : '&nbsp;',id : 'bbarOceanConditionDataType'}
-            ,{widht : 12,height : 28,html : '<img width=10 src="img/blank.png">'}
-            ,{width : 180,height : 28,html : '&nbsp;',id : 'bbarOceanConditionLegend'}
+          new Ext.Panel({width : 275,hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
+             {html : '&nbsp;',id : 'bbarOceanConditionDataType'}
+            ,{html : '<img width=10 src="img/blank.png">'}
+            ,{html : '&nbsp;',id : 'bbarOceanConditionLegend'}
           ]})
           ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
-          ,new Ext.Panel({id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             {html : 'Forecast<br>time',width : 42}
-            ,{html : '<img height=15 width=15 src="img/blank.png">',width : 17}
+          ,new Ext.Panel({width : 270,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
+             {html : 'Forecast<br>time'}
+            ,{html : '<img height=15 width=15 src="img/blank.png">'}
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
               ,width   : 18
