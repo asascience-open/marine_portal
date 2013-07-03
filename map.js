@@ -1121,14 +1121,14 @@ function init() {
         ]
         ,bbar : {id : 'bbar',height : 45,hidden : viewer != 'lite',items : [
           new Ext.Panel({width : 275,hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
-             {html : '&nbsp;',id : 'bbarOceanConditionDataType'}
-            ,{html : '<img width=10 src="img/blank.png">'}
-            ,{html : '&nbsp;',id : 'bbarOceanConditionLegend'}
+             new Ext.form.Label({html : '&nbsp;',id : 'bbarOceanConditionDataType'})
+            ,new Ext.form.Label({html : '<img width=10 src="img/blank.png">'})
+            ,new Ext.form.Label({html : '&nbsp;',id : 'bbarOceanConditionLegend'})
           ]})
-          ,{id : 'timeSpacer',html : '&nbsp;',hidden : true}
+          ,new Ext.form.Label({id : 'timeSpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({width : 270,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             {html : 'Forecast<br>time'}
-            ,{html : '<img height=15 width=15 src="img/blank.png">'}
+             new Ext.form.Label({html : 'Forecast<br>time'})
+            ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">'})
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
               ,width   : 18
@@ -1194,10 +1194,10 @@ function init() {
               }
             })
           ]})
-          ,{id : 'findBuoySpacer',html : '&nbsp;',hidden : true}
+          ,new Ext.form.Label({id : 'findBuoySpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({id : 'findBuoyControl',width : 280,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',hidden : true,items : [
-             {html : 'Find a<br>&nbsp;station&nbsp;',width : 42}
-            ,{html : '<img height=15 width=15 src="img/blank.png">',width : 17}
+             new Ext.form.Label({html : 'Find a<br>&nbsp;station&nbsp;',width : 42})
+            ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">',width : 17})
             ,new Ext.form.ComboBox({
                width          : 200
               ,listWidth      : 500
