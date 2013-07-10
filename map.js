@@ -1119,7 +1119,7 @@ function init() {
             }
           }
         ]
-        ,bbar : {id : 'bbar',height : 45,hidden : viewer != 'lite',items : [
+        ,bbar : {id : 'bbar',height : 51 - (Ext.isIE ? 4 : 0),hidden : viewer != 'lite',items : [
           new Ext.Panel({width : 275,hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
              new Ext.form.Label({html : '&nbsp;',id : 'bbarOceanConditionDataType'})
             ,new Ext.form.Label({html : '<img width=10 src="img/blank.png">'})
