@@ -1127,7 +1127,7 @@ function init() {
           ]})
           ,new Ext.form.Label({id : 'timeSpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({width : 270,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             new Ext.form.Label({html : 'Forecast<br>time'})
+             new Ext.form.Label({html : '<table><tr><td align="center">Forecast<br>time</td></tr></table>'})
             ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">'})
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
@@ -1196,7 +1196,7 @@ function init() {
           ]})
           ,new Ext.form.Label({id : 'findBuoySpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({id : 'findBuoyControl',width : 280,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',hidden : true,items : [
-             new Ext.form.Label({html : 'Find a<br>&nbsp;station&nbsp;',width : 42})
+             new Ext.form.Label({html : '<table><tr><td align="center">Find a<br>&nbsp;station&nbsp;</td></tr></table>',width : 42})
             ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">',width : 17})
             ,new Ext.form.ComboBox({
                width          : 200
@@ -1325,6 +1325,10 @@ function init() {
             ,allowDepress : true
             ,handler      : function(b) {
               if (b.pressed) {
+                if (!b.initAlert) {
+                  Ext.Msg.alert('Conditions report',"Click anywhere on the map to create a conditions report.");
+                }
+                b.initAlert = true;
                 highlightControl.deactivate();
                 selectControl.deactivate();
               }
@@ -4408,14 +4412,25 @@ function checkZoomAlert(lyr) {
     }
   }
 
+  if (viewer == 'lite') {
+    document.getElementById('mapMessagesHtml').innerHTML = 'To view observations, left-click a marker on the map.';
+  }
+
   if (c.p == 0) {
     document.getElementById('mapMessagesHtml').innerHTML = 'There are no available ' + c.o  + ' stations in this area.';
   }
   else {
-    document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' hide of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
+    if (viewer == 'lite') {
+      document.getElementById('mapMessagesHtml').innerHTML += c.v != c.p ? ' <font style="color:#15428B"><b>Zoom in to view more stations.</b></font>' : '';
+    }
+    else {
+      document.getElementById('mapMessagesHtml').innerHTML = 'You are currently viewing approximately ' + c.v + ' of ' + c.p + ' ' + c.o  + ' stations.' + (c.v != c.p ? ' Zoom in to view more.' : '');
+    }
   }
-  document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0) && lyr.visibility ? 'visible' : 'hidden';
-  zoomAlert.hits = 0;
+  document.getElementById('mapMessagesButtonGroup').style.visibility = (c.v != c.p || c.p == 0 || (activeMode == 'observations' && viewer == 'lite')) && lyr.visibility ? 'visible' : 'hidden';
+  if (viewer != 'lite') {
+    zoomAlert.hits = 0;
+  }
 }
 
 function mapClick(xy,allMaps) {
@@ -4952,7 +4967,7 @@ function syncMapLegends(cb,lp) {
   else if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
     if (/forecast|weather/.test(cb)) {
       Ext.getCmp('bbarOceanConditionBbarPanel').show();
-      Ext.getCmp('bbarOceanConditionDataType').update(rec.get('liteLegendLabel'));
+      Ext.getCmp('bbarOceanConditionDataType').update('<table><tr><td align="center">' + rec.get('liteLegendLabel') + '</td></tr></table>');
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + rec.get('liteLegendImage') + '">');
     }
   }
@@ -5037,7 +5052,7 @@ function showObsLegend(o) {
     }
     else {
       Ext.getCmp('bbarOceanConditionBbarPanel').show();
-      Ext.getCmp('bbarOceanConditionDataType').update(makeObsLegend(o).label);
+      Ext.getCmp('bbarOceanConditionDataType').update('<table><tr><td align="center">' + makeObsLegend(o).label + '</td></tr></table>');
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + makeObsLegend(o).img + '">');
     }
     return; 
@@ -6591,8 +6606,8 @@ function viewConversation(id) {
 
 function goSession() {
   Ext.MessageBox.show({
-     title     : 'Login / register'
-    ,msg       : 'Enter your email address:'
+     title     : 'Login'
+    ,msg       : 'Provide your email address to set or restore your browsing session:'
     ,width     : 300
     ,buttons   : Ext.MessageBox.OKCANCEL
     ,prompt    : true
