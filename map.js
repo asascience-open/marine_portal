@@ -2458,6 +2458,9 @@ function init() {
               ,icon  : 'img/fishCatch16.png'
               ,scale : 'medium'
               ,pressed      : !startupbyCatchLayer || startupbyCatchLayer == 'None'
+              ,handler      : function() {
+                goByCatch('None');
+              }
             })
             ,{html : '&nbsp;'}
             ,{
