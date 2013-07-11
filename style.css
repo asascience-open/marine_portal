@@ -595,3 +595,9 @@ div.olControlMousePosition {
 .splashTable{
         font-size:14px;
 }
+
+.bbarLabels {
+  border-collapse : collapse;
+  padding : 0;
+  text-align : center;
+}

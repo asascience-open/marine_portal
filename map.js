@@ -1119,7 +1119,7 @@ function init() {
             }
           }
         ]
-        ,bbar : {id : 'bbar',height : 51 - (Ext.isIE ? 4 : 0),hidden : viewer != 'lite',items : [
+        ,bbar : {id : 'bbar',height : 45,hidden : viewer != 'lite',items : [
           new Ext.Panel({width : 275,hidden : true,id : 'bbarOceanConditionBbarPanel',layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center'},bodyStyle : 'padding:6px',items : [
              new Ext.form.Label({html : '&nbsp;',id : 'bbarOceanConditionDataType'})
             ,new Ext.form.Label({html : '<img width=10 src="img/blank.png">'})
@@ -1127,7 +1127,7 @@ function init() {
           ]})
           ,new Ext.form.Label({id : 'timeSpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({width : 270,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             new Ext.form.Label({html : '<table><tr><td align="center">Forecast<br>time</td></tr></table>'})
+             new Ext.form.Label({html : '<table class="bbarLabels"><tr><td>Forecast<br>time</td></tr></table>'})
             ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">'})
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
@@ -1196,7 +1196,7 @@ function init() {
           ]})
           ,new Ext.form.Label({id : 'findBuoySpacer',html : '&nbsp;',hidden : true})
           ,new Ext.Panel({id : 'findBuoyControl',width : 280,layout : 'column',columns : 3,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',hidden : true,items : [
-             new Ext.form.Label({html : '<table><tr><td align="center">Find a<br>&nbsp;station&nbsp;</td></tr></table>',width : 42})
+             new Ext.form.Label({html : '<table class="bbarLabels"><tr><td>Find a<br>&nbsp;station&nbsp;</td></tr></table>',width : 42})
             ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">',width : 17})
             ,new Ext.form.ComboBox({
                width          : 200
@@ -4967,7 +4967,7 @@ function syncMapLegends(cb,lp) {
   else if (viewer == 'lite' && map.getLayersByName(layers[0])[0].visibility) {
     if (/forecast|weather/.test(cb)) {
       Ext.getCmp('bbarOceanConditionBbarPanel').show();
-      Ext.getCmp('bbarOceanConditionDataType').update('<table><tr><td align="center">' + rec.get('liteLegendLabel') + '</td></tr></table>');
+      Ext.getCmp('bbarOceanConditionDataType').update('<table class="bbarLabels"><tr><td>' + rec.get('liteLegendLabel') + '</td></tr></table>');
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + rec.get('liteLegendImage') + '">');
     }
   }
@@ -5052,7 +5052,7 @@ function showObsLegend(o) {
     }
     else {
       Ext.getCmp('bbarOceanConditionBbarPanel').show();
-      Ext.getCmp('bbarOceanConditionDataType').update('<table><tr><td align="center">' + makeObsLegend(o).label + '</td></tr></table>');
+      Ext.getCmp('bbarOceanConditionDataType').update('<table class="bbarLabels"><tr><td>' + makeObsLegend(o).label + '</td></tr></table>');
       Ext.getCmp('bbarOceanConditionLegend').update('<img width=175 src="' + makeObsLegend(o).img + '">');
     }
     return; 
