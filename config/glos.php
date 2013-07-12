@@ -6,6 +6,8 @@
 
   $hasHelp = true;
 
+  $viewer = 'standard';
+
   $mapCenter = '-84.4,44.0';
   $mapZoom   = 6;
   $basemap   = 'ESRI Ocean';
@@ -1060,7 +1062,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'WaterSurfaceTemperature-LakeMichigan'
-      ,'http://64.9.200.113:8080/thredds/wms/SST/LakeMichiganSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'http://tds.glos.us:8080/thredds/wms/SST/LakeMichiganSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
       ,'sst'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1076,7 +1078,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'WaterSurfaceTemperature-LakeErie'
-      ,'http://64.9.200.113:8080/thredds/wms/SST/LakeErieSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'http://tds.glos.us:8080/thredds/wms/SST/LakeErieSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
       ,'sst'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1092,7 +1094,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'WaterSurfaceTemperature-LakeHuron'
-      ,'http://64.9.200.113:8080/thredds/wms/SST/LakeHuronSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'http://tds.glos.us:8080/thredds/wms/SST/LakeHuronSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
       ,'sst'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1108,7 +1110,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'WaterSurfaceTemperature-LakeOntario'
-      ,'http://64.9.200.113:8080/thredds/wms/SST/LakeOntarioSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'http://tds.glos.us:8080/thredds/wms/SST/LakeOntarioSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
       ,'sst'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1124,7 +1126,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'WaterSurfaceTemperature-LakeSuperior'
-      ,'http://64.9.200.113:8080/thredds/wms/SST/LakeSuperiorSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'http://tds.glos.us:8080/thredds/wms/SST/LakeSuperiorSST-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
       ,'sst'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1135,6 +1137,86 @@ EOJS;
       ,''
       ,false
       ,{slope : 9/5,offset : 32,format : '%d'}
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'Chlorophyll-LakeMichigan'
+      ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeMichiganCHL-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'chl'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,'No details available.'
+      ,false
+      ,{slope : 1,offset : 0,format : '%d',log : true}
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'Chlorophyll-LakeErie'
+      ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeErieCHL-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'chl'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'Chlorophyll-LakeHuron'
+      ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeHuronCHL-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'chl'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'Chlorophyll-LakeOntario'
+      ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeOntarioCHL-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'chl'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'Chlorophyll-LakeSuperior'
+      ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeSuperiorCHL-Agg?GetMetadata=1&COLORSCALERANGE=0,30&'
+      ,'chl'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
     ]
     ,[
        'forecasts'
@@ -1395,23 +1477,24 @@ EOJS;
   ]
 ";
 
-  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendImage']
   $forecastMapsStoreDataJS = "[
-     ['Currents (GLERL)',['Currents-GLERL-Erie','Currents-GLERL-Huron','Currents-GLERL-Michigan','Currents-GLERL-Ontario','Currents-GLERL-Superior','Currents-GLERL-LakeStClaire','Currents-GLERL-StLawrenceRiver'],['Currents-GLERL-Erie'],false,true,false,false]
-    ,['Currents (NOS)',['Currents-NOS-Erie','Currents-NOS-Huron','Currents-NOS-Michigan','Currents-NOS-Ontario','Currents-NOS-Superior'],['Currents-NOS-Erie'],false,false,false,false]
-    ,['Ice thickness (GLERL)',['IceThickness-GLERL-Erie','IceThickness-GLERL-Huron','IceThickness-GLERL-Michigan','IceThickness-GLERL-Ontario','IceThickness-GLERL-Superior'],['IceThickness-GLERL-Erie'],['Ice thickness (m)'],false,false,false]
-    ,['Water level (GLERL)',['WaterLevel-GLERL-Erie','WaterLevel-GLERL-Huron','WaterLevel-GLERL-Michigan','WaterLevel-GLERL-Ontario','WaterLevel-GLERL-Superior'],['WaterLevel-GLERL-Erie'],['Water level (m)'],false,false,false]
-    ,['Waves (GLERL)',['Waves-GLERL-Erie','Waves-GLERL-Huron','Waves-GLERL-Michigan','Waves-GLERL-Ontario','Waves-GLERL-Superior'],['Waves-GLERL-Erie'],['Wave height (m)'],false,false,false]
-    ,['Winds (NAM)',['Winds'],['Winds'],false,false,false,false]
+     ['Currents (GLERL)',['Currents-GLERL-Erie','Currents-GLERL-Huron','Currents-GLERL-Michigan','Currents-GLERL-Ontario','Currents-GLERL-Superior','Currents-GLERL-LakeStClaire','Currents-GLERL-StLawrenceRiver'],['Currents-GLERL-Erie'],false,true,false,false,'','']
+    ,['Currents (NOS)',['Currents-NOS-Erie','Currents-NOS-Huron','Currents-NOS-Michigan','Currents-NOS-Ontario','Currents-NOS-Superior'],['Currents-NOS-Erie'],false,false,false,false,'','']
+    ,['Ice thickness (GLERL)',['IceThickness-GLERL-Erie','IceThickness-GLERL-Huron','IceThickness-GLERL-Michigan','IceThickness-GLERL-Ontario','IceThickness-GLERL-Superior'],['IceThickness-GLERL-Erie'],['Ice thickness (m)'],false,false,false,'','']
+    ,['Water level (GLERL)',['WaterLevel-GLERL-Erie','WaterLevel-GLERL-Huron','WaterLevel-GLERL-Michigan','WaterLevel-GLERL-Ontario','WaterLevel-GLERL-Superior'],['WaterLevel-GLERL-Erie'],['Water level (m)'],false,false,false,'','']
+    ,['Waves (GLERL)',['Waves-GLERL-Erie','Waves-GLERL-Huron','Waves-GLERL-Michigan','Waves-GLERL-Ontario','Waves-GLERL-Superior'],['Waves-GLERL-Erie'],['Wave height (m)'],false,false,false,'','']
+    ,['Winds (NAM)',['Winds'],['Winds'],false,false,false,false,'','']
   ]
 ";
 
-  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport']
+  // ['id','wmsLayers','wmsLegends','showLegendTitle','visibility','historical','conditionsReport','liteLegendLabel','liteLegendImage']
   $weatherMapsStoreDataJS = "[
      ['RADAR']
-    ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false]
+    ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
-    ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false]
+    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(mg m^-3)'],false,".getChlorophyllTime().",false,'','']
+    ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
   ]
 ";
 
@@ -1437,6 +1520,28 @@ EOJS;
       foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
         foreach ($l0->{'Layer'} as $l1) {
           if (sprintf("%s",$l1->{'Name'}) == 'sst') {
+            array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
+          }
+        }
+      }
+    }
+    if (count($a) > 0) {
+      return '['.implode(',',$a).']';
+    }
+    else {
+      return false;
+    }
+  }
+
+  function getChlorophyllTime() {
+    $lakes = array('Lake Erie','Lake Huron','Lake Michigan','Lake Ontario','Lake Superior');
+    $a = array();
+    for ($i = 0; $i < count($lakes); $i++) {
+      $l = $lakes[$i];
+      $xml = @simplexml_load_file('xml/glosChlorophyll'.str_replace(' ','',$l).'.getcaps.xml');
+      foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
+        foreach ($l0->{'Layer'} as $l1) {
+          if (sprintf("%s",$l1->{'Name'}) == 'chl') {
             array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
           }
         }
