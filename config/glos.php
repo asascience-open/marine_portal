@@ -1141,6 +1141,86 @@ EOJS;
     ,[
        'weather'
       ,'wms'
+      ,'NaturalColor-LakeMichigan'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/michigan_natural_color/?GetMetadata=1&'
+      ,'Band1*Band2*Band3'
+      ,'composite_average_jet_None_None_grid_False'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,'No details available.'
+      ,false
+      ,{slope : -999,offset : -999,format : '',image : 'img/blank1x1.png'}
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'NaturalColor-LakeErie'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/erie_natural_color/?GetMetadata=1&'
+      ,'Band1*Band2*Band3'
+      ,'composite_average_jet_None_None_grid_False'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'NaturalColor-LakeHuron'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/huron_natural_color/?GetMetadata=1&'
+      ,'Band1*Band2*Band3'
+      ,'composite_average_jet_None_None_grid_False'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'NaturalColor-LakeOntario'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/ontario_natural_color/?GetMetadata=1&'
+      ,'Band1*Band2*Band3'
+      ,'composite_average_jet_None_None_grid_False'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'NaturalColor-LakeSuperior'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/superior_natural_color/?GetMetadata=1&'
+      ,'Band1*Band2*Band3'
+      ,'composite_average_jet_None_None_grid_False'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
       ,'Chlorophyll-LakeMichigan'
       ,'http://tds.glos.us:8080/thredds/wms/CHL/LakeMichiganCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
       ,'chl'
@@ -1494,6 +1574,7 @@ EOJS;
     ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
     ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(mg m^-3)'],false,".getChlorophyllTime().",false,'','']
+    ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,false,false,'','']
     ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
   ]
 ";
