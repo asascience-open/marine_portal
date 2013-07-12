@@ -689,7 +689,7 @@ EOJS;
       ,1
       ,true
       ,true
-      ,'Information currently unavailable.'
+      ,'Sea surface temperature is from the HYbrid Coordinate Ocean Model (HYCOM), a generalized coordinate ocean model. HYCOM is maintained by a multi-institutional consortium sponsored by the National Ocean Partnership Program (NOPP). The currents are assimilated from the Navy Coupled Ocean Data Assimilation (NCODA) System. Current profile data is collected from various sources such as XBTs, CTDs, PALACE floats, fixed buoys, and drifting buoy altimeters.'
       ,false
       ,false
     ]
