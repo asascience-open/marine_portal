@@ -67,7 +67,7 @@
         ,html      : '<?php echo $southPanelHtml?>'
       };
       var extraInitJS  = <?php echo json_encode($extraInitJS)?>;
-      var viewer       = <?php echo json_encode($viewer)?>;
+      var viewer       = <?php echo json_encode(isset($_REQUEST['viewer']) ? $_REQUEST['viewer'] : $viewer)?>;
       var byCatch      = <?php echo json_encode($byCatch == 'on')?>;
       var chat         = <?php echo json_encode($chat == 'on' ? getenv('config') : false)?>;
       var search       = <?php echo json_encode($search == 'on')?>;
