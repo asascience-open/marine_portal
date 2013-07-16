@@ -699,7 +699,7 @@ EOJS;
       ,'Winds'                          
       ,'http://coastmap.com/ecop/wms.aspx'                             
       ,'NAM_WINDS'      
-      ,'WINDS_VERY_SPARSE_GRADIENT-False-1-0-45-Low'
+      ,'WINDS_VERY_SPARSE_GRADIENT-False-1-0-45-High'
       ,'image/png'
       ,true
       ,1

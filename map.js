@@ -1126,9 +1126,9 @@ function init() {
             ,new Ext.form.Label({html : '&nbsp;',id : 'bbarOceanConditionLegend'})
           ]})
           ,new Ext.form.Label({id : 'timeSpacer',html : '&nbsp;',hidden : true})
-          ,new Ext.Panel({width : 270,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#DFE8F6'},bodyStyle : 'padding:6px;background:#DFE8F6',items : [
-             new Ext.form.Label({html : '<table class="bbarLabels"><tr><td>Forecast<br>time</td></tr></table>'})
-            ,new Ext.form.Label({html : '<img height=15 width=15 src="img/blank.png">'})
+          ,new Ext.Panel({width : 295,id : 'timeControl',hidden : true,layout : 'column',columns : 5,defaults : {border : false,bodyStyle : 'text-align:center;background:#9ac6f5'},bodyStyle : 'padding:6px;background:url(img/blueGrad.jpg)',items : [
+             new Ext.form.Label({html : '<table class="bbarLabels"><tr><td><img width=32 height=32 src="img/clock32.png"></td><td><img src="img/blank.png" width=5 height=5></td><td>Forecast<br>time</td></tr></table>'})
+            ,new Ext.form.Label({html : '<img height=5 width=5 src="img/blank.png">'})
             ,new Ext.Button({
                icon    : 'img/ButtonLeft.png'
               ,width   : 18
@@ -2678,6 +2678,9 @@ function initMap() {
             slider.resumeEvents();
           }
         },1000);
+      }
+      else {
+        mapLoadendUnmask(e.object.name,e.object.panel);
       }
       syncWatermark();
     });
