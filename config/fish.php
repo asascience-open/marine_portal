@@ -712,6 +712,22 @@ EOJS;
     ,[
        'weather'
       ,'wms'
+      ,'Satellite water temperature'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/maracoos_SST_Seven_Agg/?ELEVATION=0&'
+      ,'mcsst'
+      ,'pcolor_average_jet_0_27_node_False'
+      ,'image/png'
+      ,true
+      ,1
+      ,false
+      ,false
+      ,'For researchers, SST data from all individual passes from the NOAA series of satellites from January 2000 to present are available on an equal-angle, approximately 1km resolution grid for the region 35N to 46N, 77W to 63W. The data set includes a cloud_mask flag derived from several differing criteria. This information is documented in the attributes of the data set.'
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
       ,'Ocean fronts'
       ,'http://107.21.136.52:8080/wms/maracoos_fronts_2013_Agg/'
       ,'M_WK_G'
@@ -1012,6 +1028,8 @@ EOJS;
       ,'Ocean<br>fronts','$obsLegendsPath/OceanFronts.png']
     ,['Cloud imagery',['Cloud imagery'],['Cloud imagery'],['Cloud imagery'],false,false,false
       ,'Cloud<br>imagery','$obsLegendsPath/CloudImagery.gif']
+    ,['Satellite water temperature',['Satellite water temperature'],['Satellite water temperature'],false,true,false,false
+      ,'Temperature<br>(deg F)','$obsLegendsPath/SurfaceWaterTemp.png']
     ,['RADAR']
     ,['Weather RADAR',['Weather RADAR'],['Weather RADAR'],['Weather RADAR'],false,false,false
       ,'Weather<br>RADAR','$obsLegendsPath/WeatherRADAR.png']

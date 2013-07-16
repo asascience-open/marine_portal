@@ -1820,28 +1820,28 @@ function init() {
             ,{html : '&nbsp;&nbsp;'}
             ,new Ext.Button({
                toggleGroup  : 'satelliteGroup'
-              ,id           : 'satelliteCloud imagery'
+              ,id           : 'satelliteSatellite water temperature'
               ,enableToggle : true
               ,allowDepress : false
               ,icon : 'img/satellite16.png'
               ,scale : 'medium'
               ,handler      : function(b) {
                 if (b.pressed) {
-                  goSatellite('Cloud imagery');
+                  goSatellite('Satellite water temperature');
                 }
               }
-              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery'
+              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Satellite water temperature'
             })
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Cloud imagery\')"><span id="satelliteCloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Cloud Imagery</span></a> <img id="goSatelliteCloud imagery" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Satellite water temperature\')"><span id="satelliteSatellite water temperatureTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Satellite water temperature' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Water<br>Temperature</span></a> <img id="goSatelliteSatellite water temperature" width=10 height=10 src="img/small-help-icon.gif">'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
-                     title     : 'Cloud imagery'
-                    ,html      : map.getLayersByName('Cloud imagery')[0].moreInfo.split('For more info')[0]
-                    ,target    : 'goSatelliteCloud imagery'
+                     title     : 'Water temperature'
+                    ,html      : map.getLayersByName('Satellite water temperature')[0].moreInfo.split('For more info')[0]
+                    ,target    : 'goSatelliteSatellite water temperature'
                     ,showDelay : 0
                     ,anchor    : 'right'
                     ,dismissDelay : 0
@@ -1883,37 +1883,6 @@ function init() {
             ,{html : '&nbsp;&nbsp;'}
             ,new Ext.Button({
                toggleGroup  : 'satelliteGroup'
-              ,id           : 'satelliteWeather RADAR'
-              ,enableToggle : true
-              ,allowDepress : false
-              ,icon : 'img/satellite16.png'
-              ,scale : 'medium'
-              ,handler      : function(b) {
-                if (b.pressed) {
-                  goSatellite('Weather RADAR');
-                }
-              }
-              ,pressed : Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR'
-            })
-            ,{html : '&nbsp;'}
-            ,{
-               cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Weather RADAR\')"><span id="satelliteWeather RADARTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR</span></a> <img id="goSatelliteWeather RADAR" width=10 height=10 src="img/small-help-icon.gif">'
-              ,listeners : {
-                afterrender : function() {
-                  new Ext.ToolTip({
-                     title     : 'Weather RADAR'
-                    ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo.split('For more info')[0]
-                    ,target    : 'goSatelliteWeather RADAR'
-                    ,showDelay : 0
-                    ,anchor    : 'right'
-                    ,dismissDelay : 0
-                  });
-                }
-              }
-            }
-            ,new Ext.Button({
-               toggleGroup  : 'satelliteGroup'
               ,id           : 'satelliteWeather RADAR and cloud imagery'
               ,enableToggle : true
               ,allowDepress : false
@@ -1929,9 +1898,20 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><span id="satelliteWeather RADAR and cloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR<br>& Cloud Imagery</span></a>'
+              ,html : '<a href="javascript:goSatellite(\'Weather RADAR and cloud imagery\')"><span id="satelliteWeather RADAR and cloud imageryTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Weather RADAR and cloud imagery' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Weather RADAR<br>& Cloud Imagery</span></a> <img id="goSatelliteWeather RADAR and cloud imagery" width=10 height=10 src="img/small-help-icon.gif">'
+              ,listeners : {
+                afterrender : function() {
+                  new Ext.ToolTip({
+                     title     : 'Weather RADAR & Cloud Imagery'
+                    ,html      : map.getLayersByName('Weather RADAR')[0].moreInfo.split('For more info')[0]
+                    ,target    : 'goSatelliteWeather RADAR and cloud imagery'
+                    ,showDelay : 0
+                    ,anchor    : 'right'
+                    ,dismissDelay : 0
+                  });
+                }
+              }
             }
-            ,{html : '&nbsp;'}
             ,new Ext.Button({
                toggleGroup  : 'satelliteGroup'
               ,id           : 'satelliteNone'
@@ -6853,7 +6833,7 @@ function goObs(s) {
 }
 
 function goSatellite(s) {
-  var a = ['Chlorophyll concentration','Cloud imagery','Ocean fronts','Weather RADAR','Weather RADAR and cloud imagery','None'];
+  var a = ['Chlorophyll concentration','Weather RADAR and cloud imagery','Ocean fronts','Satellite water temperature','None'];
   for (var i = 0; i < a.length; i++) {
     Ext.getCmp('satellite' + a[i]).toggle(s == a[i],true);
     var el = document.getElementById('satellite' + a[i] + 'Title');
