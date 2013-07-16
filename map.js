@@ -2631,7 +2631,7 @@ function initMap() {
     else if (rec.get('type') == 'tilecache') {
       lyr = addTileCache(rec);
       lyr.events.register('tileerror',this,function(tile) {
-        if (map.getZoom() > 8) {
+        if (map.getZoom() > 9) {
           OpenLayers.Element.removeClass(tile.tile.imgDiv,'olImageLoadError');
           tile.tile.setImgSrc('img/noDataZoomOut.png');
         }
