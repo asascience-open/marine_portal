@@ -35,7 +35,7 @@
     <script type="text/javascript" src="http://cloud.iboattrack.com/js/ext-3.4.1/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="http://cloud.iboattrack.com/js/ext-3.4.1/ext-all.js"></script>
     <script type="text/javascript" src="./js/ext-3.3.0/SearchField.js"></script>
-    <script type="text/javascript" src="./js/OpenLayers-2.12-rc7/OpenLayers-closure.js"></script>
+    <script type="text/javascript" src="./js/OpenLayers-2.12-rc7/OpenLayers-closure-ie10-fix.js"></script>
     <link rel="stylesheet" type="text/css" href="./js/OpenLayers-2.12-rc7/theme/default/google.css"/>
     <script type="text/javascript" src="./js/CloudMade.js"></script>
     <script>
