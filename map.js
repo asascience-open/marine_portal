@@ -2562,7 +2562,7 @@ function initMap() {
               ,fontSize          : 18
             })
             ,{context : {getLabel : function(f) {
-              return f.attributes.label ? 'Last bycatch report\n' + f.attributes.label : '';
+              return f.attributes.label ? f.attributes.label : '';
             }}}
           )
         })}
@@ -6775,7 +6775,16 @@ function syncWatermark() {
     var legends = rec.get('wmsLegends');
     for (var i = 0; i < legends.length; i++) {
       if (map.getLayersByName(legends[i])[0].visibility) {
-        label = rec.get('showLegendTitle')[i].split(/Updated |<br>/).pop();
+        label = 'Last bycatch report\n' + rec.get('showLegendTitle')[i].split(/Updated |<br>/).pop();
+      }
+    }
+  });
+  // special case for ocean fronts
+  weatherMapsStore.each(function(rec) {
+    var legends = rec.get('wmsLegends');
+    for (var i = 0; i < legends.length; i++) {
+      if (legends[i] == 'Ocean fronts' && map.getLayersByName(legends[i])[0].visibility) {
+        label += (label != '' ? '\n' : '') + 'Ocean Fronts\ncurrently under development';
       }
     }
   });
