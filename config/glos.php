@@ -2,7 +2,7 @@
   date_default_timezone_set('UTC');
 
   $title     = 'Great Lakes Observing System Data Portal';
-  $googleId  = 'UA-32882439-1';
+  $googleId  = 'UA-32882439-1x';
 
   $hasHelp = true;
 
@@ -1140,11 +1140,11 @@ EOJS;
     ]
     ,[
        'weather'
-      ,'wms'
+      ,'tilecache'
       ,'NaturalColor-LakeMichigan'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/michigan_natural_color/?GetMetadata=1&'
-      ,'Band1*Band2*Band3'
-      ,'composite_average_jet_None_None_grid_False'
+      ,'http://64.9.200.121/tiles/current/'
+      ,'michigan-natcolor'
+      ,''
       ,'image/png'
       ,false
       ,1
@@ -1156,65 +1156,65 @@ EOJS;
     ]
     ,[
        'weather'
-      ,'wms'
+      ,'tilecache'
       ,'NaturalColor-LakeErie'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/erie_natural_color/?GetMetadata=1&'
-      ,'Band1*Band2*Band3'
-      ,'composite_average_jet_None_None_grid_False'
+      ,'http://64.9.200.121/tiles/current/'
+      ,'erie-natcolor'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
       ,true
-      ,''
+      ,'No details available.'
       ,false
       ,false
     ]
     ,[
        'weather'
-      ,'wms'
-      ,'NaturalColor-LakeHuron'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/huron_natural_color/?GetMetadata=1&'
-      ,'Band1*Band2*Band3'
-      ,'composite_average_jet_None_None_grid_False'
-      ,'image/png'
-      ,false
-      ,1
-      ,false
-      ,true
-      ,''
-      ,false
-      ,false
-    ]
-    ,[
-       'weather'
-      ,'wms'
-      ,'NaturalColor-LakeOntario'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/ontario_natural_color/?GetMetadata=1&'
-      ,'Band1*Band2*Band3'
-      ,'composite_average_jet_None_None_grid_False'
-      ,'image/png'
-      ,false
-      ,1
-      ,false
-      ,true
-      ,''
-      ,false
-      ,false
-    ]
-    ,[
-       'weather'
-      ,'wms'
+      ,'tilecache'
       ,'NaturalColor-LakeSuperior'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/superior_natural_color/?GetMetadata=1&'
-      ,'Band1*Band2*Band3'
-      ,'composite_average_jet_None_None_grid_False'
+      ,'http://64.9.200.121/tiles/current/'
+      ,'superior-natcolor'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
       ,true
+      ,'No details available.'
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'tilecache'
+      ,'NaturalColor-LakeHuron'
+      ,'http://64.9.200.121/tiles/current/'
+      ,'huron-natcolor'
       ,''
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,'No details available.'
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'tilecache'
+      ,'NaturalColor-LakeOntario'
+      ,'http://64.9.200.121/tiles/current/'
+      ,'ontario-natcolor'
+      ,''
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,true
+      ,'No details available.'
       ,false
       ,false
     ]

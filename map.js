@@ -2628,6 +2628,15 @@ function initMap() {
     else if (rec.get('type') == 'wunderground') {
       lyr = addWunderground(rec);
     }
+    else if (rec.get('type') == 'tilecache') {
+      lyr = addTileCache(rec);
+      lyr.events.register('tileerror',this,function(tile) {
+        if (map.getZoom() > 8) {
+          OpenLayers.Element.removeClass(tile.tile.imgDiv,'olImageLoadError');
+          tile.tile.setImgSrc('img/noDataZoomOut.png');
+        }
+      });
+    }
 
     lyr.events.register('loadstart',this,function(e) {
       mapLoadstartMask(e.object.name,e.object.panel);
@@ -4869,6 +4878,26 @@ function addTMS(rec) {
   );
 }
 
+function addTileCache(rec) {
+  return new OpenLayers.Layer.TileCache(
+     rec.get('id')
+    ,rec.get('getMapUrl')
+    ,rec.get('getMapLayers')
+    ,{
+       visibility  : rec.get('visibility')
+      ,isBaseLayer : false
+      ,projection  : proj3857
+      ,opacity     : rec.get('opacity')
+      ,time        : new Date().getTime()
+      ,type        : 'png'
+      ,panel       : rec.get('panel')
+      ,moreInfo    : rec.get('moreInfo')
+      ,bbox        : rec.get('bbox')
+      ,legend      : rec.get('legend')
+    }
+  );
+}
+
 function contains(bufferFeatures,g) {
   for (var i = 0; i < bufferFeatures.length; i++) {
     if (bufferFeatures[i].geometry.containsPoint(g)) {
@@ -4966,7 +4995,7 @@ function syncMapLegends(cb,lp) {
        REQUEST : 'GetLegendGraphic'
       ,LAYER   : p['LAYERS']
     };
-    if (p['STYLES'].indexOf('boxfill/') >= 0) {
+    if (p['STYLES'] && p['STYLES'].indexOf('boxfill/') >= 0) {
       params['PALETTE'] = p['STYLES'].replace('boxfill/','');
     }
     var ts = '';
@@ -4979,7 +5008,11 @@ function syncMapLegends(cb,lp) {
     }
     lblTd.push('<td style="text-align:center">' + (rec.get('showLegendTitle')[titles] ? rec.get('showLegendTitle')[titles] + ts : '') + '</td>');
     titles += rec.get('showLegendTitle')[titles] ? 1 : 0;
-    var getMetadata = p['GetMetadata'] ? 'LAYER=' + p['LAYERS'] + '&TIME=' + (p['TIME']  ? p['TIME'] : '') + '&COLORSCALERANGE=' + p['COLORSCALERANGE'] + '&GetMetadata=' + encodeURIComponent(Ext.encode(l.legend)) + '&' : '';
+    var getMetadata = p['GetMetadata'] ? 'LAYER=' + p['LAYERS'] + '&TIME=' + (p['TIME'] ? p['TIME'] : '') + '&COLORSCALERANGE=' + p['COLORSCALERANGE'] + '&GetMetadata=' + encodeURIComponent(Ext.encode(l.legend)) + '&' : '';
+    // exception for Natural color
+    if (getMetadata == '' && /NaturalColor/.test(l.name)) {
+      getMetadata = '&GetMetadata=' + encodeURIComponent(Ext.encode(l.legend)) + '&';
+    }
     imgTd.push('<td style="text-align:center"><img src="' + baseUrl + 'getLegend.php?' + getMetadata + 'u=' + encodeURIComponent(l.getFullRequestString(params)) + '"></td>');
     infoTd.push('<td style="text-align:center"><a class="cleanLink" id="moreInfo' + l.name + '" href="javascript:moreInfo(\'' + rec.get('id') + '\',\'' + l.name + '\')">Learn more<br>about this data</a></td>');
   }
