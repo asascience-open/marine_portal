@@ -5167,9 +5167,43 @@ function linkMap(linkOnly) {
   }
 
   if (!linkOnly) {
-    Ext.Msg.buttonText.ok = 'Close';
-    Ext.Msg.alert(document.title + ' link','Click <a target=_blank href="' + baseUrl + '?' + params.join('&') + '">here</a> to launch ' + document.title + ' in your current configuration. This link is suitable for bookmarking and sharing.');
-    Ext.Msg.buttonText.ok = 'OK';
+    var win = new Ext.Window({
+       title           : document.title
+      ,layout          : 'fit'
+      ,width           : 300
+      ,height          : 250
+      ,constrainHeader : true
+      ,modal           : true
+      ,defaults        : {border : false}
+      ,resizable       : false
+      ,items           : new Ext.FormPanel({
+         bodyStyle : 'padding:6'
+        ,defaults  : {border : false}
+        ,items     : [
+          {
+            html : '<table class="directionsTextNoAlign" width="100%"><tr><td>Choose one of the following methods to view or share your current configuration.</td></tr></table></td></tr></table>'
+          }
+          ,{html : '&nbsp;'}
+          ,{
+             layout : 'column'
+            ,defaults  : {border : false}
+            ,items  : [
+               {columnWidth : 0.50,items : {xtype : 'container',autoEl : {tag : 'center'},items : {border : false,html : '<a target=_blank href="' + baseUrl + '?' + params.join('&') + '"><img width=64 height=64 src="img/bookmark64.png"></a><br>Right-click to<br>save as a bookmark'}}}
+              ,{columnWidth : 0.50,items : {xtype : 'container',autoEl : {tag : 'center'},items : {border : false,html : '<a target=_blank href="mailto:?subject=' + document.title + '&body=' + baseUrl + '?' + encodeURIComponent(params.join('&').replace(/ /g,'%20')) + '"><img width=64 height=64 src="img/email64.png"></a><br>Email the<br>link to a friend'}}}
+            ]
+          }
+        ]
+      })
+      ,buttons : [
+        {
+           text    : 'Close'
+          ,handler : function() {
+            win.hide();
+          }
+        }
+      ]
+    });
+    win.show();
   }
   else {
     return baseUrl + '?' + params.join('&');
