@@ -5141,7 +5141,7 @@ function linkMap(linkOnly) {
   }
   else if (activeMode == 'weather') {
     h['wxLayer']    = Ext.getCmp('weatherMapsTypeComboBox').getValue() != 'None' ? Ext.getCmp('weatherMapsTypeComboBox').getValue().replace('&','%26') : '';
-    h['wxContrast'] = Ext.getCmp('weatherVisibilitySlider').getValue();
+    h['wxContrast'] = Ext.getCmp(viewer == 'lite' ? 'contrastSlider' : 'weatherVisibilitySlider').getValue();
     h['wwa']        = Ext.getCmp('wwaRadioGroupYes').getValue() ? 'on' : 'off';
   }
   else if (activeMode == 'observations') {
