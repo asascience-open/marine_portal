@@ -5136,7 +5136,7 @@ function mapLoadstartMask(name,panel) {
     document.getElementById('activity').style.visibility = 'visible';
   }
 
-  if (panel) {
+  if (panel && Ext.getCmp(panel + 'LegendPanel').getEl()) {
     loadingLayers[panel][name] = true;
     Ext.getCmp(panel + 'LegendPanel').getEl().mask('<table><tr><td>Updating...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
   }
@@ -5153,7 +5153,7 @@ function mapLoadendUnmask(name,panel) {
     for (var i in loadingLayers[panel]) {
       hits++;
     }
-    if (hits == 0) {
+    if (hits == 0 && Ext.getCmp(panel + 'LegendPanel').getEl()) {
       Ext.getCmp(panel + 'LegendPanel').getEl().unmask();
     }
   }
