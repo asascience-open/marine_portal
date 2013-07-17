@@ -473,7 +473,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://wms.glos.us:8080/wms/HECWFS_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/HECWFS_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'u,v'
           ,'vectors_average_jet_0_1.5_cell_True'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -511,7 +511,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://wms.glos.us:8080/wms/SLRFVM_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/SLRFVM_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'u,v'
           ,'vectors_average_jet_0_1.5_cell_True'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -870,7 +870,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Currents-GLERL-StLawrenceRiver'
-      ,'http://wms.glos.us:8080/wms/SLRFVM_Latest_Forecast/'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/SLRFVM_Latest_Forecast/'
       ,'u,v'
       ,'vectors_average_jet_0_1.5_cell_True'
       ,'image/png'
@@ -886,7 +886,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Currents-GLERL-LakeStClaire'
-      ,'http://wms.glos.us:8080/wms/HECWFS_Latest_Forecast/'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/HECWFS_Latest_Forecast/'
       ,'u,v'
       ,'vectors_average_jet_0_1.5_cell_True'
       ,'image/png'
@@ -1574,7 +1574,7 @@ EOJS;
     ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
     ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(mg m^-3)'],false,".getChlorophyllTime().",false,'','']
-    ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,false,false,'','']
+    ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,".getNaturalColorTime().",false,'','']
     ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
   ]
 ";
@@ -1624,6 +1624,32 @@ EOJS;
         foreach ($l0->{'Layer'} as $l1) {
           if (sprintf("%s",$l1->{'Name'}) == 'chl') {
             array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
+          }
+        }
+      }
+    }
+    if (count($a) > 0) {
+      return '['.implode(',',$a).']';
+    }
+    else {
+      return false;
+    }
+  }
+
+  function getNaturalColorTime() {
+    $lakes = array('Lake Erie','Lake Huron','Lake Michigan','Lake Ontario','Lake Superior');
+    $a = array();
+    for ($i = 0; $i < count($lakes); $i++) {
+      $l = $lakes[$i];
+      $xml = @simplexml_load_file('xml/glosNaturalColor'.str_replace(' ','',$l).'.getcaps.xml');
+      foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
+        if (sprintf("%s",$l0->{'Name'}) == 'Band1') { 
+          foreach ($l0->{'Extent'} as $e) {
+            if (sprintf("%s",$e->attributes()->{'name'}) == 'time') {
+              // for now, pull apart the times string and assume that the last one is the default
+              $times = explode(',',sprintf("%s",$e));
+              array_push($a,'["'.$l.'",new Date('.strtotime(array_pop($times)).' * 1000)]');
+            }
           }
         }
       }
