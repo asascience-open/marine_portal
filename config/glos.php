@@ -1647,8 +1647,8 @@ EOJS;
           foreach ($l0->{'Extent'} as $e) {
             if (sprintf("%s",$e->attributes()->{'name'}) == 'time') {
               // for now, pull apart the times string and assume that the last one is the default
-              $times = explode(',',sprintf("%s",$e));
-              array_push($a,'["'.$l.'",new Date('.strtotime(array_pop($times)).' * 1000)]');
+              $times = preg_split("/,|\//",sprintf("%s",$e));
+              array_push($a,'["'.$l.'",new Date('.strtotime($times[count($times)-1]).' * 1000)]');
             }
           }
         }
