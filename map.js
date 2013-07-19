@@ -1414,6 +1414,7 @@ function init() {
                   }
                 }
               }
+/*
               ,'-'
               ,{
                  text         : 'Shaded Relief (ETOPO1)'
@@ -1439,6 +1440,7 @@ function init() {
                   }
                 }
               }
+*/
               ,{
                  text        : '<b>Bathymetry options</b>'
                 ,canActivate : false
