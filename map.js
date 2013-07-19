@@ -5424,7 +5424,8 @@ function runQuery() {
           return new Ext.data.XmlReader({
              record : 'gmd_contentInfo > gmi_MI_CoverageDescription > gmd_dimension'
             ,fields : [
-              {name : 'name',mapping : 'gmd_MD_Band > gmd_descriptor > gco_CharacterString'}
+               {name : 'name'    ,mapping : 'gmd_MD_Band > gmd_descriptor > gco_CharacterString'}
+              ,{name : 'niceName',mapping : 'gmd_MD_Band > gmd_sequenceIdentifier > gco_MemberName > gco_aName > gco_CharacterString'}
             ]
           }).readRecords(n).records;
         }
@@ -5798,8 +5799,10 @@ function runQuery() {
             var data = [];
             var dimensions = rec.get('dimensions');
             var dimSort = [];
+            var niceName2Name = {};
             for (var j = 0; j < dimensions.length; j++) {
-              dimSort.push(dimensions[j].get('name'));
+              dimSort.push(dimensions[j].get('niceName'));
+              niceName2Name[dimensions[j].get('niceName')] = dimensions[j].get('name');
             }
             dimSort.sort(function(a,b) {
               return a.toLowerCase().localeCompare(b.toLowerCase());
@@ -5807,7 +5810,7 @@ function runQuery() {
             for (var j = 0; j < dimSort.length; j++) {
               var id = Ext.id();
               data.push([
-                dimSort[j],dimSort[j]
+                dimSort[j],niceName2Name[dimSort[j]]
               ]);
             }
 
