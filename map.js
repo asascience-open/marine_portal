@@ -1162,7 +1162,7 @@ function init() {
                   for (var i = 0; i <= 48; i += fcSliderIncrement) {
                     sto.add(new sto.recordType({
                        lab : dateToFriendlyString(new Date(dNow.getTime() + i * 3600000))
-                      ,val : makeTimeParam(new Date(dNow.getTime() + i * 3600 * 1000))
+                      ,val : makeTimeParam(new Date(dNow.getTime() + i * 3600000))
                     }));
                   }
                   cb.setValue(sto.getAt(0).get('val'));
@@ -1173,7 +1173,7 @@ function init() {
                   for (var i = 0; i < layers.length; i++) {
                     var lyr = map.getLayersByName(layers[i])[0];
                     if (lyr.timeParam) {
-                      lyr.mergeNewParams({TIME : makeTimeParam(new Date(dNow.getTime() + idx * 3600 * 1000))});
+                      lyr.mergeNewParams({TIME : rec.get('val')});
                     }
                   }
                 }
