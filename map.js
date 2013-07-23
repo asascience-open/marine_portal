@@ -6,6 +6,7 @@ var proj900913 = new OpenLayers.Projection("EPSG:900913");
 var proj4326   = new OpenLayers.Projection("EPSG:4326");
 
 var maxFeatures   = 150;
+var guaranteeFeatures = [];
 var loadingLayers = {
    'forecasts'   : {}
   ,'weather'     : {}
@@ -1226,8 +1227,7 @@ function init() {
                   if (n.attributes.provider == rec.get('provider') && n.attributes.text == rec.get('descr')) {
                     tree.selectPath(n.getPath());
                     n.ui.focus();
-                    selectWeatherStationType('all',{provider : n.attributes.provider,descr : n.attributes.text});
-                    goObs('all');
+                    goObs('all',{provider : n.attributes.provider,descr : n.attributes.text});
                     return false;
                   }
                 });
@@ -2779,6 +2779,7 @@ function initMap() {
     if (lyr && lyr.unfilteredFeatures.length > 0 && lyr.listenForMoveEnd) {
       syncIconLayerWithData(lyr);
     }
+    lyr.listenForMoveEnd = true;
 
     map.getLayersByName('OpenStreetMapOlay')[0].setVisibility(map.baseLayer.name == 'ESRI Ocean' && map.getZoom() >= 11);
 
@@ -3268,7 +3269,7 @@ function getIconData(lyr,buffer) {
 }
 
 function syncIconLayerWithData(lyr,guaranteeFeature) {
-  if (lyr.bbox && lyr.bbox.containsBounds(map.getExtent()) && lyr.zoom && lyr.zoom == map.getZoom()) {
+  if (!guaranteeFeature && lyr.bbox && lyr.bbox.containsBounds(map.getExtent()) && lyr.zoom && lyr.zoom == map.getZoom()) {
     return;
   }
   lyr.bbox = new OpenLayers.Geometry.LinearRing(map.getExtent().toGeometry().getVertices()).resize(2,new OpenLayers.Geometry.Point(map.getCenter().lon,map.getCenter().lat)).getBounds();
@@ -3345,20 +3346,28 @@ function syncIconLayerWithData(lyr,guaranteeFeature) {
         f = features[i];
       }
     }
-    lyr.listenForMoveEnd = true;
+
+    var found = false;
+    for (var i = 0; i < guaranteeFeatures.length; i++) {
+      found = found || (guaranteeFeatures[i].attributes.provider == guaranteeFeature.provider && guaranteeFeatures[i].attributes.descr == guaranteeFeature.descr);
+    }
+    if (!found) {
+      guaranteeFeatures.push(f);
+    }
   }
 
   features = shuffle(features).slice(0,maxFeatures);
 
-  var foundF = false;
-  if (f) {
+  for (var j = 0; j < guaranteeFeatures.length; j++) {
+    var foundF = false;
     for (var i = 0; i < features.length; i++) {
-      if (features[i].attributes.provider == f.provider && features[i].attributes.descr == f.descr) {
+      if (features[i].attributes.provider == guaranteeFeatures[j].attributes.provider && features[i].attributes.descr == guaranteeFeatures[j].attributes.descr) {
         foundF = true;
+        break;
       }
     }
     if (!foundF) {
-      features.push(f);
+      features.push(guaranteeFeatures[j]);
       lyr.possibleHits.all++;
     }
   }
@@ -3811,7 +3820,7 @@ function selectWeatherStationType(o,guaranteeFeature) {
       lyr.listenForMoveEnd = false;
       zoomToStation(guaranteeFeature.provider,guaranteeFeature.descr);
     }
-    syncIconLayerWithData(lyr,guaranteeFeature);
+    Ext.defer(function(){syncIconLayerWithData(lyr,guaranteeFeature)},10);
   }
 
   var a = ['Winds','Waves','WaterTemp','WaterLevel','Other'];
@@ -4265,8 +4274,8 @@ function getOffset( el ) {
 }
 
 function zoomToStation(provider,descr) {
-  if (lastHighlight && lastHighlight.feature && lastHighlight.feature.layer) {
-    highlightControl.unhighlight(lastHighlight.feature);
+  for (var i = 0; i < guaranteeFeatures.length; i++) {
+    highlightControl.unhighlight(guaranteeFeatures[i]);
   }
   var lyr = map.getLayersByName('icon')[0];
   var f;
@@ -6894,7 +6903,7 @@ function goTheme(s) {
   }
 }
 
-function goObs(s) {
+function goObs(s,f) {
   var a = ['winds','waves','waterTemp','waterLevel','dissolvedOxygen','airTemperature','all','none'];
   for (var i = 0; i < a.length; i++) {
     Ext.getCmp('obs' + a[i]).toggle(s == a[i],true);
@@ -6910,7 +6919,7 @@ function goObs(s) {
       }
     }
   }
-  selectWeatherStationType(s);
+  selectWeatherStationType(s,f);
 }
 
 function goSatellite(s) {
