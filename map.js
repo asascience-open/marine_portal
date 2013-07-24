@@ -5308,16 +5308,18 @@ function printMap(data,pLonLat) {
         for (var k = 0; k < lyr.features.length; k++) {
           if (!lyr.features[k].hidden) {
             var s   = varSummary(lyr.features[k],0.6);
-            var pix = map.getPixelFromLonLat(new OpenLayers.LonLat(lyr.features[k].geometry.x,lyr.features[k].geometry.y));
-            features[lyr.name].push([
-               pix.x
-              ,pix.y
-              ,baseUrl + s.url
-              ,s.w
-              ,s.h
-            ]);
-            if (!legends['obs']) {
-              legends['obs'] = makeObsLegend(s.leg).html.replace(obsLegendsPath,baseUrl + obsLegendsPath).replace(/style="width:90px" align=center|align=right/g,'');
+            if (s.url != 'img/blank.png') {
+              var pix = map.getPixelFromLonLat(new OpenLayers.LonLat(lyr.features[k].geometry.x,lyr.features[k].geometry.y));
+              features[lyr.name].push([
+                 pix.x
+                ,pix.y
+                ,baseUrl + s.url
+                ,s.w
+                ,s.h
+              ]);
+              if (!legends['obs']) {
+                legends['obs'] = makeObsLegend(s.leg).html.replace(obsLegendsPath,baseUrl + obsLegendsPath).replace(/style="width:90px" align=center|align=right/g,'');
+              }
             }
           }
         }
