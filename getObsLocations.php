@@ -1201,7 +1201,7 @@
             array_key_exists($matches[1].' '.$matches[2].' Thermistor Temperature',$sites[$i]['topObs'])
             && array_key_exists($matches[1].' '.$matches[2].' Depth In Water',$sites[$i]['topObs'])
           ) {
-            $compK = 'ThermistorTemperature'
+            $compK = 'WaterTemperature'
               .' @ ' 
               .sprintf("%05.2f",$sites[$i]['topObs'][$matches[1].' '.$matches[2].' Depth In Water']['v']['ft'])
               .' ft';
