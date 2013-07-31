@@ -3675,8 +3675,10 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
   var obs = ['<tr><td align=center><table>'];
   if (type) {
     for (var i = 0; i < type.length; i++) {
-      if (summary[type[i]]) {
-        obs.push('<tr><td>' + makeNiceTopObs(type[i]).name + '</td><td>&nbsp;</td><td>' + summary[type[i]] + '</td></tr>');
+      for (k in summary) {
+        if (k.indexOf(type[i]) == 0) {
+          obs.push('<tr><td>' + makeNiceTopObs(k).name + '</td><td>&nbsp;</td><td>' + summary[k] + '</td></tr>');
+        }
       }
     }
   }
@@ -3924,6 +3926,11 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['watertemp'] + '&mag=' + Math.round(o.mag) + hilite;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
+      if (o.mag == 'all') {
+        url = 'img/site' + hilite + '.png';
+        w   = hilite != '' ? 40 : 20;
+        h   = hilite != '' ? 40 : 20;
+      }
       if (!o.mag) {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
@@ -3933,13 +3940,13 @@ function varSummary(f,scaleFactor,ctl) {
          url   : url
         ,w     : w
         ,h     : h
-        ,type  : ['WaterTemperature']
+        ,type  : ['WaterTemperature'] // ,'ThermistorTemperature']
         ,graph : {
            o : 'WaterTemperature'
           ,u : 'F'
         }
         ,regx  : {
-           o : /^WaterTemperature$/
+           o : /^WaterTemperature/
           ,u : /^F$/
         }
         ,leg    : 'watertemp'
@@ -4325,12 +4332,19 @@ function getWaves(f) {
 }
 
 function getWaterTemp(f) {
-  if (!f.attributes.topObs['WaterTemperature']) {
-    return false;
+  if (f.attributes.topObs['WaterTemperature']) {
+    return {
+      mag : f.attributes.topObs['WaterTemperature'].v['F']
+    };
   }
-  return {
-    mag : f.attributes.topObs['WaterTemperature'].v['F']
-  };
+  for (var s in f.attributes.topObs) {
+    if (/WaterTemperature/.test(s)) {
+      return {
+        mag : 'all'
+      };
+    }
+  }
+  return false;
 }
 
 function getWaterLevel(f) {

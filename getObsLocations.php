@@ -118,6 +118,23 @@
     $ndbcTextProviders = array();
   }
 
+  $glosJsonProviders = array(
+     'GLOS' => array(
+       'varMap'   => array(
+         'Wind Speed'                   => 'WindSpeed'
+        ,'Wind from Direction'          => 'WindDirection'
+        ,'Air Temperature'              => 'AirTemperature'
+        ,'Significant Wave Height'      => 'SignificantWaveHeight'
+        ,'Water Temperature at Surface' => 'WaterTemperature'
+      )
+      ,'siteType'  => 'buoy'
+      ,'ndbcStations' => array()
+    )
+  );
+  if (!in_array('glos',$providers)) {
+    $glosJsonProviders = array();
+  }
+
   $soapProviders = array(
     'National Estuarine Research Reserve System' => array(
       'varMap'   => array(
@@ -188,6 +205,14 @@
     switch ($provider) {
       case 'Environment Canada' :
         getNDBCText($ndbcTextProviders,$provider,$dBegin,$tUom,$sites);
+      break;
+    }
+  }
+
+  foreach ($glosJsonProviders as $provider => $v) {
+    switch ($provider) {
+      case 'GLOS' :
+        getGLOSJson($glosJsonProviders,$provider,$dBegin,$hours,$tUom,$sites);
       break;
     }
   }
@@ -509,7 +534,7 @@
       $loc    = explode(' ',sprintf("%s",$chld->{'boundedBy'}[0]->{'Envelope'}[0]->{'lowerCorner'}));
       $dSensor = array();
       $getObs  = array();
-      if (contains($bbox,$loc[1],$loc[0])) { // && $id == '45029') {
+      if (contains($bbox,$loc[1],$loc[0]) && !in_array($id,$glosJsonProviders['GLOS']['ndbcStations'])) { // && $id == '45029') {
         foreach ($o->{'observedProperty'} as $prop) {
           $p = explode('/',$prop->attributes('http://www.w3.org/1999/xlink')->{'href'});
           if (array_key_exists(sprintf("%s",$p[count($p)-1]),$sosProviders[$provider]['variables'])) {
@@ -1063,6 +1088,131 @@
             }
           }
         }
+      }
+    }
+  }
+
+  function getGLOSJson(&$glosJsonProviders,$provider,$dBegin,$hours,$tUom,&$sites) {
+    $u = 'http://data.glos.us/glos_obs/platform.glos?tid=15';
+    print "$u\n";
+    $json = json_decode(file_get_contents($u),true);
+    $platforms = array();
+    foreach ($json as $platform) {
+      array_push($platforms,array(
+         'id'       => $platform['id']
+        ,'descr'    => !is_null($platform['longName']) ? $platform['longName'] : $platform['shortName']
+        ,'lon'      => $platform['lon']
+        ,'lat'      => $platform['lat']
+        ,'provider' => $platform['org']['shortName']
+        ,'url'      => !is_null($platform['stationUrl']) ? $platform['stationUrl'] : ''
+        ,'sensors'  => array()
+      ));
+      if (!is_null($platform['ndbcHandler'])) {
+        array_push($glosJsonProviders[$provider]['ndbcStations'],$platform['ndbcHandler']);
+      }
+    }
+
+    for ($i = 0; $i < count($platforms); $i++) {
+      $u = 'http://data.glos.us/glos_obs/sensor.glos?pid='.$platforms[$i]['id'];
+      print "$u (".$platforms[$i]['descr'].")\n";
+      $json = json_decode(file_get_contents($u),true);
+      if ($json) {
+        foreach ($json as $sensor) {
+          array_push($platforms[$i]['sensors'],array(
+             'id'    => $sensor['id']
+            ,'descr' => $sensor['sensorType']['description']
+            ,'type'  => $sensor['sensorType']['typeName']
+            ,'uom'   => $sensor['measureType']['uomDisplay']
+          ));
+        }
+      }
+    }
+
+    for ($k = 0; $k < count($platforms); $k++) {
+      array_push($sites,array(
+         'descr'        => $platforms[$k]['descr']
+        ,'provider'     => $platforms[$k]['provider']
+        ,'organization' => ''
+        ,'lon'          => $platforms[$k]['lon']
+        ,'lat'          => $platforms[$k]['lat']
+        ,'timeSeries'   => array()
+        ,'topObs'       => array()
+        ,'url'          => $platforms[$k]['url']
+        ,'siteType'     => $glosJsonProviders[$provider]['siteType']
+      ));
+
+      $t0 = strtotime($dBegin);
+      $i = count($sites) - 1;
+      for ($j = 0; $j < count($platforms[$k]['sensors']); $j++) {
+        $u = 'http://data.glos.us/glos_obs/obs.glos?sids='.$platforms[$k]['sensors'][$j]['id'].'&pt=15&pid='.$platforms[$k]['id'].'&hours='.$hours;
+        print "$u\n";
+        $json = json_decode(file_get_contents($u),true);
+        foreach ($json as $sensor) {
+          if (preg_match('/^Thermistor/',$platforms[$k]['sensors'][$j]['type'])) {
+            $platforms[$k]['sensors'][$j]['type'] .= ' '.$platforms[$k]['sensors'][$j]['descr'];
+          }
+          print $platforms[$k]['sensors'][$j]['type']."\n";
+          foreach ($sensor as $obs) {
+            $t = strtotime($obs['dateTime'].'Z');
+            if ($t >= $t0) {
+              $uom = $platforms[$k]['sensors'][$j]['uom'];
+              $a = convertUnits($obs['value'],$uom,$tUom == 'english');
+              $n = $platforms[$k]['sensors'][$j]['type'];
+              if (array_key_exists($n,$glosJsonProviders[$provider]['varMap'])) {
+                $n = $glosJsonProviders[$provider]['varMap'][$n];
+              }
+              if (!array_key_exists($n,$sites[$i]['timeSeries'])) {
+                $v = array(
+                  $a[0]['uom'] => array()
+                );
+                if (count($a) == 2) {
+                  $v[$a[1]['uom']] = array();
+                }
+                $sites[$i]['timeSeries'][$n] = array(
+                   'v' => $v
+                  ,'t' => array()
+                );
+                $sites[$i]['topObs'][$n] = array(
+                   'v' => array()
+                  ,'t' => 0
+                );
+              }
+              array_push($sites[$i]['timeSeries'][$n]['v'][$a[0]['uom']],$a[0]['val']);
+              if (count($a) == 2) {
+                array_push($sites[$i]['timeSeries'][$n]['v'][$a[1]['uom']],$a[1]['val']);
+              }
+              array_push($sites[$i]['timeSeries'][$n]['t'],$t);
+              if ($t >= $sites[$i]['topObs'][$n]['t']) {
+                $sites[$i]['topObs'][$n]['t'] = $t;
+                $sites[$i]['topObs'][$n]['v'][$a[0]['uom']] = $a[0]['val'];
+                if (count($a) == 2) {
+                  $sites[$i]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Go back through the platform's sensors to glue thermistor depths together.
+      foreach (array_keys($sites[$i]['topObs']) as $sensor) {
+        if (preg_match('/^(Thermistor String Node) (..)/',$sensor,$matches)) {
+          if (
+            array_key_exists($matches[1].' '.$matches[2].' Thermistor Temperature',$sites[$i]['topObs'])
+            && array_key_exists($matches[1].' '.$matches[2].' Depth In Water',$sites[$i]['topObs'])
+          ) {
+            $compK = 'ThermistorTemperature'
+              .' @ ' 
+              .sprintf("%05.2f",$sites[$i]['topObs'][$matches[1].' '.$matches[2].' Depth In Water']['v']['ft'])
+              .' ft';
+            $sites[$i]['topObs'][$compK] = $sites[$i]['topObs'][$sensor];
+            unset($sites[$i]['topObs'][$matches[1].' '.$matches[2].' Thermistor Temperature']);
+            unset($sites[$i]['topObs'][$matches[1].' '.$matches[2].' Depth In Water']);
+            $sites[$i]['timeSeries'][$compK] = $sites[$i]['timeSeries'][$sensor];
+            unset($sites[$i]['timeSeries'][$matches[1].' '.$matches[2].' Thermistor Temperature']);
+            unset($sites[$i]['timeSeries'][$matches[1].' '.$matches[2].' Depth In Water']);
+          }
+        } 
       }
     }
   }
