@@ -736,7 +736,7 @@ EOJS;
       ,true
       ,1
       ,false
-      ,true
+      ,false
       ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
       ,false
       ,{slope : -999,offset : -999,format : '',image : 'http://icons-ak.wxug.com/graphics/wu2/key_gSat_Wide.gif'}
