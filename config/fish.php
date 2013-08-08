@@ -1,6 +1,6 @@
 <?php
   $title     = 'MyMARACOOS Fishing';
-  $googleId  = 'UA-32877184-1';
+  $googleId  = 'UA-32877184-1x';
 
   $mapCenter = '-73,38.5';
   $mapZoom   = 6;
@@ -729,14 +729,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Ocean fronts'
-      ,'http://107.21.136.52:8080/wms/maracoos_fronts_2013_Agg/'
+      ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
       ,'M_WK_G'
       ,'pcolor_average_jet_0.01_10_grid_Log'
       ,'image/png'
       ,true
       ,1
       ,false
-      ,true
+      ,false
       ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
       ,false
       ,{slope : -999,offset : -999,format : '',image : 'http://icons-ak.wxug.com/graphics/wu2/key_gSat_Wide.gif'}
