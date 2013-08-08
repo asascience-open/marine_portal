@@ -1,7 +1,7 @@
 <?php
   session_start();
   include_once('config/'.getenv('config').'.php');
-  $version = 0.29;
+  $version = 0.30;
 ?>
 <html>
   <head>
