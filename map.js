@@ -3926,11 +3926,6 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['watertemp'] + '&mag=' + Math.round(o.mag) + hilite;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
-      if (o.mag == 'all') {
-        url = 'img/site' + hilite + '.png';
-        w   = hilite != '' ? 40 : 20;
-        h   = hilite != '' ? 40 : 20;
-      }
       if (!o.mag) {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
@@ -3940,7 +3935,7 @@ function varSummary(f,scaleFactor,ctl) {
          url   : url
         ,w     : w
         ,h     : h
-        ,type  : ['WaterTemperature'] // ,'ThermistorTemperature']
+        ,type  : ['WaterTemperature']
         ,graph : {
            o : 'WaterTemperature'
           ,u : 'F'
