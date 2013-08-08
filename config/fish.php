@@ -1,6 +1,6 @@
 <?php
   $title     = 'MyMARACOOS Fishing';
-  $googleId  = 'UA-32877184-1x';
+  $googleId  = 'UA-32877184-1';
 
   $mapCenter = '-73,38.5';
   $mapZoom   = 6;
