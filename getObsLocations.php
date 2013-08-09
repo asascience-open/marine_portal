@@ -1098,6 +1098,9 @@
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
+      if ($platform['id'] != 399) {
+        // continue;
+      }
       array_push($platforms,array(
          'id'       => $platform['id']
         ,'descr'    => !is_null($platform['longName']) ? $platform['longName'] : $platform['shortName']
@@ -1108,6 +1111,7 @@
         ,'sensors'  => array()
       ));
       if (!is_null($platform['ndbcHandler'])) {
+        $platforms[count($platforms) - 1]['alternateUrl'] = 'http://www.ndbc.noaa.gov/station_page.php?station='.$platform['ndbcHandler'];
         array_push($glosJsonProviders[$provider]['ndbcStations'],$platform['ndbcHandler']);
       }
     }
@@ -1140,6 +1144,9 @@
         ,'url'          => $platforms[$k]['url']
         ,'siteType'     => $glosJsonProviders[$provider]['siteType']
       ));
+      if (array_key_exists('alternateUrl',$platforms[$k])) {
+        $sites[count($sites) - 1]['alternateUrl'] = $platforms[$k]['alternateUrl'];
+      }
 
       $t0 = strtotime($dBegin);
       $i = count($sites) - 1;
