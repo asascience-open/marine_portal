@@ -5433,10 +5433,20 @@ function runQuery() {
       ,{name : 'services'       ,convert : (function(){
         return function(v,n) {
           return new Ext.data.XmlReader({
-             record : 'gmd_identificationInfo > srv_SV_ServiceIdentification > srv_containsOperations > srv_SV_OperationMetadata'
+             record : 'gmd_identificationInfo > srv_SV_ServiceIdentification'
             ,fields : [
-               {name : 'name',mapping : 'srv_operationName > gco_CharacterString'}
-              ,{name : 'url' ,mapping : 'srv_connectPoint > gmd_CI_OnlineResource > gmd_linkage > gmd_URL'}
+               {name : 'category',mapping : '@id'}
+              ,{name : 'details' ,convert : (function(){
+                return function(v,n) {
+                  return new Ext.data.XmlReader({
+                     record : 'srv_containsOperations > srv_SV_OperationMetadata'
+                    ,fields : [
+                       {name : 'name'    ,mapping : 'srv_operationName > gco_CharacterString'}
+                      ,{name : 'url'     ,mapping : 'srv_connectPoint > gmd_CI_OnlineResource > gmd_linkage > gmd_URL'}
+                    ]
+                  }).readRecords(n).records;
+                }
+              })()}
             ]
           }).readRecords(n).records;
         }
@@ -5876,20 +5886,33 @@ function runQuery() {
             }
 
             var svc = [];
+            var svcTOC = [];
             var services = rec.get('services');
             for (var i = 0; i < services.length; i++) {
-              var p = OpenLayers.Util.getParameters(services[i].get('url'));
-              if (new RegExp(/getcapabilities/i).test(p['request']) && new RegExp(/wms/i).test(p['service'])) {
-                svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(services[i].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(services[i].get('url')) + '\')">' + 'preview data on map' + '</a>');
-              }
-              else if (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service'])) {
-                var id = Ext.id();
-                svc.push('<img style="margin-bottom:-3px" width=16 height=16 src="img/chart16.png"> Select an observation to preview from the list below:');
-                svc.push('<img height=5 src="img/blank.png"');
-                svc.push('<div id="combo.' + id + '"></div>');
-                createComboBox.defer(100,this,[val,id,rec,services[i],data]);
+              var details = services[i].get('details');
+              for (var j = 0; j < details.length; j++) {
+                var p = OpenLayers.Util.getParameters(details[j].get('url'));
+                if (new RegExp(/getcapabilities/i).test(p['request']) && new RegExp(/wms/i).test(p['service'])) {
+                  svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + 'Preview data on map' + '</a>');
+                }
+                else if (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service'])) {
+                  var id = Ext.id();
+                  svc.push('<img style="margin-bottom:-3px" width=16 height=16 src="img/chart16.png"> Select an observation to preview from the list below:');
+                  svc.push('<img height=5 src="img/blank.png"');
+                  svc.push('<div id="combo.' + id + '"></div>');
+                  createComboBox.defer(100,this,[val,id,rec,details[j],data]);
+                }
+console.dir([services[i].get('category'),details[j].get('name')]);
+                svcTOC.push( 
+                  '<a target=_blank href="' + details[j].get('url')  + (/opendap/i.test(details[j].get('name')) ? '.html' : '') + '">'
+                  + (new RegExp(services[i].get('category')).test(details[j].get('name')) ? details[j].get('name') : (services[i].get('category') + ' ' + details[j].get('name')))
+                  + '</a>'
+                );
               }
             }
+            svcTOC.sort(function(a,b) {
+              return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
             var d = '';
             if (rec.get('minT') != '' && rec.get('maxT') != '') {
               if (isoDateToDate(rec.get('minT')).format('mmm d, yyyy') == isoDateToDate(rec.get('maxT')).format('mmm d, yyyy')) {
@@ -5908,7 +5931,7 @@ function runQuery() {
             else if (rec.get('maxT') != '') {
               d = '<br><br>to ' + isoDateToDate(rec.get('maxT')).format('mmm d, yyyy');
             }
-            return '<b><a href="xsl2html.php?xsl=' + xsl + '&id=' + encodeURIComponent(rec.get('cswId')) + '&url=' + encodeURIComponent('http://user:glos@64.9.200.121:8984/rest/glos') + '" target=_blank>' + (val != '' ? val : 'Title unavailable') + '</a></b><p><br>' + rec.get('abstract') + d + '</p>' + (svc.length > 0 ? '<p><br>' + svc.join('<br>') + '</p>' : '');
+            return '<b><a href="xsl2html.php?xsl=' + xsl + '&id=' + encodeURIComponent(rec.get('cswId')) + '&url=' + encodeURIComponent('http://user:glos@64.9.200.121:8984/rest/glos') + '" target=_blank>' + (val != '' ? val : 'Title unavailable') + '</a></b><p><br>' + rec.get('abstract') + d + '</p>' + (svcTOC.length > 0 ? '<p><br>Data service(s) : ' + svcTOC.join(' | ') + '</p>' : '') + (svc.length > 0 ? '<p><br>' + svc.join('<br>') + '</p>' : '');
           }}
           ,{width : 142,renderer : function(val,p,rec) {
             var bbox = [rec.get('bboxWest'),rec.get('bboxSouth'),rec.get('bboxEast'),rec.get('bboxNorth')];
