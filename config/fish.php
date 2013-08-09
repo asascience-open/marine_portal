@@ -533,32 +533,6 @@ EOJS;
       )
       ,'map' => 'Bottom water temperature'
     )
-    ,array(
-      'u'     => function($srs,$bbox,$x,$y,$w,$h) {
-        return sprintf(
-          "http://tds.maracoos.org/ncWMS/wms?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/xml&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
-          ,'modis/chl_oc3'
-          ,'boxfill/rainbow'
-          ,$srs,$bbox,$x,$y,$w,$h
-          ,'modis/chl_oc3'
-        );
-      }
-      ,'fmt' => 'xml'
-      ,'forceVar' => array(
-         'name' => 'Chlorophyll concentration'
-        ,'uom'  => 'mg m^-3'
-      )
-      ,'vars' => array(
-        'Chlorophyll concentration' => array(
-           'name' => 'Chlorophyll concentration (mg m^-3)'
-          ,'fmt'  => "%0.2f"
-          ,'f'    => function($val,$a,$t) {
-            return $val;
-          }
-        )
-      )
-      ,'map' => 'Chlorophyll concentration'
-    )
   );
 
   $byCatchInfo = getByCatchInfo();
@@ -633,9 +607,9 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll concentration'
-      ,'http://tds.maracoos.org/ncWMS/wms?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'modis-seven/chl_oc3'
-      ,'boxfill/rainbow'
+      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/MODIS_Eight_Agg/?ELEVATION=0&'
+      ,'chl_oc3'
+      ,'pcolor_average_jet_0_20_node_Log'
       ,'image/png'
       ,true
       ,1
