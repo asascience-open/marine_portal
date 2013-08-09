@@ -5893,7 +5893,7 @@ function runQuery() {
               for (var j = 0; j < details.length; j++) {
                 var p = OpenLayers.Util.getParameters(details[j].get('url'));
                 if (new RegExp(/getcapabilities/i).test(p['request']) && new RegExp(/wms/i).test(p['service'])) {
-                  svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + 'Preview data on map' + '</a>');
+                  svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + 'Preview data on map.' + '</a>');
                 }
                 else if (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service'])) {
                   var id = Ext.id();
