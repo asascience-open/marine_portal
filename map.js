@@ -5902,7 +5902,6 @@ function runQuery() {
                   svc.push('<div id="combo.' + id + '"></div>');
                   createComboBox.defer(100,this,[val,id,rec,details[j],data]);
                 }
-console.dir([services[i].get('category'),details[j].get('name')]);
                 svcTOC.push( 
                   '<a target=_blank href="' + details[j].get('url')  + (/opendap/i.test(details[j].get('name')) ? '.html' : '') + '">'
                   + (new RegExp(services[i].get('category')).test(details[j].get('name')) ? details[j].get('name') : (services[i].get('category') + ' ' + details[j].get('name')))
