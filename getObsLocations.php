@@ -787,7 +787,7 @@
     for ($i = 0; $i < count($urls); $i++) {
       echo $urls[$i]."\n";
       $xml = @simplexml_load_file($urls[$i]);
-      if ($xml == FALSE) {
+      if ($xml === FALSE) {
         echo "\tERROR PARSING\n";
         continue;
       }
