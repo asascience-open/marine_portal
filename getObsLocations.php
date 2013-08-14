@@ -45,6 +45,7 @@
       )
       ,'provUrl'   => 'http://www.ndbc.noaa.gov/station_page.php?station=___SITE___'
       ,'siteType'  => 'buoy'
+      ,'skipStations' => array('45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028')
     )
     ,'COOPS' => array(
        'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
@@ -56,6 +57,7 @@
       )
       ,'provUrl'   => 'http://tidesandcurrents.noaa.gov/geo.shtml?location=___SITE___'
       ,'siteType'  => 'buoy'
+      ,'skipStations' => array()
     )
   );
 
@@ -128,7 +130,7 @@
         ,'Water Temperature at Surface' => 'WaterTemperature'
       )
       ,'siteType'  => 'buoy'
-      ,'ndbcStations' => array('45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028')
+      ,'ndbcStations' => array()
     )
   );
   if (!in_array('glos',$providers)) {
@@ -534,7 +536,7 @@
       $loc    = explode(' ',sprintf("%s",$chld->{'boundedBy'}[0]->{'Envelope'}[0]->{'lowerCorner'}));
       $dSensor = array();
       $getObs  = array();
-      if (contains($bbox,$loc[1],$loc[0]) && !in_array($id,$glosJsonProviders['GLOS']['ndbcStations'])) { // && $id == '45029') {
+      if (contains($bbox,$loc[1],$loc[0]) && !in_array($id,$sosProviders[$provider]['skipStations'])) { // && $id == '45029') {
         foreach ($o->{'observedProperty'} as $prop) {
           $p = explode('/',$prop->attributes('http://www.w3.org/1999/xlink')->{'href'});
           if (array_key_exists(sprintf("%s",$p[count($p)-1]),$sosProviders[$provider]['variables'])) {
@@ -601,6 +603,9 @@
             ,'siteType'     => $sosProviders[$provider]['siteType']
           ));
         }
+      }
+      else {
+        echo "skipping $id\n";
       }
     }
   }
