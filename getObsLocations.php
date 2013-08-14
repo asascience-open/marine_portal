@@ -128,7 +128,7 @@
         ,'Water Temperature at Surface' => 'WaterTemperature'
       )
       ,'siteType'  => 'buoy'
-      ,'ndbcStations' => array()
+      ,'ndbcStations' => array('45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028')
     )
   );
   if (!in_array('glos',$providers)) {
