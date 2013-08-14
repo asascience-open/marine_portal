@@ -1,11 +1,11 @@
 #!/bin/bash
 
-echo getobs start `date`
-if [ ! -f /tmp/lock_getobs$1 ]; then
-  touch /tmp/lock_getobs$1
+echo getobs $3 start `date`
+if [ ! -f /tmp/lock_getobs.$1.$3 ]; then
+  touch /tmp/lock_getobs.$1.$3
 
   php -d memory_limit=256M ./getObsLocations.php $1 $2 $3
 
-  rm -f /tmp/lock_getobs$1
+  rm -f /tmp/lock_getobs.$1.$3
 fi
-echo getobs end `date`
+echo getobs $3 end `date`

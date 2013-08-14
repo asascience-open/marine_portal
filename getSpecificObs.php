@@ -6,6 +6,7 @@
   $dbPass = getenv('dbPass');
   $dbName = getenv('dbName');
   $dbPort = getenv('dbPort');
+  $providers = explode(',',getenv('providers'));
 
   include_once('util.php');
   include_once('searchObs.php');
@@ -14,12 +15,18 @@
 
   $json = null;
   if (!array_key_exists('fromSearch',$_REQUEST) || (array_key_exists('fromSearch',$_REQUEST) && $_REQUEST['fromSearch'] != 'true')) {
+    $data   = array();
     $dbconn = pg_connect("host=localhost dbname=$dbName user=$dbUser password=$dbPass port=$dbPort");
-    $result = pg_query("select f from json order by seq desc limit 1");
-    while ($line = pg_fetch_array($result)) {
-      $json = json_decode(file_get_contents($line[0]),true);
+    foreach ($providers as $p) {
+      $result = pg_query("select f from json where providers = '$p' order by seq desc limit 1");
+      while ($line = pg_fetch_array($result)) {
+        $data = array_merge($data,json_decode(file_get_contents($line[0]),true));
+      }
     }
     pg_close($dbconn);
+    if (count($data) > 0) {
+      $json = $data;
+    }
   }
   else {
     $minT         = date('Y-m-d\T00:00:00\Z',strtotime($_REQUEST['minT']));

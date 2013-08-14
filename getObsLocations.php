@@ -1385,7 +1385,7 @@
 
   echo "json written\nupdating db...\n";
 
-  pg_query($dbconn,'insert into json (f) values(\''."json/obs.$id.json".'\')');
+  pg_query($dbconn,'insert into json (providers,f) values(\''.implode(',',$providers).'\',\''."json/obs.$id.json".'\')');
   pg_close($dbconn);
 
   echo "all done!\n";
