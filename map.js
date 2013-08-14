@@ -3584,18 +3584,42 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
     return a.toLowerCase().localeCompare(b.toLowerCase());
   });
 
+  // group the profiles (will have ' @ ' in them) unless this is a mouseover
+  var groupedObs = [];
+  var profiles   = {};
+  for (var i = 0; i < sortedObs.length; i++) {
+    var p = sortedObs[i].split(' @ ');
+    if (regx || p.length == 1) {
+      groupedObs.push(sortedObs[i]);
+    }
+    else if (!regx) {
+      if (groupedObs.length == 0 || groupedObs[groupedObs.length - 1] != p[0] + ' (profile)') {
+        groupedObs.push(p[0] + ' (profile)');
+        profiles[p[0] + ' (profile)'] = [];
+      }
+      profiles[p[0] + ' (profile)'].push(sortedObs[i]);
+    }
+  }
+
+  // pull out the max time and assume all at this time
+  var maxT;
+  for (var o in feature.attributes.topObs) {
+    if (feature.attributes.topObs[o].t && (!maxT || feature.attributes.topObs[o].t > maxT)) {
+      maxT = feature.attributes.topObs[o].t;
+    }
+  }
+
   var rows    = [];
   var summary = {};
-  var t;
-  for (var i = 0; i < sortedObs.length; i++ ) {
-    var o = sortedObs[i];
-    var maxT;
-    // assume all at the same time t
-    if (feature.attributes.topObs[o].t) {
-      if (feature.attributes.topObs[o].t && (!maxT || feature.attributes.topObs[o].t > maxT)) {
-        maxT = feature.attributes.topObs[o].t;
-      }
-      t = new Date(feature.attributes.topObs[o].t * 1000);
+  for (var i = 0; i < groupedObs.length; i++) {
+    var o = groupedObs[i];
+    var profileO = false;
+    if (profiles[o]) {
+      profileO = o;
+      // trick the popup into thinking it is plotting the 1st bin
+      o = profiles[o][0];
+    }
+    if (feature.attributes.topObs[o] && feature.attributes.topObs[o].t) {
       var v = [];
       for (var u in feature.attributes.topObs[o].v) {
         var tsT = 'null';
@@ -3610,20 +3634,21 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
           + '\'' + id + '\''
           + ',\'' + feature.attributes.provider + '\''
           + ',\'' + feature.attributes.descr.replace(/'/g,'\\\'') + '\''
-          + ',\'' + o + '\''
+          + ',\'' + (!profileO ? o : profileO) + '\''
           + ',\'' + u + '\''
           + ',' + tsT
           + ',' + tsV
           + ',' + fromSearch
           + ',' + pointsOnly
-          + ')">' + (feature.attributes.topObs[o].v[u] ? feature.attributes.topObs[o].v[u] + '&nbsp;' + u : 'view&nbsp;plot') + '<img id="' + id + '" src="img/blank.png" width=0></a>'
+          + ',' + (!profileO ? false : '[\'' + profiles[profileO].join('\',\'') + '\']')
+          + ')">' + (feature.attributes.topObs[o].v[u] && !profileO ? feature.attributes.topObs[o].v[u] + '&nbsp;' + u : 'view&nbsp;plot') + '<img id="' + id + '" src="img/blank.png" width=0></a>'
         );
         if (regx && regx.o.test(o) && regx.u.test(u)) {
           summary[o] = makeNiceTopObs(o,feature.attributes.topObs[o].v[u]).value + ' ' + u;
         }
       }
       rows.push(
-        '<td>' + o + '</td>'
+        '<td>' + (!profileO ? o : profileO) + '</td>'
         + '<td>' + v.join('<br>') + '</td>'
       );
     }
@@ -3697,7 +3722,7 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
         + '<tr><td align=center><img height=2 src="img/blank.png"></td></tr>'
         + (graphTitle ? '<tr><td align=center><b>' + graphTitle + '</b></td></tr>' : '')
         + (graphData.length > 0 ? '<tr><td align=center><div style="width:250px;height:90px" id="' + graphId + '"></div></td></tr>' : '')
-        + (t && obs.length > 0 ? '<tr><td align=center>' + dateToFriendlyString(t) + '</td></tr>' : '<tr><td align=center>No reported observations.</td></tr>')
+        + (maxT && obs.length > 0 ? '<tr><td align=center>' + dateToFriendlyString(new Date(maxT * 1000)) + '</td></tr>' : '<tr><td align=center>No reported observations.</td></tr>')
         + obs.join('')
         + '<tr><td align=center><font color=gray>Click the icon for more observations.</font></td></tr>'
         + '<tr><td align=center><img height=1 src="img/blank.png"></td></tr>'
@@ -3705,7 +3730,7 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
     ,graphData : graphData
     ,graphId   : graphId
     ,closable  : true
-    ,t         : t
+    ,t         : maxT
     ,nCols     : nCols
   };
 }
@@ -4022,7 +4047,7 @@ function varSummary(f,scaleFactor,ctl) {
   };
 }
 
-function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly) {
+function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly,profile) {
 
   function drawPlotCallback(r) {
     var json = new OpenLayers.Format.JSON().read(r.responseText);
@@ -4075,6 +4100,11 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
     }
   }
 
+  if (profile) {
+    Ext.Msg.alert('Error',"We're sorry, but this isn't supported yet.");
+    return;
+  }
+
   if (selectPopup && !selectPopup.isDestroyed) {
     selectPopup.items.items[0].getEl().mask('<table class="maskText"><tr><td>Loading...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>');
   }
@@ -4094,7 +4124,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
       ,callback : OpenLayers.Function.bind(getSpecificObsCallback,null)
     });
   }
-  else {
+  else if (!profile) {
     OpenLayers.Request.issue({
        url      : 'getSpecificObs.php'
          + '?id='       + id 
@@ -4104,7 +4134,27 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
          + '&varUnits=' + varUnits
          + '&fromSearch=false'
       ,callback : OpenLayers.Function.bind(getSpecificObsCallback,null)
-    })
+    });
+    _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
+  }
+  else {
+    var profileR = [];
+    for (var i = 0; i < profile.length; i++) {
+      OpenLayers.Request.issue({
+         url      : 'getSpecificObs.php'
+           + '?id='       + id
+           + '&provider=' + provider
+           + '&descr='    + descr
+           + '&varName='  + profile[i]
+           + '&varUnits=' + varUnits
+           + '&fromSearch=false'
+        ,async    : false
+        ,callback : function(r) {
+          profileR.push(r);
+        }
+      });
+    }
+    getSpecificObsCallback(profileR[0]);
     _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
   }
 }
