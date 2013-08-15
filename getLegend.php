@@ -6,7 +6,6 @@
   header("Expires: " . date(DATE_RFC822,strtotime("2 day")));
 
   $u = $_REQUEST['u'];
-file_put_contents('/tmp/maplog',$u."\n",FILE_APPEND);
 
   if (!preg_match('/getlegendgraphic/i',$u)) {
     exit;

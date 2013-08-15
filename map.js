@@ -62,6 +62,17 @@ var month = [
   ,'Dec'
 ];
 
+var lineColors = [
+   '#99BBE8'
+  ,'#66C2A5'
+  ,'#FC8D62'
+  ,'#E78AC3'
+  ,'#A6D854'
+  ,'#FFD92F'
+  ,'#E5C494'
+  ,'#B3B3B3'
+];
+
 var activeMode = 'observations';
 var lastHighlight = {};
 var highlightControl;
@@ -4103,7 +4114,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
         });
       }
       else if (json.v) {
-        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly,profile);
+        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly,!profile ? false : {varName : varName,data : profile});
       }
       else {
         if (selectPopup && !selectPopup.isDestroyed) {
@@ -4218,7 +4229,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
   var series = [{
      label  : varUnits
     ,data   : graphData
-    ,color  : '#99BBE8'
+    ,color  : lineColors[0]
     ,points : {show : pointsOnly}
     ,lines  : {show : !pointsOnly}
   }];
@@ -4231,15 +4242,15 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
     var tHash      = {};
     var tArr       = [];
     var seriesData = [];
-    for (var i = 0; i < profile.length; i++) {
+    for (var i = 0; i < profile.data.length; i++) {
       var d = [];
-      for (var j = 0; j < profile[i].t.length; j++) {
-        if (!tHash[profile[i].t[j]]) {
-          tHash[profile[i].t[j]] = [];
-          tArr.push(profile[i].t[j]);
+      for (var j = 0; j < profile.data[i].t.length; j++) {
+        if (!tHash[profile.data[i].t[j]]) {
+          tHash[profile.data[i].t[j]] = [];
+          tArr.push(profile.data[i].t[j]);
         }
-        tHash[profile[i].t[j]][i] = profile[i].v[j];
-        d.push([new Date(profile[i].t[j] * 1000),profile[i].v[j]]);
+        tHash[profile.data[i].t[j]][i] = profile.data[i].v[j];
+        d.push([new Date(profile.data[i].t[j] * 1000),profile.data[i].v[j]]);
       }
       seriesData.push(d);
     }
@@ -4254,14 +4265,14 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
     col    = [col[0]];
     hdr    = [];
     series = [];
-    for (var i = 0; i < profile.length; i++) {
+    for (var i = 0; i < profile.data.length; i++) {
       fields.push('v' + i);
-      col.push({header : profile[i].varName + ' (' + varUnits + ')',dataIndex : 'v' + i});
-      hdr.push(profile[i].varName);
+      col.push({header : profile.data[i].varName + ' (' + varUnits + ')',dataIndex : 'v' + i});
+      hdr.push(profile.data[i].varName);
       series.push({
-         label  : profile[i].varName
+         label  : profile.data[i].varName.replace(profile.varName.replace(' (profile)',''),'').split(' @ ').pop()
         ,data   : seriesData[i]
-        ,color  : '#99BBE8'
+        ,color  : lineColors[i % lineColors.length]
         ,points : {show : pointsOnly}
         ,lines  : {show : !pointsOnly}
       });
@@ -4273,6 +4284,8 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
     });
 
     autoExpandColumn = false;
+
+    title = profile.varName.replace(' (profile)',' (' + varUnits + ')');
   }
 
   var win = new Ext.Window({
@@ -4316,7 +4329,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                 var y = item.datapoint[1];
                 if (prevPoint != item.dataIndex) {
                   $('#tooltip').remove();
-                  showToolTip(item.pageX,item.pageY,y + ' ' + item.series.label + '<br/>' + (!largeTimeSpan ? dateToFriendlyString(x) : new Date(x).format("mmm d, yyyy'<br>'h:MM tt (Z)")));
+                  showToolTip(item.pageX,item.pageY,y + '<br/>' + (!largeTimeSpan ? dateToFriendlyString(x) : new Date(x).format("mmm d, yyyy'<br>'h:MM tt (Z)")));
                 }
                 prevPoint = item.dataIndex;
               }
@@ -4335,7 +4348,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                 ,grid      : {backgroundColor : {colors : ['#fff','#eee']},borderWidth : 1,borderColor : '#99BBE8',hoverable : true}
                 ,zoom      : {interactive : true}
                 ,pan       : {interactive : true}
-                ,legend    : {show : false}
+                ,legend    : {show : profile,backgroundOpacity : 0.5,position : 'sw'}
               }
             );
           }}
