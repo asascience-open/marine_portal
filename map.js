@@ -4066,7 +4066,24 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
   }
 
   function getSpecificObsCallback(r) {
-    var json = new OpenLayers.Format.JSON().read(r.responseText);
+    var json;
+    var profile = [];
+    if (r instanceof Array) {
+      for (var i = 0; i < r.length; i++) {
+        json = new OpenLayers.Format.JSON().read(r[i].responseText);
+        if (json) {
+          profile.push({
+             varName : json.varName
+            ,t       : json.t
+            ,v       : json.v
+          });
+        }
+      } 
+    }
+    else {
+      json    = new OpenLayers.Format.JSON().read(r.responseText);
+      profile = false;
+    }
     if (!json) {
       if (selectPopup && !selectPopup.isDestroyed) {
         selectPopup.getEl().unmask();
@@ -4077,7 +4094,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
       Ext.Msg.alert('Error',"We're sorry, but there was an error making this plot.");
     }
     else {
-      if (json.v && json.v.z) {
+      if (json.v && json.z) {
         OpenLayers.Request.issue({
            url      : '/cgi-bin/drawPlot'
           ,method   : 'POST'
@@ -4086,7 +4103,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
         });
       }
       else if (json.v) {
-        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly);
+        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly,profile);
       }
       else {
         if (selectPopup && !selectPopup.isDestroyed) {
@@ -4098,11 +4115,6 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
         Ext.Msg.alert('Error retrieving data',"We're sorry, but there was an error retrieving the data.");
       }
     }
-  }
-
-  if (profile) {
-    Ext.Msg.alert('Error',"We're sorry, but this isn't supported yet.");
-    return;
   }
 
   if (selectPopup && !selectPopup.isDestroyed) {
@@ -4154,12 +4166,12 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
         }
       });
     }
-    getSpecificObsCallback(profileR[0]);
+    getSpecificObsCallback(profileR);
     _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
   }
 }
 
-function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
+function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profile) {
   if (selectPopup && !selectPopup.isDestroyed) {
     selectPopup.items.items[0].getEl().unmask();
   }
@@ -4177,11 +4189,6 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
     html = '<tr><td align=center><img src="' + img + '"></td></tr>';
   }
 
-  var graphData = [];
-  for (var i = 0; i < t.length; i++) {
-    graphData.push([new Date(t[i] * 1000),Number(v[i])]);
-  }
-
   var timeAxisFormat = "%a<br>%l:%M %p";
   var largeTimeSpan  = false;
   if (t.length >= 2 && t[t.length - 1] - t[0] > 3600 * 24 * 7) {
@@ -4189,10 +4196,84 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
     largeTimeSpan  = true;
   }
 
+  var graphData = [];
+  for (var i = 0; i < t.length; i++) {
+    graphData.push([new Date(t[i] * 1000),Number(v[i])]);
+  }
+
   var sto = new Ext.data.ArrayStore({
      fields : ['time','value']
     ,data   : graphData
   });
+
+  var col = [
+     {header : 'Time',dataIndex : 'time',id : 'time',width : 200,type : 'date',sortable : true,renderer : function(val) {return !largeTimeSpan ? dateToFriendlyString(val) : new Date(val).format("mmm d, yyyy h:MM tt (Z)")}}
+    ,{header : varName + ' (' + varUnits + ')',dataIndex : 'value',id : 'value'}
+  ];
+
+  var hdr;
+
+  var autoExpandColumn = 'value';
+
+  var series = [{
+     label  : varUnits
+    ,data   : graphData
+    ,color  : '#99BBE8'
+    ,points : {show : pointsOnly}
+    ,lines  : {show : !pointsOnly}
+  }];
+
+  var title = varName + ' (' + varUnits + ')';
+
+  // reconfigure if profile
+  if (profile) {
+    // figure out all the times (may have bucket(s) not perfectly in sync across time)
+    var tHash      = {};
+    var tArr       = [];
+    var seriesData = [];
+    for (var i = 0; i < profile.length; i++) {
+      var d = [];
+      for (var j = 0; j < profile[i].t.length; j++) {
+        if (!tHash[profile[i].t[j]]) {
+          tHash[profile[i].t[j]] = [];
+          tArr.push(profile[i].t[j]);
+        }
+        tHash[profile[i].t[j]][i] = profile[i].v[j];
+        d.push([new Date(profile[i].t[j] * 1000),profile[i].v[j]]);
+      }
+      seriesData.push(d);
+    }
+    tArr.sort();
+
+    graphData = [];
+    for (var i = 0; i < tArr.length; i++) {
+      graphData.push([new Date(tArr[i] * 1000)].concat(tHash[tArr[i]]));
+    }
+
+    fields = ['time'];
+    col    = [col[0]];
+    hdr    = [];
+    series = [];
+    for (var i = 0; i < profile.length; i++) {
+      fields.push('v' + i);
+      col.push({header : profile[i].varName + ' (' + varUnits + ')',dataIndex : 'v' + i});
+      hdr.push(profile[i].varName);
+      series.push({
+         label  : profile[i].varName
+        ,data   : seriesData[i]
+        ,color  : '#99BBE8'
+        ,points : {show : pointsOnly}
+        ,lines  : {show : !pointsOnly}
+      });
+    }
+
+    sto =  new Ext.data.ArrayStore({
+       fields : fields
+      ,data   : graphData
+    });
+
+    autoExpandColumn = false;
+  }
 
   var win = new Ext.Window({
      x               : pos.left - w * 1.1
@@ -4219,7 +4300,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
           ,tabTip    : 'View data in a chart format'
           ,html      : '<table style="width:100%"><tr><td align=center><table class="popup">'
             + '<tr><td align=center><img height=5 src="img/blank.png"></td></tr>'
-            + '<tr><td align=center><b>' + varName + ' (' + varUnits + ')' + '</b></td></tr>'
+            + '<tr><td align=center><b>' + title + '</b></td></tr>'
             + html
             + '<tr><td align=center><img height=4 src="img/blank.png"></td></tr>'
             + '</table></td></tr></table>'
@@ -4247,7 +4328,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
 
             var p = $.plot(
                $('#' + graphId)
-              ,[{label : varUnits,data : graphData,color : '#99BBE8',points : {show : pointsOnly},lines : {show : !pointsOnly}}]
+              ,series
               ,{
                  xaxis     : {mode  : "time",timezone : 'browser',twelveHourClock : true,timeformat : timeAxisFormat}
                 ,crosshair : {mode  : 'x'   }
@@ -4268,11 +4349,8 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
           ,disableSelection : true
           ,forceFit         : true
           ,cls              : 'gridBorderTop'
-          ,columns          : [
-             {header : 'Time',dataIndex : 'time',id : 'time',width : 200,type : 'date',sortable : true,renderer : function(val) {return !largeTimeSpan ? dateToFriendlyString(val) : new Date(val).format("mmm d, yyyy h:MM tt (Z)")}}
-            ,{header : varName + ' (' + varUnits + ')',dataIndex : 'value',id : 'value'}
-          ]
-          ,autoExpandColumn : 'value'
+          ,columns          : col
+          ,autoExpandColumn : autoExpandColumn
         })
         ,{
            title     : 'Export data'
@@ -4288,12 +4366,13 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly) {
                 ,headers  : {'Content-Type' : 'application/x-www-form-urlencoded'}
                 ,data     : OpenLayers.Util.getParameterString({
                    data  : Ext.encode(graphData)
-                  ,'var' : Ext.encode(varName)
-                  ,uom   : Ext.encode(varUnits)
-                  ,site  : Ext.encode(provider + ' Station ' + descr)
-                  ,tz    : Ext.encode(new Date(graphData[0][0] * 1000).format('Z'))
-                  ,sess  : sessionId
-                  ,id    : Ext.id()
+                  ,'var'   : Ext.encode(varName)
+                  ,uom     : Ext.encode(varUnits)
+                  ,site    : Ext.encode(provider + ' Station ' + descr)
+                  ,tz      : Ext.encode(new Date(graphData[0][0] * 1000).format('Z'))
+                  ,sess    : sessionId
+                  ,id      : Ext.id()
+                  ,profile : Ext.encode(hdr)
                 })
                 ,callback : function(r) {
                   var json = new OpenLayers.Format.JSON().read(r.responseText);
