@@ -1,7 +1,7 @@
 <?php
   session_start();
   include_once('config/'.getenv('config').'.php');
-  $version = 0.33;
+  $version = 0.34;
 ?>
 <html>
   <head>
@@ -101,7 +101,7 @@
       var helpPage              = <?php echo json_encode(isset($hasHelp) ? 'help/'.getenv('config').'/' : false)?>;
     </script>
     <script type="text/javascript" src="./js/jquery/jquery.js"></script>
-    <script type="text/javascript" src="./js/jquery/jquery.flot.js"></script>
+    <script type="text/javascript" src="./js/jquery/jquery.flot.js?bg"></script>
     <script type="text/javascript" src="./js/jquery/jquery.flot.time.js"></script>
     <script type="text/javascript" src="./js/jquery/jquery.flot.crosshair.js"></script>
     <script type="text/javascript" src="./js/jquery/jquery.flot.navigate.js"></script>

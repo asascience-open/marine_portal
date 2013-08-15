@@ -4348,7 +4348,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                 ,grid      : {backgroundColor : {colors : ['#fff','#eee']},borderWidth : 1,borderColor : '#99BBE8',hoverable : true}
                 ,zoom      : {interactive : true}
                 ,pan       : {interactive : true}
-                ,legend    : {show : profile,backgroundOpacity : 0.5,position : 'sw'}
+                ,legend    : {show : profile,backgroundOpacity : 0.8,position : 'sw',border : '1px solid #99BBE8'}
               }
             );
           }}
