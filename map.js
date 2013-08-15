@@ -3692,7 +3692,6 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
   if (feature.attributes.url != '') {
     rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.url + '">here</a> for station information.</font></td></tr>');
   }
-console.dir(feature.attributes);
   if (feature.attributes.alternateUrl && feature.attributes.alternateUrl != '') {
     rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.alternateUrl + '">here</a> for alternate station information.</font></td></tr>');
   }
