@@ -3692,7 +3692,8 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
   if (feature.attributes.url != '') {
     rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.url + '">here</a> for station information.</font></td></tr>');
   }
-  if (feature.attributes.alternateUrl != '') {
+console.dir(feature.attributes);
+  if (feature.attributes.alternateUrl && feature.attributes.alternateUrl != '') {
     rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.alternateUrl + '">here</a> for alternate station information.</font></td></tr>');
   }
 
@@ -6785,7 +6786,7 @@ function sosGetObs(title,name,u,bbox,provider,id,minT,maxT) {
           ,siteType     : ''
           ,url          : ''
           ,minT         : minT
-          ,maxT         : (a.t ? makeTimeParam(a.t) + 'Z' : maxT)
+          ,maxT         : (a.t ? makeTimeParam(new Date(a.t * 1000)) + 'Z' : maxT)
         })
        });
       selectPopup.show();
