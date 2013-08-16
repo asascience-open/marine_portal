@@ -4161,24 +4161,27 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
     _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
   }
   else {
-    var profileR = [];
-    for (var i = 0; i < profile.length; i++) {
-      OpenLayers.Request.issue({
-         url      : 'getSpecificObs.php'
-           + '?id='       + id
-           + '&provider=' + provider
-           + '&descr='    + descr
-           + '&varName='  + profile[i]
-           + '&varUnits=' + varUnits
-           + '&fromSearch=false'
-        ,async    : false
-        ,callback : function(r) {
-          profileR.push(r);
-        }
-      });
-    }
-    getSpecificObsCallback(profileR);
-    _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
+    // defer this so that the mask can fire
+    Ext.defer(function() {
+      var profileR = [];
+      for (var i = 0; i < profile.length; i++) {
+        OpenLayers.Request.issue({
+           url      : 'getSpecificObs.php'
+             + '?id='       + id
+             + '&provider=' + provider
+             + '&descr='    + descr
+             + '&varName='  + profile[i]
+             + '&varUnits=' + varUnits
+             + '&fromSearch=false'
+          ,async    : false
+          ,callback : function(r) {
+            profileR.push(r);
+          }
+        });
+      }
+      getSpecificObsCallback(profileR);
+      _gaq.push(['_trackEvent','Point observations',provider + ' - ' + descr,varName]);
+    },100);
   }
 }
 
