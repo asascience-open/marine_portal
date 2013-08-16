@@ -1103,7 +1103,7 @@
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
-      if ($platform['id'] != 399) {
+      if ($platform['id'] != 357) {
         // continue;
       }
       array_push($platforms,array(
@@ -1215,7 +1215,7 @@
           ) {
             $compK = 'WaterTemperature'
               .' @ ' 
-              .sprintf("%05.2f",$sites[$i]['topObs'][$matches[1].' '.$matches[2].' Depth In Water']['v']['ft'])
+              .sprintf("%3s",round($sites[$i]['topObs'][$matches[1].' '.$matches[2].' Depth In Water']['v']['ft']))
               .' ft';
             $sites[$i]['topObs'][$compK] = $sites[$i]['topObs'][$sensor];
             unset($sites[$i]['topObs'][$matches[1].' '.$matches[2].' Thermistor Temperature']);
