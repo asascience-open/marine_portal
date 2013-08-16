@@ -1,0 +1,11 @@
+#!/bin/bash
+
+echo cacheobs start `date`
+if [ ! -f /tmp/lock_cacheobs ]; then
+  touch /tmp/lock_cacheobs
+
+  php -d memory_limit=256M ./getObs.php > cachedObs.json
+
+  rm -f /tmp/lock_cacheobs
+fi
+echo cacheobs end `date`
