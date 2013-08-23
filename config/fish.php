@@ -702,6 +702,22 @@ EOJS;
     ,[
        'weather'
       ,'wms'
+      ,'Ocean fronts coverage'
+      ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
+      ,'M_WK'
+      ,'pcolor_average_Accent-r_1_1_grid_Log'
+      ,'image/png'
+      ,true
+      ,1
+      ,false
+      ,false
+      ,false
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
       ,'Ocean fronts'
       ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
       ,'M_WK_G'
@@ -713,7 +729,7 @@ EOJS;
       ,false
       ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
       ,false
-      ,{slope : -999,offset : -999,format : '',image : 'http://icons-ak.wxug.com/graphics/wu2/key_gSat_Wide.gif'}
+      ,false
     ]
     ,[
        'weather'
@@ -998,7 +1014,7 @@ EOJS;
      ['Satellite']
     ,['Chlorophyll concentration',['Chlorophyll concentration'],['Chlorophyll concentration'],['Chlorophyll concentration<br>(mg m^-3)'],true,false,false
       ,'Chl. conc.<br>(mg m^-3)','$obsLegendsPath/Chlorophyll.png']
-    ,['Ocean fronts',['Ocean fronts'],['Ocean fronts'],false,true,false,false
+    ,['Ocean fronts',['Ocean fronts coverage','Ocean fronts'],['Ocean fronts'],false,true,false,false
       ,'Ocean<br>fronts','$obsLegendsPath/OceanFronts.png']
     ,['Cloud imagery',['Cloud imagery'],['Cloud imagery'],['Cloud imagery'],false,false,false
       ,'Cloud<br>imagery','$obsLegendsPath/CloudImagery.gif']

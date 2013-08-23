@@ -1879,7 +1879,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>Fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif">'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>Fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif"> <a id="satelliteOcean frontsTitleOne" href="javascript:changeAggregation(\'Ocean fronts\',\'One\')">1</a>, <a id="satelliteOcean frontsTitleThree" href="javascript:changeAggregation(\'Ocean fronts\',\'Three\')">3</a>, <a id="satelliteOcean frontsTitleEight"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + ' href="javascript:changeAggregation(\'Ocean fronts\',\'Eight\')">8</a>'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -7115,6 +7115,20 @@ function goSatellite(s) {
         el.style.color      = '';
       }
     }
+    var agg = ['One','Three','Eight'];
+    for (var j = 0; j < agg.length; j++) {
+      el = document.getElementById('satellite' + a[i] + 'Title' + agg[j]);
+      if (el) {
+        if (s == a[i] && map.getLayersByName(a[i])[0].url.indexOf(agg[j]) >= 0) {
+          el.style.fontWeight = 'bold';
+          el.style.color      = '#15428b';
+        }
+        else {
+          el.style.fontWeight = '';
+          el.style.color      = '';
+        }
+      }
+    }
   }
   var combo = Ext.getCmp('weatherMapsTypeComboBox');
   combo.setValue(s);
@@ -7165,4 +7179,14 @@ function goByCatch(s) {
   map.zoomToByCatch = false;
 
   document.getElementById('byCatchLegend').style.visibility = s != 'None' ? 'visible' : 'hidden';
+}
+
+function changeAggregation(layerName,agg) {
+  var n = [layerName,layerName + ' coverage'];
+  for (var i = 0; i < n.length; i++) {
+    var l = map.getLayersByName(n[i])[0];
+    var a = l.url.split(/MODIS_(.*)_Agg/);
+    l.setUrl(a[0] + 'MODIS_' + agg + '_Agg' + a[2]);
+  }
+  goSatellite(layerName);
 }
