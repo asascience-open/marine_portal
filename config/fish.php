@@ -492,7 +492,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/NAVY_HYCOM/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://64.72.74.107:8080/wms/NAVY_HYCOM/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'water_temp'
           ,'pcolor_average_jet_5_20_node_False'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -514,7 +514,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/necofs_forecast/?ELEVATION=39&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'temp'
           ,'pcolor_average_jet_5_20_node_False'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -543,7 +543,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Surface water temperature'      
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/NAVY_HYCOM/?ELEVATION=0&'
+      ,'http://64.72.74.107:8080/wms/NAVY_HYCOM/?ELEVATION=0&'
       ,'water_temp'       
       ,'pcolor_average_jet_0_27_grid_False'
       ,'image/png'
@@ -559,7 +559,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature'       
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&'
       ,'temp'           
       ,'pcolor_average_jet_5_20_node_False'
       ,'image/png'
@@ -575,7 +575,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature contours'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&'
       ,'temp'
       ,'contours_average_gray_5_20_node_False'
       ,'image/png'
@@ -607,14 +607,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll concentration'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/MODIS_Eight_Agg/?ELEVATION=0&'
+      ,'http://64.72.74.107:8080/wms/MODIS_Eight_Agg/?ELEVATION=0&'
       ,'chl_oc3'
       ,'pcolor_average_jet_0_20_node_Log'
       ,'image/png'
       ,true
       ,1
       ,false
-      ,false
+      ,true
       ,'Chlorophyll data is calculated using the ocean color information coming from the MODIS Aqua satellite system. This data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. The layer is a 3-day data composite which reduces gaps in spatial coverage due to cloud cover, although gaps are still occasionally present. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more Infomration click <a href=\'http://orb.ceoe.udel.edu\' target=_blank>here</a>.'
       ,false
       ,{slope : 1,offset : 0,format : '%d',log : true}
@@ -687,14 +687,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Satellite water temperature'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/maracoos_SST_Seven_Agg/?ELEVATION=0&'
+      ,'http://64.72.74.107:8080/wms/maracoos_SST_Seven_Agg/?ELEVATION=0&'
       ,'mcsst'
       ,'pcolor_average_jet_0_27_node_False'
       ,'image/png'
       ,true
       ,1
       ,false
-      ,false
+      ,true
       ,'For researchers, SST data from all individual passes from the NOAA series of satellites from January 2000 to present are available on an equal-angle, approximately 1km resolution grid for the region 35N to 46N, 77W to 63W. The data set includes a cloud_mask flag derived from several differing criteria. This information is documented in the attributes of the data set.'
       ,false
       ,false
@@ -710,7 +710,7 @@ EOJS;
       ,true
       ,1
       ,false
-      ,false
+      ,true
       ,false
       ,false
       ,false
@@ -726,7 +726,7 @@ EOJS;
       ,true
       ,1
       ,false
-      ,false
+      ,true
       ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
       ,false
       ,false
