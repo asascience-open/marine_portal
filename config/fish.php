@@ -615,7 +615,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'Chlorophyll data is calculated using the ocean color information coming from the MODIS Aqua satellite system. This data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. The layer is a 3-day data composite which reduces gaps in spatial coverage due to cloud cover, although gaps are still occasionally present. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more Infomration click <a href=\'http://orb.ceoe.udel.edu\' target=_blank>here</a>.'
+      ,'<b>High values (greens to reds) typically mean the water is turbid and cloudy, while low values (blues) mean the water is very clear.</b><br>Chlorophyll concentrations are estimated using the ocean color information coming from the MODIS-Aqua satellite system. The data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. This layer is considered an experimental research product. The layer is a <b>3-day data composite</b>, which reduces gaps in spatial coverage due to cloud cover, although gaps may persist during cloudy seasons. The MODIS-Aqua sensor is well past its mission design lifetime, and the sensor is beginning to degrade, often causing noticeable <b>parallel stripes</b> in the data. Periodic re-processing of the MODIS data stream will occur in the near future, but the long term solution for this product is the transition to the VIIRS sensor. NOAA\'s provisional plans are to have the VIIRS sensor operational sometime in late 2013.'
       ,false
       ,{slope : 1,offset : 0,format : '%d',log : true}
     ]
@@ -695,7 +695,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'For researchers, SST data from all individual passes from the NOAA series of satellites from January 2000 to present are available on an equal-angle, approximately 1km resolution grid for the region 35N to 46N, 77W to 63W. The data set includes a cloud_mask flag derived from several differing criteria. This information is documented in the attributes of the data set.'
+      ,'Sea surface temperature data displayed in this layer comes from multiple NOAA satellites (including the AVHRR). The layer is a <b>7-day data composite</b>. Cloud contamination is provisionally removed for plotting purposes only. Occasionally, cool water may be discarded as cloud contamination. The data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. This layer is considered an experimental research product.'
       ,false
       ,false
     ]
@@ -727,7 +727,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'Ocean frontal boundaries in this layer are calculated using a gradient strength index which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS satellite system to detect both hydrographic and biological fronts. High values indicate a large relative difference between adjacent water types (either in temperature or ocean color), or a strong ocean front. Low values indicate a relatively small difference between adjacent water types (either in temperature or ocean color), or a weak ocean front. Data gaps or holes occasionally present in the layer are due to cloud cover. For more information about this data set please contact researchers at the University of DelawareâOcean Exploration, Remote Sensing, and Biogeography Lab. For more information <a target=_blank href=\'http://orb.ceoe.udel.edu\'>here</a>.'
+      ,'<b>High values (greens to reds) indicate a strong surface front in either temperature or ocean color, low values (blues) indicate a presence of a weak front in temperature or ocean color.</b><<br>Ocean frontal boundaries in this layer are calculated using a gradient strength index, which estimates the differences between water types or masses. This index incorporates both temperature and ocean color from the MODIS-Aqua satellite system to detect both hydrographic and biological fronts. Data gaps are due to cloud cover <b>(no data indicted by clear cells or no coloration). Grey coloration indicates very low or 0 gradient strength.</b> The layer is available as a <b>1-day, 3-day, or 8-day data composite</b>. Each composite option successively reduces gaps in spatial coverage due to <b>cloud cover and daily satellite pass/swath width</b>. The data is processed by researchers at the University of Delaware and re-gridded to Mercator lat/long projection. This layer is considered an experimental research product. The MODIS-Aqua sensor is well past its mission design lifetime, and the sensor is beginning to degrade, often causing noticeable <b>parallel stripes</b> in the data. This may produce <b>\'pseudo\'</b> fronts in the data stream where no front really exists. Sets of long, parallel fronts may be a result of sensor degradation. Periodic re-processing of the MODIS data stream will occur in the near future, but the long term solution for this product is the transition to the VIIRS sensor. NOAA\'s provisional plans are to have the VIIRS sensor operational sometime in late 2013.'
       ,false
       ,false
     ]

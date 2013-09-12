@@ -1879,7 +1879,7 @@ function init() {
             ,{html : '&nbsp;'}
             ,{
                cls  : 'directionsTextNoAlign grayLink'
-              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>Fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif"> <a id="satelliteOcean frontsTitleOne" href="javascript:changeAggregation(\'Ocean fronts\',\'One\')">1</a>, <a id="satelliteOcean frontsTitleThree" href="javascript:changeAggregation(\'Ocean fronts\',\'Three\')">3</a>, <a id="satelliteOcean frontsTitleEight"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + ' href="javascript:changeAggregation(\'Ocean fronts\',\'Eight\')">8</a>'
+              ,html : '<a href="javascript:goSatellite(\'Ocean fronts\')"><span id="satelliteOcean frontsTitle"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + '>Ocean<br>Fronts</span></a> <img id="goSatelliteOcean fronts" width=10 height=10 src="img/small-help-icon.gif"> <a id="satelliteOcean frontsTitleOne" href="javascript:changeAggregation(\'Ocean fronts\',\'One\')">1</a>, <a id="satelliteOcean frontsTitleThree" href="javascript:changeAggregation(\'Ocean fronts\',\'Three\')">3</a>, <a id="satelliteOcean frontsTitleEight"' + (Ext.getCmp('weatherMapsTypeComboBox').getValue() == 'Ocean fronts' ? ' style="font-weight:bold;color : #15428b"' : '') + ' href="javascript:changeAggregation(\'Ocean fronts\',\'Eight\')">8</a> (days)'
               ,listeners : {
                 afterrender : function() {
                   new Ext.ToolTip({
@@ -7009,7 +7009,7 @@ function syncWatermark() {
     var legends = rec.get('wmsLegends');
     for (var i = 0; i < legends.length; i++) {
       if (legends[i] == 'Ocean fronts' && map.getLayersByName(legends[i])[0].visibility) {
-        label += (label != '' ? '\n' : '') + 'Ocean Fronts\ncurrently under development';
+        label += (label != '' ? '\n' : '') + 'Ocean Fronts\n(Experimental)';
       }
     }
   });
