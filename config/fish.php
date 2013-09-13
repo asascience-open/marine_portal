@@ -1035,7 +1035,7 @@ EOJS;
        'Bottom trawl Northeast/MA'
       ,['Butterfish bottom trawl','Butterfish bottom trawl grid']
       ,['Butterfish bottom trawl']
-      ,['Butterfish<br>Northeast/MA<br>Bottom trawl<br>Updated 3/12/13']
+      ,['Butterfish<br>Northeast/MA<br>Bottom trawl<br>Updated 9/13/13']
       ,true
       ,false
     ]
