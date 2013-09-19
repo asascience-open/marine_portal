@@ -721,7 +721,7 @@ EOJS;
       ,'Ocean fronts'
       ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
       ,'M_WK_G'
-      ,'pcolor_average_jet_0.01_1_grid_Log'
+      ,'pcolor_average_jet_0.01_2_grid_Log'
       ,'image/png'
       ,true
       ,1
