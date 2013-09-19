@@ -609,7 +609,7 @@ EOJS;
       ,'Chlorophyll concentration'
       ,'http://64.72.74.107:8080/wms/MODIS_Eight_Agg/?ELEVATION=0&'
       ,'chl_oc3'
-      ,'pcolor_average_jet_0_20_node_Log'
+      ,'pcolor_average_jet_0.01_20_node_Log'
       ,'image/png'
       ,true
       ,1
