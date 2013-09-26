@@ -473,7 +473,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/HECWFS_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://wms.maracoos.org/wms/HECWFS_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'u,v'
           ,'vectors_average_jet_0_1.5_cell_True'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -511,7 +511,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/SLRFVM_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://wms.maracoos.org/wms/SLRFVM_Latest_Forecast/?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'u,v'
           ,'vectors_average_jet_0_1.5_cell_True'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -870,7 +870,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Currents-GLERL-StLawrenceRiver'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/SLRFVM_Latest_Forecast/'
+      ,'http://wms.maracoos.org/wms/SLRFVM_Latest_Forecast/'
       ,'u,v'
       ,'vectors_average_jet_0_1.5_cell_True'
       ,'image/png'
@@ -886,7 +886,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Currents-GLERL-LakeStClaire'
-      ,'http://ec2-107-21-136-52.compute-1.amazonaws.com:8080/wms/HECWFS_Latest_Forecast/'
+      ,'http://wms.maracoos.org/wms/HECWFS_Latest_Forecast/'
       ,'u,v'
       ,'vectors_average_jet_0_1.5_cell_True'
       ,'image/png'

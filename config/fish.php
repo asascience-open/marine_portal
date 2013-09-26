@@ -492,7 +492,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://64.72.74.107:8080/wms/NAVY_HYCOM/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://wms.maracoos.org/wms/NAVY_HYCOM/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'water_temp'
           ,'pcolor_average_jet_5_20_node_False'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -514,7 +514,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'temp'
           ,'pcolor_average_jet_5_20_node_False'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -543,7 +543,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Surface water temperature'      
-      ,'http://64.72.74.107:8080/wms/NAVY_HYCOM/?ELEVATION=0&'
+      ,'http://wms.maracoos.org/wms/NAVY_HYCOM/?ELEVATION=0&'
       ,'water_temp'       
       ,'pcolor_average_jet_0_27_grid_False'
       ,'image/png'
@@ -559,7 +559,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature'       
-      ,'http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&'
       ,'temp'           
       ,'pcolor_average_jet_5_20_node_False'
       ,'image/png'
@@ -575,7 +575,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature contours'
-      ,'http://64.72.74.107:8080/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&'
       ,'temp'
       ,'contours_average_gray_5_20_node_False'
       ,'image/png'
@@ -607,7 +607,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll concentration'
-      ,'http://64.72.74.107:8080/wms/MODIS_Eight_Agg/?ELEVATION=0&'
+      ,'http://wms.maracoos.org/wms/MODIS_Eight_Agg/?ELEVATION=0&'
       ,'chl_oc3'
       ,'pcolor_average_jet_0.01_20_node_Log'
       ,'image/png'
@@ -687,7 +687,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'Satellite water temperature'
-      ,'http://64.72.74.107:8080/wms/maracoos_SST_Seven_Agg/?ELEVATION=0&'
+      ,'http://wms.maracoos.org/wms/maracoos_SST_Seven_Agg/?ELEVATION=0&'
       ,'mcsst'
       ,'pcolor_average_jet_0_27_node_False'
       ,'image/png'
@@ -703,7 +703,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'Ocean fronts coverage'
-      ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
+      ,'http://wms.maracoos.org/wms/MODIS_Eight_Agg/'
       ,'M_WK'
       ,'pcolor_average_Accent-r_1_1_grid_Log'
       ,'image/png'
@@ -719,7 +719,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'Ocean fronts'
-      ,'http://107.21.136.52:8080/wms/MODIS_Eight_Agg/'
+      ,'http://wms.maracoos.org/wms/MODIS_Eight_Agg/'
       ,'M_WK_G'
       ,'pcolor_average_jet_0.01_2_grid_Log'
       ,'image/png'
