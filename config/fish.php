@@ -721,7 +721,7 @@ EOJS;
       ,'Ocean fronts'
       ,'http://wms.maracoos.org/wms/MODIS_Eight_Agg/'
       ,'M_WK_G'
-      ,'pcolor_average_jet_0.01_3.2_grid_Log'
+      ,'pcolor_average_jet_0.1_3.2_grid_Log'
       ,'image/png'
       ,true
       ,1
