@@ -808,7 +808,8 @@ EOJS;
       ,false
       ,true
       ,'Cornell Cooperative Extension has received funding from NFWF to initiate a fleet communication system to abate butterfish bycatch in the longfin squid bottom trawl fishery. Since the 2 species exhibit similar migratory patterns and habitat preferences, the squid fishery observes considerable amounts of butterfish bycatch. With butterfish bycatch cap limitations in effect, the longfin squid fishery is threatened by early closures and cancellations. Due to the commercial significance of this fishery, the need for a bycatch reduction method is compulsory. This is an alternative approach to bycatch reduction devices and mesh size modification for reducing bycatch. The fleet communication system collects and reports real-time observations of butterfish through Boatracs and identifies \\'hot spots\\' from vessels engaged in the squid fishery. This enables the fleet to avoid \\'hot spots\\' and reduce fleet-wide capture of butterfish. \\'Hot spots\\' (areas with high concentrations of butterfish within a tow) are identified by cell number on a chart with a 10 minute square grid. For more info call Kristin Gerbino at (631) 727-7850 x315 or go to <a href=\\'http://www.squidtrawlnetwork.com\\' target=_blank>www.squidtrawlnetwork.com</a>.'
-      ,'".$byCatchInfo['byCatch.butterfish.latest']['bbox']."'
+      ,'-74.5000071843465,38.4999941190082,-71.5000071843465,41.1666607856749' // select st_astext(st_envelope(st_buffer(st_collect(the_geom),1))) from by_catch_butterfish_latest where val is not null;
+//      ,'".$byCatchInfo['byCatch.butterfish.latest']['bbox']."'
       ,false
     ]
     ,[
