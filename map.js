@@ -7000,7 +7000,12 @@ function syncWatermark() {
     var legends = rec.get('wmsLegends');
     for (var i = 0; i < legends.length; i++) {
       if (map.getLayersByName(legends[i])[0].visibility) {
-        label = 'Last bycatch report\n' + rec.get('showLegendTitle')[i].split(/Updated |<br>/).pop();
+        if (rec.get('showLegendTitle')[i].indexOf('expire') >= 0) {
+          label = 'Last bycatch report\n' + rec.get('showLegendTitle')[i].substr(rec.get('showLegendTitle')[i].indexOf('Updated')).replace('<br>','\n');
+        }
+        else {
+          label = 'Last bycatch report\n' + rec.get('showLegendTitle')[i].split(/Updated |<br>/).pop();
+        }
       }
     }
   });
