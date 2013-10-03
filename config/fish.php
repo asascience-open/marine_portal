@@ -514,7 +514,7 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          "http://wms.maracoos.org/wms/maracoos_espresso/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
           ,'temp'
           ,'pcolor_average_jet_5_20_node_False'
           ,$srs,$bbox,$x,$y,$w,$h
@@ -559,7 +559,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature'       
-      ,'http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://wms.maracoos.org/wms/maracoos_espresso/?ELEVATION=0&'
       ,'temp'           
       ,'pcolor_average_jet_5_20_node_False'
       ,'image/png'
@@ -567,7 +567,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'The Northeast Coastal Ocean Forecast System (NECOFS) is an integrated atmosphere-ocean model system designed for the northeast US coastal region covering a computational domain from the south of Long-Island Sound to the north of the Nova Scotian Shelf.'
+      ,'The Regional Ocean Modeling System (ROMS) ESPreSSO (Experimental System for Predicting Shelf and Slope Optics) model covers the Mid-Atlantic Bight from the center of Cape Cod southward to Cape Hatters, from the coast to beyond the shelf break and shelf/slope front. The prototype system is a 5-km horizontal, 36-level ROMS model with Incremental Strong Constraint 4DVAR assimilation of AVHRR and daily composite SST (remss) and along track altimeter SSH anomalies (RADS).'
       ,false
       ,false
     ]
@@ -575,7 +575,7 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Bottom water temperature contours'
-      ,'http://wms.maracoos.org/wms/necofs_forecast/?ELEVATION=39&'
+      ,'http://wms.maracoos.org/wms/maracoos_espresso/?ELEVATION=0&'
       ,'temp'
       ,'contours_average_gray_5_20_node_False'
       ,'image/png'
