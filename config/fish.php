@@ -567,7 +567,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'The Regional Ocean Modeling System (ROMS) ESPreSSO (Experimental System for Predicting Shelf and Slope Optics) model covers the Mid-Atlantic Bight from the center of Cape Cod southward to Cape Hatters, from the coast to beyond the shelf break and shelf/slope front. The prototype system is a 5-km horizontal, 36-level ROMS model with Incremental Strong Constraint 4DVAR assimilation of AVHRR and daily composite SST (remss) and along track altimeter SSH anomalies (RADS).'
+      ,'The Regional Ocean Modeling System (ROMS) ESPreSSO (Experimental System for Predicting Shelf and Slope Optics) model covers the Mid-Atlantic Bight from Cape Cod southward to Cape Hatteras, from the coast to beyond the shelf break and shelf/slope front. The prototype system is a 5-km horizontal, 36-level ROMS model with Incremental Strong Constraint 4DVAR assimilation of AVHRR and daily composite microwave+IR SST (REMSS), surface currents from HF-radar, along track altimeter SSH anomalies from Jason-2, AltiKa and CryoSat (via RADS) and in situ T/S from available gliders and GTS observations.'
       ,false
       ,false
     ]
