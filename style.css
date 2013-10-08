@@ -601,3 +601,8 @@ div.olControlMousePosition {
   padding : 0;
   text-align : center;
 }
+
+.x-tree-node table {
+  font: normal 11px arial, tahoma, helvetica, sans-serif;
+  line-height: 17px;
+}

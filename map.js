@@ -385,6 +385,7 @@ function init() {
     ,loader      : new Ext.tree.TreeLoader({preloadChildren : true})
     ,autoScroll  : true
     ,rootVisible : false
+    ,lines       : false
     ,root        : new Ext.tree.AsyncTreeNode()
     ,tbar        : {items : new Ext.form.ComboBox({
        id             : 'weatherStationsQuickFindComboBox'
@@ -3226,12 +3227,14 @@ function getIconData(lyr,buffer) {
               treeViewData[f.attributes.provider] = {
                  text     : f.attributes.provider
                 ,children : []
+                ,uiProvider : Ext.tree.IndentedTreeNodeUI
               };
             }
             treeViewData[f.attributes.provider].children.push({
                text     : f.attributes.descr
               ,leaf     : true
               ,provider : f.attributes.provider
+              ,uiProvider : Ext.tree.IndentedTreeNodeUI
             });
             recs.push(new sto.recordType({
                'lbl'      : f.attributes.provider + ' Station ' + f.attributes.descr
