@@ -3375,7 +3375,7 @@ function syncIconLayerWithData(lyr,guaranteeFeature) {
   for (var j = 0; j < guaranteeFeatures.length; j++) {
     var foundF = false;
     for (var i = 0; i < features.length; i++) {
-      if (features[i].attributes.provider == guaranteeFeatures[j].attributes.provider && features[i].attributes.descr == guaranteeFeatures[j].attributes.descr) {
+      if (features[i].attributes && features[i].attributes.provider == guaranteeFeatures[j].attributes.provider && features[i].attributes.descr == guaranteeFeatures[j].attributes.descr) {
         foundF = true;
         break;
       }
