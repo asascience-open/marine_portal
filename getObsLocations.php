@@ -16,7 +16,7 @@
   $swe2Providers = array(
     'GLOS' => array(
       'sos'      => array(
-         'GetCapabilities' => 'http://64.9.200.113:8080/52n-sos-ioos/sos?service=SOS&request=GetCapabilities'
+         'GetCapabilities' => 'http://sos.glos.us/52n/sos/kvp?service=SOS&request=GetCapabilities&AcceptVersions=1.0.0'
         ,'network'         => 'urn:ioos:network:glos:all'
         ,'DescribeSensor'  => array()
         ,'GetObservation'  => array()

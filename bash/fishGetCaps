@@ -4,7 +4,7 @@ echo fishGetCaps start `date`
 if [ ! -f /tmp/lock_fishGetCaps ]; then
   touch /tmp/lock_fishGetCaps
 
-  wget 'http://64.72.74.123/geoserver/maracoos/wms?service=WMS&version=1.1.0&request=GetCapabilities' -O xml/fishByCatch.getcaps.xml
+  wget 'http://geo.asascience.com/geoserver/maracoos/wms?service=WMS&version=1.1.0&request=GetCapabilities' -O xml/fishByCatch.getcaps.xml
 
   rm -f /tmp/lock_fishGetCaps
 fi
