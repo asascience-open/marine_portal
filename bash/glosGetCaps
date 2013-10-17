@@ -14,14 +14,14 @@ if [ ! -f /tmp/lock_glosGetCaps ]; then
   wget 'http://tds.glos.us/thredds/wms/CHL/LakeOntarioCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeOntario.getcaps.xml
   wget 'http://tds.glos.us/thredds/wms/CHL/LakeErieCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeErie.getcaps.xml
   wget 'http://tds.glos.us/thredds/wms/CHL/LakeHuronCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeHuron.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/HECWFS_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-LakeStClaire.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/SLRFVM_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-StLawrenceRiver.getcaps.xml
+  wget 'http://wms.glos.us/wms/HECWFS_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-LakeStClaire.getcaps.xml
+  wget 'http://wms.glos.us/wms/SLRFVM_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-StLawrenceRiver.getcaps.xml
   wget 'http://coastmap.com/ecop/wms.aspx?Request=GetCapabilities&SERVICE=WMS&key=999' -O xml/ecop.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/superior_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeSuperior.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/michigan_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeMichigan.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/ontario_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeOntario.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/erie_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeErie.getcaps.xml
-  wget 'http://wms.maracoos.org/wms/huron_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeHuron.getcaps.xml
+  wget 'http://wms.glos.us/wms/superior_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeSuperior.getcaps.xml
+  wget 'http://wms.glos.us/wms/michigan_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeMichigan.getcaps.xml
+  wget 'http://wms.glos.us/wms/ontario_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeOntario.getcaps.xml
+  wget 'http://wms.glos.us/wms/erie_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeErie.getcaps.xml
+  wget 'http://wms.glos.us/wms/huron_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeHuron.getcaps.xml
 
   rm -f /tmp/lock_glosGetCaps
 fi
