@@ -25,13 +25,8 @@
   $buffer   = "xml/buffer.$dataBbox.json";
 
   $bannerHeight    = 75;
-/*
   $bannerHtml      = <<< EOHTML
 <div id="headwrapper"><div id="head"><a href="http://glos.us/"><img src="img/blank.png" width="168" height="75" alt="GLOS" /></a><a href="http://explorer.glos.us/"><img src="img/blank.png" width="632" height="75" alt="GLOS Observations Explorer" /></a> </div></div>
-EOHTML;
-*/
-  $bannerHtml      = <<< EOHTML
-<div id="headwrapper"><div id="head"><p style="font-size:11px;background-color:#000000;color:#ffffff;padding:3px;position:absolute;right:15px;margin-top:10px;">Some of the data feeds used in this portal may be unavailable<br/>due to the U.S. Federal government shutdown.<br/> We apologize for any inconvenience.</p><a href="http://glos.us/"><img src="img/blank.png" width="168" height="75" alt="GLOS" /></a><a href="http://explorer.glos.us/"><img src="img/blank.png" width="632" height="75" alt="GLOS Observations Explorer" /></a> </div></div>
 EOHTML;
   $southPanelHeight    = 119;
   $southPanelHtml      = <<< EOHTML
