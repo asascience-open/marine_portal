@@ -1141,6 +1141,86 @@ EOJS;
     ,[
        'weather'
       ,'wms'
+      ,'DissolvedOrganicCarbon-LakeErie'
+      ,'http://tds.glos.us/thredds/wms/DOC/LakeErieDOC-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'doc'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'DissolvedOrganicCarbon-LakeHuron'
+      ,'http://tds.glos.us/thredds/wms/DOC/LakeHuronDOC-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'doc'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'DissolvedOrganicCarbon-LakeMichigan'
+      ,'http://tds.glos.us/thredds/wms/DOC/LakeMichiganDOC-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'doc'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,'No information currently available.'
+      ,false
+      ,{slope : 1,offset : 0,format : '%d'}
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'DissolvedOrganicCarbon-LakeOntario'
+      ,'http://tds.glos.us/thredds/wms/DOC/LakeOntarioDOC-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'doc'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
+      ,'DissolvedOrganicCarbon-LakeSuperior'
+      ,'http://tds.glos.us/thredds/wms/DOC/LakeSuperiorDOC-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'doc'
+      ,'boxfill/rainbow'
+      ,'image/png'
+      ,false
+      ,1
+      ,false
+      ,false
+      ,''
+      ,false
+      ,false
+    ]
+    ,[
+       'weather'
+      ,'wms'
       ,'ColoredDissolvedOrganicMatter-LakeErie'
       ,'http://tds.glos.us/thredds/wms/CDOM/LakeErieCDOM-Agg?GetMetadata=1&COLORSCALERANGE=0,2&'
       ,'cdom'
@@ -1735,6 +1815,7 @@ EOJS;
     ,['Satellite']
     ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(mg m^-3)'],false,".getChlorophyllTime().",false,'','']
     ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(ug/L)'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
+    ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(ug/L)'],false,".getDissolvedOrganicCarbonTime().",false,'','']
     ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,".getNaturalColorTime().",false,'','']
     ,['Suspended minerals',['SuspendedMinerals-LakeErie','SuspendedMinerals-LakeHuron','SuspendedMinerals-LakeMichigan','SuspendedMinerals-LakeOntario','SuspendedMinerals-LakeSuperior'],['SuspendedMinerals-LakeMichigan'],['Colored dissolved organic matter<br>(ug/L)'],false,".getSuspendedMineralsTime().",false,'','']
     ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
@@ -1785,6 +1866,28 @@ EOJS;
       foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
         foreach ($l0->{'Layer'} as $l1) {
           if (sprintf("%s",$l1->{'Name'}) == 'sm') {
+            array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
+          }
+        }
+      }
+    }
+    if (count($a) > 0) {
+      return '['.implode(',',$a).']';
+    }
+    else {
+      return false;
+    }
+  }
+
+  function getDissolvedOrganicCarbonTime() {
+    $lakes = array('Lake Erie','Lake Huron','Lake Michigan','Lake Ontario','Lake Superior');
+    $a = array();
+    for ($i = 0; $i < count($lakes); $i++) {
+      $l = $lakes[$i];
+      $xml = @simplexml_load_file('xml/glosDissolvedOrganicCarbon'.str_replace(' ','',$l).'.getcaps.xml');
+      foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
+        foreach ($l0->{'Layer'} as $l1) {
+          if (sprintf("%s",$l1->{'Name'}) == 'doc') {
             array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
           }
         }
