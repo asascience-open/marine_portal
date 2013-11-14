@@ -4,24 +4,25 @@ echo glosGetCaps start `date`
 if [ ! -f /tmp/lock_glosGetCaps ]; then
   touch /tmp/lock_glosGetCaps
 
-  wget 'http://tds.glos.us/thredds/wms/SST/LakeSuperiorSST-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosWaterSurfaceTemperatureLakeSuperior.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/SST/LakeMichiganSST-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosWaterSurfaceTemperatureLakeMichigan.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/SST/LakeOntarioSST-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosWaterSurfaceTemperatureLakeOntario.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/SST/LakeErieSST-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosWaterSurfaceTemperatureLakeErie.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/SST/LakeHuronSST-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosWaterSurfaceTemperatureLakeHuron.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/CHL/LakeSuperiorCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeSuperior.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/CHL/LakeMichiganCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeMichigan.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/CHL/LakeOntarioCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeOntario.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/CHL/LakeErieCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeErie.getcaps.xml
-  wget 'http://tds.glos.us/thredds/wms/CHL/LakeHuronCHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities' -O xml/glosChlorophyllLakeHuron.getcaps.xml
-  wget 'http://wms.glos.us/wms/HECWFS_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-LakeStClaire.getcaps.xml
-  wget 'http://wms.glos.us/wms/SLRFVM_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-StLawrenceRiver.getcaps.xml
-  wget 'http://coastmap.com/ecop/wms.aspx?Request=GetCapabilities&SERVICE=WMS&key=999' -O xml/ecop.getcaps.xml
+  for LAKE in Erie Huron Michigan Ontario Superior
+  do
+    wget "http://tds.glos.us/thredds/wms/SST/Lake${LAKE}SST-Agg?service=WMS&version=1.3.0&request=GetCapabilities" -O xml/glosWaterSurfaceTemperatureLake${LAKE}.getcaps.xml
+    wget "http://tds.glos.us/thredds/wms/CHL/Lake${LAKE}CHL-Agg?service=WMS&version=1.3.0&request=GetCapabilities" -O xml/glosChlorophyllLake${LAKE}.getcaps.xml
+    wget "http://tds.glos.us/thredds/wms/CDOM/Lake${LAKE}CDOM-Agg?service=WMS&version=1.3.0&request=GetCapabilities" -O xml/glosColoredDissolvedOrganicMatterLake${LAKE}.getcaps.xml
+    wget "http://tds.glos.us/thredds/wms/SM/Lake${LAKE}SM-Agg?service=WMS&version=1.3.0&request=GetCapabilities" -O xml/glosSuspendedMineralsLake${LAKE}.getcaps.xml
+    wget "http://tds.glos.us/thredds/wms/DOC/Lake${LAKE}DOC-Agg?service=WMS&version=1.3.0&request=GetCapabilities" -O xml/glosDissolvedOrganicCarbonLake${LAKE}.getcaps.xml
+  done
+
   wget 'http://wms.glos.us/wms/superior_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeSuperior.getcaps.xml
   wget 'http://wms.glos.us/wms/michigan_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeMichigan.getcaps.xml
   wget 'http://wms.glos.us/wms/ontario_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeOntario.getcaps.xml
   wget 'http://wms.glos.us/wms/erie_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeErie.getcaps.xml
   wget 'http://wms.glos.us/wms/huron_natural_color/?REQUEST=GetCapabilities' -O xml/glosNaturalColorLakeHuron.getcaps.xml
+
+  wget 'http://wms.glos.us/wms/HECWFS_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-LakeStClaire.getcaps.xml
+  wget 'http://wms.glos.us/wms/SLRFVM_Latest_Forecast/?service=wms&version=1.1.1&request=getcapabilities' -O xml/Currents-GLERL-StLawrenceRiver.getcaps.xml
+
+  wget 'http://coastmap.com/ecop/wms.aspx?Request=GetCapabilities&SERVICE=WMS&key=999' -O xml/ecop.getcaps.xml
 
   rm -f /tmp/lock_glosGetCaps
 fi
