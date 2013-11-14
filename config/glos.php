@@ -1062,7 +1062,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'SuspendedMinerals-LakeErie'
-      ,'http://tds.glos.us/thredds/wms/SM/LakeErieSM-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'http://tds.glos.us/thredds/wms/SM/LakeErieSM-Agg?GetMetadata=1&COLORSCALERANGE=0,5&'
       ,'sm'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1078,7 +1078,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'SuspendedMinerals-LakeHuron'
-      ,'http://tds.glos.us/thredds/wms/SM/LakeHuronSM-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'http://tds.glos.us/thredds/wms/SM/LakeHuronSM-Agg?GetMetadata=1&COLORSCALERANGE=0,5&'
       ,'sm'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1094,7 +1094,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'SuspendedMinerals-LakeMichigan'
-      ,'http://tds.glos.us/thredds/wms/SM/LakeMichiganSM-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'http://tds.glos.us/thredds/wms/SM/LakeMichiganSM-Agg?GetMetadata=1&COLORSCALERANGE=0,5&'
       ,'sm'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1104,13 +1104,13 @@ EOJS;
       ,false
       ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs). Suspended Minerals (SM)  consist of inorganic particulate matter (such as sand, silt, and clay), which scatter and absorb light.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
-      ,{slope : 1,offset : 0,format : '%d'}
+      ,{slope : 1,offset : 0,format : '%.2f'}
     ]
     ,[
        'weather'
       ,'wms'
       ,'SuspendedMinerals-LakeOntario'
-      ,'http://tds.glos.us/thredds/wms/SM/LakeOntarioSM-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'http://tds.glos.us/thredds/wms/SM/LakeOntarioSM-Agg?GetMetadata=1&COLORSCALERANGE=0,5&'
       ,'sm'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1126,7 +1126,7 @@ EOJS;
        'weather'
       ,'wms'
       ,'SuspendedMinerals-LakeSuperior'
-      ,'http://tds.glos.us/thredds/wms/SM/LakeSuperiorSM-Agg?GetMetadata=1&COLORSCALERANGE=0,10&'
+      ,'http://tds.glos.us/thredds/wms/SM/LakeSuperiorSM-Agg?GetMetadata=1&COLORSCALERANGE=0,5&'
       ,'sm'
       ,'boxfill/rainbow'
       ,'image/png'
@@ -1817,7 +1817,7 @@ EOJS;
     ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(absorption/m @ 443nm)'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
     ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(mgC/L)'],false,".getDissolvedOrganicCarbonTime().",false,'','']
     ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,".getNaturalColorTime().",false,'','']
-    ,['Suspended minerals',['SuspendedMinerals-LakeErie','SuspendedMinerals-LakeHuron','SuspendedMinerals-LakeMichigan','SuspendedMinerals-LakeOntario','SuspendedMinerals-LakeSuperior'],['SuspendedMinerals-LakeMichigan'],['Colored dissolved organic matter<br>(mg/L)'],false,".getSuspendedMineralsTime().",false,'','']
+    ,['Suspended minerals',['SuspendedMinerals-LakeErie','SuspendedMinerals-LakeHuron','SuspendedMinerals-LakeMichigan','SuspendedMinerals-LakeOntario','SuspendedMinerals-LakeSuperior'],['SuspendedMinerals-LakeMichigan'],['Suspended minerals<br>(mg/L)'],false,".getSuspendedMineralsTime().",false,'','']
     ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
   ]
 ";
