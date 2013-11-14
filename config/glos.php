@@ -1104,7 +1104,7 @@ EOJS;
       ,false
       ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs). Suspended Minerals (SM)  consist of inorganic particulate matter (such as sand, silt, and clay), which scatter and absorb light.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
-      ,{slope : 1,offset : 0,format : '%.1f'}
+      ,{slope : 1,offset : 0,format : '%.2f'}
     ]
     ,[
        'weather'
