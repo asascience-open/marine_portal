@@ -1102,7 +1102,7 @@ EOJS;
       ,1
       ,false
       ,false
-      ,'No information currently available.'
+      ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs). Suspended Minerals (SM)  consist of inorganic particulate matter (such as sand, silt, and clay), which scatter and absorb light.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : 1,offset : 0,format : '%d'}
     ]
@@ -1182,7 +1182,7 @@ EOJS;
       ,1
       ,false
       ,false
-      ,'No information currently available.'
+      ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs).  Dissolved Organic Carbon (DOC) is a form of organic carbon that is produced during micro-organism metabolism and may also be transported from decaying vegetation via rivers and streams. DOC only absorbs light, it does not scatter light, and appears yellow to brown in color. A significant fraction of the total DOC concentration is invisible and must be estimated empirically from the colored portion known as Colored Dissolved Organic Carbon (CDOM).  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : 1,offset : 0,format : '%d'}
     ]
@@ -1262,7 +1262,7 @@ EOJS;
       ,1
       ,false
       ,false
-      ,'No information currently available.'
+      ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs).  Colored Dissolved Organic Material (CDOM) is the optically measurable component of the dissolved organic carbon in water and is naturally occurring due to decaying plant matter and micro-organism metabolism. CDOM is highly absorbent of blue light which results in a yellow-brown color. CDOM is typically delivered to large aquatic ecosystems via river discharge.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : 1,offset : 0,format : '%.1f'}
     ]
@@ -1390,7 +1390,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'No details available.'
+      ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs).  Collected by the MODIS satellite sensor, these natural color images are produced using the Red, Green, and Blue channels at a spatial resolution of 1 kilometer.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : -999,offset : -999,format : '',image : 'img/blank1x1.png'}
     ]
@@ -1406,7 +1406,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'No details available.'
+      ,''
       ,false
       ,false
     ]
@@ -1422,7 +1422,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'No details available.'
+      ,''
       ,false
       ,false
     ]
@@ -1438,7 +1438,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'No details available.'
+      ,''
       ,false
       ,false
     ]
@@ -1454,7 +1454,7 @@ EOJS;
       ,1
       ,false
       ,true
-      ,'No details available.'
+      ,''
       ,false
       ,false
     ]
@@ -1470,7 +1470,7 @@ EOJS;
       ,1
       ,false
       ,false
-      ,'No details available.'
+      ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs).  Chlorophyll (Chl) is a green pigment found in plant and phytoplankton cells.  Algal cells that are suspended in water produce a green-yellow color.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.glosaocmapping.org\">www.glosaocmapping.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : 1,offset : 0,format : '%d',log : true}
     ]
@@ -1813,11 +1813,11 @@ EOJS;
      ['RADAR']
     ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
-    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(mg m^-3)'],false,".getChlorophyllTime().",false,'','']
-    ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(ug/L)'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
-    ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(ug/L)'],false,".getDissolvedOrganicCarbonTime().",false,'','']
+    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(ug/L)'],false,".getChlorophyllTime().",false,'','']
+    ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(absorption/m @ 443nm)'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
+    ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(mgC/L)'],false,".getDissolvedOrganicCarbonTime().",false,'','']
     ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color'],false,".getNaturalColorTime().",false,'','']
-    ,['Suspended minerals',['SuspendedMinerals-LakeErie','SuspendedMinerals-LakeHuron','SuspendedMinerals-LakeMichigan','SuspendedMinerals-LakeOntario','SuspendedMinerals-LakeSuperior'],['SuspendedMinerals-LakeMichigan'],['Colored dissolved organic matter<br>(ug/L)'],false,".getSuspendedMineralsTime().",false,'','']
+    ,['Suspended minerals',['SuspendedMinerals-LakeErie','SuspendedMinerals-LakeHuron','SuspendedMinerals-LakeMichigan','SuspendedMinerals-LakeOntario','SuspendedMinerals-LakeSuperior'],['SuspendedMinerals-LakeMichigan'],['Colored dissolved organic matter<br>(mg/L)'],false,".getSuspendedMineralsTime().",false,'','']
     ,['Water surface temperature',['WaterSurfaceTemperature-LakeMichigan','WaterSurfaceTemperature-LakeErie','WaterSurfaceTemperature-LakeHuron','WaterSurfaceTemperature-LakeOntario','WaterSurfaceTemperature-LakeSuperior'],['WaterSurfaceTemperature-LakeMichigan'],['Water surface<br>temperature (deg F)'],true,".getWaterSurfaceTemperatureTime().",false,'','']
   ]
 ";
