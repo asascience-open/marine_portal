@@ -110,7 +110,7 @@ var otherObs                    = {
   ,streamFlow : {
      topObsName : 'Streamflow'
     ,niceName   : 'Streamflow'
-    ,units      : 'cfs'
+    ,units      : 'ft3/s'
     ,niceValue  : function(value) {return Math.round(value * 1) / 1}
  }
   ,turbidity : {
