@@ -16,7 +16,6 @@ var loadingLayers = {
 
 var searchLimitPerPage = 20;
 var searchStart        = 1;
-var activeSearches     = 0;
 
 var chatLimitPerPage   = 100;
 
@@ -5561,6 +5560,12 @@ function printErrorAlert() {
 }
 
 function runQuery() {
+  var cmp = Ext.getCmp('searchResultsGridPanel');
+  if (cmp && cmp.getStore()) {
+    // kill an active search (if any)
+    Ext.Ajax.abort(cmp.getStore().proxy.activeRequest);
+  }
+
   var sto = new Ext.data.XmlStore({
     proxy       : new Ext.data.HttpProxy({
        method  : 'POST'
@@ -5616,15 +5621,11 @@ function runQuery() {
     ,listeners  : {
       beforeload : function(sto,o) {
         Ext.getCmp('searchResultsGridPanel').getEl().mask('<table><tr><td>Loading...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
-        activeSearches++;
         sto.setBaseParam('xmlData',buildFilter(o.params.limit,o.params.start));
         _gaq.push(['_trackEvent','Search',Ext.getCmp('anyTextSearchField').getValue()]);
       }
       ,load      : function(sto) {
-        activeSearches--;
-        if (activeSearches <= 0) {
-          Ext.getCmp('searchResultsGridPanel').getEl().unmask();
-        }
+        Ext.getCmp('searchResultsGridPanel').getEl().unmask();
         var c = sto.getTotalCount();
         if (c == 0) {
           Ext.getCmp('searchResultsWin').setTitle('Search results : No results found');
@@ -5632,6 +5633,12 @@ function runQuery() {
         else {
           Ext.getCmp('searchResultsWin').setTitle('Search results : ' + c  + ' result(s) found');
         }
+      }
+      ,exception : function(sto) {
+        Ext.getCmp('searchResultsGridPanel').getEl().unmask();
+        Ext.getCmp('searchResultsWin').setTitle('Search results : No results found');
+        Ext.getCmp('searchResultsGridPanel').getStore().removeAll();
+        Ext.getCmp('searchResultsPagingToolbar').updateInfo();
       }
     }
   });
