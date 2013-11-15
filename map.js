@@ -6028,6 +6028,10 @@ function runQuery() {
                 ,displayField   : 'title'
                 ,valueField     : 'name'
                 ,listeners      : {select : function(cb,rec,i) {
+                  if (!/observedProperty=/.test(servicesRec.get('url'))) {
+                    Ext.Msg.alert('Query error',"We're sorry, currently this query isn't supported.");
+                    return;
+                  }
                   sosGetObs(
                      searchVal
                     ,rec.get('name')
@@ -6052,7 +6056,10 @@ function runQuery() {
                 if (new RegExp(/getcapabilities/i).test(p['request']) && new RegExp(/wms/i).test(p['service'])) {
                   svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + 'Preview data on map.' + '</a>');
                 }
-                else if (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service'])) {
+                else if (
+                  (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service']))
+                  || (/opendap/i.test(details[j].get('name')) && services.length == 1) // hack for non-sos opendap data
+                ) {
                   var id = Ext.id();
                   svc.push('<img style="margin-bottom:-3px" width=16 height=16 src="img/chart16.png"> Select an observation to preview from the list below:');
                   svc.push('<img height=5 src="img/blank.png"');
