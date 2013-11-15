@@ -3,7 +3,6 @@
 
   header ("Content-Type:text/xml");
   $r = file_get_contents(wget($_REQUEST['url'],file_get_contents('php://input')));
-file_put_contents('/tmp/maplog',$r);
 
   // DomQuery doesn't support namespaces -- BOO!
   // so swap out the : after each one we care about with a _
