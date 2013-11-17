@@ -6028,14 +6028,19 @@ function runQuery() {
                 ,displayField   : 'title'
                 ,valueField     : 'name'
                 ,listeners      : {select : function(cb,rec,i) {
-                  if (!/observedProperty=/.test(servicesRec.get('url'))) {
-                    Ext.Msg.alert('Query error',"We're sorry, currently this query isn't supported.");
-                    return;
+                  // tweak the obs url based on sos vs. non-sos (i.e. opendap)
+                  var u;
+                  if (/observedProperty=/.test(servicesRec.get('url'))) {
+                    u = servicesRec.get('url').replace(/observedProperty=([^&]*)/i,'observedProperty=' + rec.get('name'))
                   }
-                  sosGetObs(
+                  else {
+                    u = servicesRec.get('url') + '___OPENDAP___' + rec.get('title');
+                  }
+// charlton
+                  getObs(
                      searchVal
                     ,rec.get('name')
-                    ,servicesRec.get('url').replace(/observedProperty=([^&]*)/i,'observedProperty=' + rec.get('name'))
+                    ,u
                     ,[searchRec.get('bboxWest'),searchRec.get('bboxSouth')]
                     ,searchRec.get('provider')
                     ,'combo.' + id
@@ -6745,7 +6750,7 @@ function wmsGetCaps(title,u) {
   });
 }
 
-function sosGetObs(title,name,u,bbox,provider,id,minT,maxT) {
+function getObs(title,name,u,bbox,provider,id,minT,maxT) {
   Ext.getCmp('searchResultsGridPanel').getEl().mask('<table><tr><td>Loading...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
 
   OpenLayers.Request.issue({
