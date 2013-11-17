@@ -6036,7 +6036,6 @@ function runQuery() {
                   else {
                     u = servicesRec.get('url') + '___OPENDAP___' + rec.get('title');
                   }
-// charlton
                   getObs(
                      searchVal
                     ,rec.get('name')
@@ -6782,7 +6781,7 @@ function getObs(title,name,u,bbox,provider,id,minT,maxT) {
         ,false // not drawing graph from topObs
         ,false // not drawing graph from topObs
         ,true  // from search
-        ,u.indexOf('herokuapp') >= 0
+        ,(u.indexOf('herokuapp') >= 0 || (u.indexOf('___OPENDAP___') >= 0 && u.indexOf('___OPENDAP___precipitation') < 0)) // hack for pointsOnly
       );
 
       if (selectPopup && selectPopup.isVisible()) {

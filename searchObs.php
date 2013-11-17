@@ -23,11 +23,12 @@
       if ($isOpendap) {
         $u = $a[0];
         $varName = $a[1];
-        preg_match("/$varName\[points = (.*)\]/",file_get_contents($u.'.dds'),$matches);
+        preg_match("/$varName\[.* = (.*)\]/",file_get_contents($u.'.dds'),$matches);
         $size = $matches[1];
         $inVarBlock  = false;
         $inTimeBlock = false;
         $varUnits;
+        $varFillValue;
         $timeUnits;
         foreach (explode("\n",file_get_contents($u.'.das')) as $l) {
           if (preg_match("/$varName \{(.*)/",$l) > 0) {
@@ -38,6 +39,9 @@
           }
           else if (!isset($varUnits) && $inVarBlock && preg_match("/units \"(.*)\"/",$l,$matches) > 0) {
             $varUnits = $matches[1];
+          }
+          else if (!isset($varFillValue) && $inVarBlock && preg_match("/_FillValue (.*)/",$l,$matches) > 0) {
+            $varFillValue = $matches[1];
           }
           else if (!isset($timeUnits) && $inTimeBlock && preg_match("/units \"(.*)\"/",$l,$matches) > 0) {
             $timeUnits = $matches[1];
@@ -50,13 +54,14 @@
         $inTimeBlock = false;
         $varVals;
         $timeVals;
+        // always attempt to pull back the last 200 vals
         foreach (explode("\n",file_get_contents(sprintf(
           "%s.ascii?time[%d:%d],%s[%d:%d]"
           ,$u
-          ,$size - 1
+          ,$size - 200
           ,$size - 1
           ,$varName
-          ,$size - 1
+          ,$size - 200
           ,$size - 1
         ))) as $l) {
           if (preg_match("/^$varName\[.*\]/",$l) > 0) {
@@ -80,10 +85,21 @@
             }
           }
         }
+
+        // time is not necessarily sorted nor unique :(
+        $d = array();
+        for ($j = 0; $j < count($timeVals); $j++) {
+          // might as well check for fill value, but it seems some precision is lost, so do a vulgar
+          // check for an exponent match -- negative #'s magically pass thru!
+          if (floor(log10($varVals[$j])) != floor(log10($varFillValue))) {
+            $d[sprintf("%s",$timeVals[$j])] = $varVals[$j]; 
+          }
+        }
+        ksort($d);
        
         $i = count($sites) - 1;
-        for ($j = 0; $j < count($timeVals); $j++) {
-          $a = convertUnits(sprintf("%.4f",$varVals[$j]),$varUnits,$tUom == 'english');
+        foreach ($d as $key => $val) {
+          $a = convertUnits(sprintf("%.4f",$val),$varUnits,$tUom == 'english');
           $k = $varName;
           if (!array_key_exists($k,$sites[$i]['timeSeries'])) {
             $v = array(
@@ -105,9 +121,9 @@
           if (count($a) == 2) {
             array_push($sites[$i]['timeSeries'][$k]['v'][$a[1]['uom']],$a[1]['val']);
           }
-          array_push($sites[$i]['timeSeries'][$k]['t'],$timeVals[$j]);
-          if ($timeVals[$j] >= $sites[$i]['topObs'][$k]['t']) {
-            $sites[$i]['topObs'][$k]['t'] = $timeVals[$j];
+          array_push($sites[$i]['timeSeries'][$k]['t'],$key);
+          if ($key >= $sites[$i]['topObs'][$k]['t']) {
+            $sites[$i]['topObs'][$k]['t'] = $key;
             $sites[$i]['topObs'][$k]['v'][$a[0]['uom']] = $a[0]['val'];
             if (count($a) == 2) {
               $sites[$i]['topObs'][$k]['v'][$a[1]['uom']] = $a[1]['val'];
