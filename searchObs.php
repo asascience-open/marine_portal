@@ -1,4 +1,6 @@
 <?php
+  date_default_timezone_set('UTC');
+
   function getSearchObs($getObs,$loc,$descr,$provider,$organization,$siteType,$url) {
     $tUom = 'english';
     $sites = array();
