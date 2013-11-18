@@ -9,13 +9,13 @@ if (-e '/tmp/lock_ck_lock_files') {
 
 `touch /tmp/lock_ck_lock_files`;
 
-my $tol_min = 5;
+my $tol_min = 2;
 my $db_name = $ENV{dbName};
 my $db_user = $ENV{dbUser};
 my $db_pass = $ENV{dbPass};
-my $db_host = $ENV{dbHost};
+my $db_port = $ENV{dbPort};
 
-my $dbh  = DBI->connect("DBI:Pg:dbname=$db_name;host=$db_host",$db_user,$db_pass);
+my $dbh  = DBI->connect("DBI:Pg:dbname=$db_name;port=$db_port",$db_user,$db_pass);
 my $now  = time();
 my $host = `hostname`;
 chomp($host);
@@ -42,7 +42,7 @@ while (my $f = readdir(DIR)) {
         if ($d{$f}{'alerted'} == 0) {
           $dbh->do("update lock_files set alerted = true where n = '$f'");
           print STDERR "\talert!\n";
-          my $cmd = "echo 'You might want to login to the server to investigate.' | mail -s '$host:$f has been running for more than $tol_min minutes' 'charlton\@2creek.com'";
+          my $cmd = "echo 'You might want to login to the server to investigate.' | mail -s '$f has been running for more than $tol_min minutes on $host' 'charlton\@2creek.com'";
           print `$cmd`;
         }
       }
@@ -52,7 +52,7 @@ while (my $f = readdir(DIR)) {
     }
     elsif (defined($d{$f}) && $d{$f}{'alerted'} == 1) {
       print STDERR "\tresumed!\n";
-      my $cmd = "echo '' | mail -s '$host:$f has recovered' 'charlton\@2creek.com'";
+      my $cmd = "echo '' | mail -s '$f has recovered on $host' 'charlton\@2creek.com'";
       print `$cmd`;
       $dbh->do("delete from lock_files where n = '$f'");
     }
