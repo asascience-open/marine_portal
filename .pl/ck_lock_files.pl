@@ -9,7 +9,7 @@ if (-e '/tmp/lock_ck_lock_files') {
 
 `touch /tmp/lock_ck_lock_files`;
 
-my $tol_min = 2;
+my $tol_min = 60;
 my $db_name = $ENV{dbName};
 my $db_user = $ENV{dbUser};
 my $db_pass = $ENV{dbPass};
@@ -42,7 +42,7 @@ while (my $f = readdir(DIR)) {
         if ($d{$f}{'alerted'} == 0) {
           $dbh->do("update lock_files set alerted = true where n = '$f'");
           print STDERR "\talert!\n";
-          my $cmd = "echo 'You might want to login to the server to investigate.' | mail -s '$f has been running for more than $tol_min minutes on $host' 'charlton\@2creek.com'";
+          my $cmd = "echo 'You might want to login to the server to investigate.' | mail -s '$f has been running for more than $tol_min minutes on $host' 'charlton\@2creek.com,kknee\@asascience.com,gwang\@glc.org'";
           print `$cmd`;
         }
       }
@@ -52,7 +52,7 @@ while (my $f = readdir(DIR)) {
     }
     elsif (defined($d{$f}) && $d{$f}{'alerted'} == 1) {
       print STDERR "\tresumed!\n";
-      my $cmd = "echo '' | mail -s '$f has recovered on $host' 'charlton\@2creek.com'";
+      my $cmd = "echo '' | mail -s '$f has recovered on $host' 'charlton\@2creek.com,kknee\@asascience.com,gwang\@glc.org'";
       print `$cmd`;
       $dbh->do("delete from lock_files where n = '$f'");
     }
