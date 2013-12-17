@@ -16,7 +16,6 @@ var loadingLayers = {
 
 var searchLimitPerPage = 20;
 var searchStart        = 1;
-var activeSearches     = 0;
 
 var chatLimitPerPage   = 100;
 
@@ -110,7 +109,7 @@ var otherObs                    = {
   ,streamFlow : {
      topObsName : 'Streamflow'
     ,niceName   : 'Streamflow'
-    ,units      : 'cfs'
+    ,units      : 'ft3/s'
     ,niceValue  : function(value) {return Math.round(value * 1) / 1}
  }
   ,turbidity : {
@@ -5561,6 +5560,12 @@ function printErrorAlert() {
 }
 
 function runQuery() {
+  var cmp = Ext.getCmp('searchResultsGridPanel');
+  if (cmp && cmp.getStore()) {
+    // kill an active search (if any)
+    Ext.Ajax.abort(cmp.getStore().proxy.activeRequest);
+  }
+
   var sto = new Ext.data.XmlStore({
     proxy       : new Ext.data.HttpProxy({
        method  : 'POST'
@@ -5616,15 +5621,11 @@ function runQuery() {
     ,listeners  : {
       beforeload : function(sto,o) {
         Ext.getCmp('searchResultsGridPanel').getEl().mask('<table><tr><td>Loading...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
-        activeSearches++;
         sto.setBaseParam('xmlData',buildFilter(o.params.limit,o.params.start));
         _gaq.push(['_trackEvent','Search',Ext.getCmp('anyTextSearchField').getValue()]);
       }
       ,load      : function(sto) {
-        activeSearches--;
-        if (activeSearches <= 0) {
-          Ext.getCmp('searchResultsGridPanel').getEl().unmask();
-        }
+        Ext.getCmp('searchResultsGridPanel').getEl().unmask();
         var c = sto.getTotalCount();
         if (c == 0) {
           Ext.getCmp('searchResultsWin').setTitle('Search results : No results found');
@@ -5632,6 +5633,12 @@ function runQuery() {
         else {
           Ext.getCmp('searchResultsWin').setTitle('Search results : ' + c  + ' result(s) found');
         }
+      }
+      ,exception : function(sto) {
+        Ext.getCmp('searchResultsGridPanel').getEl().unmask();
+        Ext.getCmp('searchResultsWin').setTitle('Search results : No results found');
+        Ext.getCmp('searchResultsGridPanel').getStore().removeAll();
+        Ext.getCmp('searchResultsPagingToolbar').updateInfo();
       }
     }
   });
@@ -6021,10 +6028,18 @@ function runQuery() {
                 ,displayField   : 'title'
                 ,valueField     : 'name'
                 ,listeners      : {select : function(cb,rec,i) {
-                  sosGetObs(
+                  // tweak the obs url based on sos vs. non-sos (i.e. opendap)
+                  var u;
+                  if (/observedProperty=/.test(servicesRec.get('url'))) {
+                    u = servicesRec.get('url').replace(/observedProperty=([^&]*)/i,'observedProperty=' + rec.get('name'))
+                  }
+                  else {
+                    u = servicesRec.get('url') + '___OPENDAP___' + rec.get('title');
+                  }
+                  getObs(
                      searchVal
                     ,rec.get('name')
-                    ,servicesRec.get('url').replace(/observedProperty=([^&]*)/i,'observedProperty=' + rec.get('name'))
+                    ,u
                     ,[searchRec.get('bboxWest'),searchRec.get('bboxSouth')]
                     ,searchRec.get('provider')
                     ,'combo.' + id
@@ -6045,7 +6060,10 @@ function runQuery() {
                 if (new RegExp(/getcapabilities/i).test(p['request']) && new RegExp(/wms/i).test(p['service'])) {
                   svc.push('<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + '<img style="margin-bottom:-3px" width=16 height=16 src="img/layers_map.png">' + '</a> ' + '<a href="javascript:wmsGetCaps(\'' + encodeURIComponent(val) + '\',\'' + encodeURIComponent(details[j].get('url')) + '\')">' + 'Preview data on map.' + '</a>');
                 }
-                else if (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service'])) {
+                else if (
+                  (new RegExp(/getobservation/i).test(p['request']) && new RegExp(/sos/i).test(p['service']))
+                  || (/opendap/i.test(details[j].get('name')) && services.length == 1) // hack for non-sos opendap data
+                ) {
                   var id = Ext.id();
                   svc.push('<img style="margin-bottom:-3px" width=16 height=16 src="img/chart16.png"> Select an observation to preview from the list below:');
                   svc.push('<img height=5 src="img/blank.png"');
@@ -6731,7 +6749,7 @@ function wmsGetCaps(title,u) {
   });
 }
 
-function sosGetObs(title,name,u,bbox,provider,id,minT,maxT) {
+function getObs(title,name,u,bbox,provider,id,minT,maxT) {
   Ext.getCmp('searchResultsGridPanel').getEl().mask('<table><tr><td>Loading...&nbsp;</td><td><img src="js/ext-3.3.0/resources/images/default/grid/loading.gif"></td></tr></table>','mask');
 
   OpenLayers.Request.issue({
@@ -6763,7 +6781,7 @@ function sosGetObs(title,name,u,bbox,provider,id,minT,maxT) {
         ,false // not drawing graph from topObs
         ,false // not drawing graph from topObs
         ,true  // from search
-        ,u.indexOf('herokuapp') >= 0
+        ,(u.indexOf('herokuapp') >= 0 || (u.indexOf('___OPENDAP___') >= 0 && u.indexOf('___OPENDAP___precipitation') < 0)) // hack for pointsOnly
       );
 
       if (selectPopup && selectPopup.isVisible()) {

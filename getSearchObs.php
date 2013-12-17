@@ -4,15 +4,15 @@
   include_once('util.php');
   include_once('searchObs.php');
 
-  $getObs = array(
-     '/home/cgalvarino/Temp/winds2.xml'
-    ,'/home/cgalvarino/Temp/air_temperature.xml'
+  $getObs       = array(
+    'http://tds.glos.us/thredds/dodsC/MTRI-Ranger3.nc___OPENDAP___air_temperature'
   );
-
-  $loc = array(0,0);
-  $descr = 'My buoy';
-  $provider = 'ndbc';
+  $loc          = array(0,0);
+  $descr        = 'My buoy';
+  $provider     = 'ndbc';
   $organization = 'mine';
+  $siteType     = '';
+  $url          = ''; 
 
   $getObs       = json_decode($_REQUEST['getObs'],true);
   $loc          = json_decode($_REQUEST['location'],true);
