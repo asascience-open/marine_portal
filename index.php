@@ -6,7 +6,7 @@
 <html>
   <head>
     <title><?php echo $title?></title>
-    <link rel="stylesheet" type="text/css" href="http://cloud.iboattrack.com/js/ext-3.4.1/resources/css/ext-all.css"/>
+    <link rel="stylesheet" type="text/css" href="http://charthorizon.com/js/ext-3.4.1/resources/css/ext-all.css"/>
     <link rel="stylesheet" type="text/css" href="style.css?<?php echo $version?>"/>
     <!--[if IE]>
       <link rel="stylesheet" type="text/css" href="style.ie.css?<?php echo $version?>" />
@@ -32,8 +32,8 @@
       <span id="loading-message">Loading core API. Please wait...</span>
     </div>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
-    <script type="text/javascript" src="http://cloud.iboattrack.com/js/ext-3.4.1/adapter/ext/ext-base.js"></script>
-    <script type="text/javascript" src="http://cloud.iboattrack.com/js/ext-3.4.1/ext-all.js"></script>
+    <script type="text/javascript" src="http://charthorizon.com/js/ext-3.4.1/adapter/ext/ext-base.js"></script>
+    <script type="text/javascript" src="http://charthorizon.com/js/ext-3.4.1/ext-all.js"></script>
     <script type="text/javascript" src="./js/ext-3.3.0/SearchField.js"></script>
     <script type="text/javascript" src="./js/ext-3.3.0/IndentedTreeNodeUI.js"></script>
     <script type="text/javascript" src="./js/OpenLayers-2.12-rc7/OpenLayers-closure-ie10-fix.js"></script>
