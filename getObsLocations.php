@@ -37,7 +37,7 @@
   $sosProviders = array(
     'NDBC' => array(
        'getCaps'   => 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
-      ,'variables' => array(
+      ,'varMap' => array(
          'winds'                 => 'WindSpeed'
         ,'waves'                 => 'SignificantWaveHeight'
         ,'sea_water_temperature' => 'WaterTemperature'
@@ -49,7 +49,7 @@
     )
     ,'COOPS' => array(
        'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
-      ,'variables' => array(
+      ,'varMap' => array(
          'winds'                                      => 'WindSpeed'
         ,'sea_water_temperature'                      => 'WaterTemperature'
         ,'water_surface_height_above_reference_datum' => 'WaterLevel'
@@ -121,7 +121,7 @@
   }
 
   $glosJsonProviders = array(
-     'GLOS' => array(
+    'GLOS' => array(
        'varMap'   => array(
          'Wind Speed'                   => 'WindSpeed'
         ,'Wind from Direction'          => 'WindDirection'
@@ -135,6 +135,19 @@
   );
   if (!in_array('glos',$providers)) {
     $glosJsonProviders = array();
+  }
+
+  $glosTDSProviders = array(
+    'GLOS' => array(
+      'varMap' => array(
+        'water_level' => 'WaterLevel'
+      )
+      ,'provUrl'   => 'http://tds.glos.us/thredds/water_levels.html?dataset=TheGreatLakesWaterLevels-Agg'
+      ,'siteType'  => 'station'
+    )
+  );
+  if (!in_array('glosTDS',$providers)) {
+    $glosTDSProviders = array();
   }
 
   $soapProviders = array(
@@ -207,6 +220,14 @@
     switch ($provider) {
       case 'Environment Canada' :
         getNDBCText($ndbcTextProviders,$provider,$dBegin,$tUom,$sites);
+      break;
+    }
+  }
+
+  foreach ($glosTDSProviders as $provider => $v) {
+    switch ($provider) {
+      case 'GLOS' :
+        getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,$sites);
       break;
     }
   }
@@ -539,9 +560,9 @@
       if (contains($bbox,$loc[1],$loc[0]) && !in_array($id,$sosProviders[$provider]['skipStations'])) { // && $id == '45029') {
         foreach ($o->{'observedProperty'} as $prop) {
           $p = explode('/',$prop->attributes('http://www.w3.org/1999/xlink')->{'href'});
-          if (array_key_exists(sprintf("%s",$p[count($p)-1]),$sosProviders[$provider]['variables'])) {
+          if (array_key_exists(sprintf("%s",$p[count($p)-1]),$sosProviders[$provider]['varMap'])) {
             array_push($dSensor,array(
-               'name' => $sosProviders[$provider]['variables'][sprintf("%s",$p[count($p)-1])]
+               'name' => $sosProviders[$provider]['varMap'][sprintf("%s",$p[count($p)-1])]
               ,'url'  => $describeSensor
                 .'?request=DescribeSensor&service=SOS&version=1.0.0'
                 .sprintf(
@@ -1091,6 +1112,104 @@
                 }
               }
             }
+          }
+        }
+      }
+    }
+  }
+
+  function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites) {
+// charlton
+    $d = `ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    $stations = array();
+    foreach(explode("\n",$d) as $row => $data) {
+      if (preg_match("/station_name.*='(.*)'/",$data,$matches)) {
+        array_push($stations,array('name' => rtrim($matches[1]),'t' => array(),'v' => array()));
+      }
+    }
+    $i = 0;
+    foreach(explode("\n",$d) as $row => $data) {
+      if (preg_match("/station.* lon.*=(.*)degrees_east/",$data,$matches)) {
+        $stations[$i++]['lon'] = rtrim($matches[1]);
+      }
+    }
+    $i = 0;
+    foreach(explode("\n",$d) as $row => $data) {
+      if (preg_match("/station.* lat.*=(.*)degrees_north/",$data,$matches)) {
+        $stations[$i++]['lat'] = rtrim($matches[1]);
+      }
+    }
+    foreach(explode("\n",$d) as $row => $data) {
+      if (preg_match("/time\[(.*)\].*station\[(.*)\] water_level.*=(.*) (.*)/",$data,$matches)) {
+        $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]);
+        $stations[$matches[2]]['u'] = rtrim($matches[4]);
+      }
+    }
+    $inTimeBlock = false;
+    $done        = false;
+    $d = `ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    foreach(explode("\n",$d) as $row => $data) {
+      if ($data == '' && $inTimeBlock) {
+        $done = true;
+      }
+      if ($inTimeBlock && !$done) {
+        for ($i = 0; $i < count($stations); $i++) {
+          $dt = new DateTime('1970-01-01 00:00:00');
+          date_add($dt,date_interval_create_from_date_string(sprintf("%d seconds",$data)));
+          array_push($stations[$i]['t'],date_format($dt,"U"));
+        }
+      }
+      if ($data == '') {
+        $inTimeBlock = true;
+      }
+    }
+
+    for ($i = 0; $i < count($stations); $i++) {
+      array_push($sites,array(
+         'descr'        => $stations[$i]['name'].' water level'
+        ,'provider'     => $provider
+        ,'organization' => ''
+        ,'lon'          => $stations[$i]['lon']
+        ,'lat'          => $stations[$i]['lat']
+        ,'timeSeries'   => array()
+        ,'topObs'       => array()
+        ,'url'          => $glosTDSProviders[$provider]['provUrl']
+        ,'siteType'     => $glosTDSProviders[$provider]['siteType']
+      ));
+      for ($j = 0; $j < count($stations[$i]['v']); $j++) {
+        $uom = $stations[$i]['u'];
+        $a = convertUnits($stations[$i]['v'][$j],$uom,$tUom == 'english');
+        $n = 'water_level';
+        if (array_key_exists($n,$glosTDSProviders[$provider]['varMap'])) {
+          $n = $glosTDSProviders[$provider]['varMap'][$n];
+        }
+        if (!array_key_exists($n,$sites[$i]['timeSeries'])) {
+          $v = array(
+            $a[0]['uom'] => array()
+          );
+          if (count($a) == 2) {
+            $v[$a[1]['uom']] = array();
+          }
+          $sites[$i]['timeSeries'][$n] = array(
+             'v' => $v
+            ,'t' => array()
+          );
+          $sites[$i]['topObs'][$n] = array(
+             'v' => array()
+            ,'t' => 0
+          );
+        }
+        array_push($sites[$i]['timeSeries'][$n]['v'][$a[0]['uom']],$a[0]['val']);
+        if (count($a) == 2) {
+          array_push($sites[$i]['timeSeries'][$n]['v'][$a[1]['uom']],$a[1]['val']);
+        }
+        $t = $stations[$i]['t'][$j];
+        array_push($sites[$i]['timeSeries'][$n]['t'],$t);
+        if ($t >= $sites[$i]['topObs'][$n]['t']) {
+          $sites[$i]['topObs'][$n]['t'] = $t;
+          $sites[$i]['topObs'][$n]['v'][$a[0]['uom']] = $a[0]['val'];
+          if (count($a) == 2) {
+            $sites[$i]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
           }
         }
       }

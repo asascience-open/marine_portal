@@ -21,6 +21,7 @@
       ,'cm/s'   => 'velocity'
       ,'kt'     => 'velocity'
       ,'m'      => 'elevation'
+      ,'meters' => 'elevation'
       ,'mm'     => 'elevation'
       ,'bar'    => 'pressure'
       ,'1.0E-9one' => 'pressure'
@@ -38,7 +39,7 @@
         array_push($a,Array('val' => sprintf("%.02f",$val * 0.01943844),'uom' => 'knots','cat' => $english_category[$uom]));
         array_push($a,Array('val' => sprintf("%.02f",$val * 0.0223693629),'uom' => 'mph','cat' => $english_category[$uom]));
       }
-      else if ($uom == 'm') {
+      else if ($uom == 'm' || $uom == 'meters') {
         array_push($a,Array('val' => sprintf("%.02f",$val * 3.2808399),'uom' => 'ft','cat' => $english_category[$uom]));
       }
       else if ($uom == 'm below land surface') {
