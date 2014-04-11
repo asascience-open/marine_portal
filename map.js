@@ -2991,12 +2991,14 @@ function initMap() {
     });
   }
 
-  new Ext.ButtonGroup({
+  // Wrap the next bit in a defer() becuase Safari bombs w/i it.
+  Ext.defer(function(){new Ext.ButtonGroup({
      renderTo  : 'mapMessagesButtonGroup'
     ,columns   : 1
+    ,autoWidth : true
     ,title     : 'Map messages'
     ,items     : {width : 250,xtype : 'container',autoEl : {tag : 'center'},items : {border : false,id : 'mapMessagesHtml',html : 'Retrieving observations...'}}
-  });
+  })},100);
 
 /*
   // read in buffer
