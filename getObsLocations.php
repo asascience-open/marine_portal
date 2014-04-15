@@ -1119,12 +1119,12 @@
   }
 
   function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites) {
-// charlton
-    $d = `ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    // $d = `ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    $d = file_get_contents('/tmp/v');
     $stations = array();
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/station_name.*='(.*)'/",$data,$matches)) {
-        array_push($stations,array('name' => rtrim($matches[1]),'t' => array(),'v' => array()));
+      if (preg_match("/station_name.*=\"(.*)\"/",$data,$matches)) {
+        array_push($stations,array('name' => rtrim($matches[1]),'v' => array()));
       }
     }
     $i = 0;
@@ -1147,7 +1147,8 @@
     }
     $inTimeBlock = false;
     $done        = false;
-    $d = `ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    // $d = `ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    $d = file_get_contents('/tmp/t');
     foreach(explode("\n",$d) as $row => $data) {
       if ($data == '' && $inTimeBlock) {
         $done = true;
@@ -1156,6 +1157,9 @@
         for ($i = 0; $i < count($stations); $i++) {
           $dt = new DateTime('1970-01-01 00:00:00');
           date_add($dt,date_interval_create_from_date_string(sprintf("%d seconds",$data)));
+          if (!array_key_exists('t',$stations[$i])) {
+            $stations[$i]['t'] = array();
+          }
           array_push($stations[$i]['t'],date_format($dt,"U"));
         }
       }
