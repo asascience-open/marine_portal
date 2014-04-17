@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo getall start `date`
+if [ ! -f /tmp/lock_getall ]; then
+  touch /tmp/lock_getall
+  pushd /var/www/html/glos/json
+  wget 'http://data.glos.us/portal/getObs.php' -O .all.0.json
+  mv .all.0.json all.0.json
+  popd
+  rm -f /tmp/lock_getall
+fi
+echo getall end `date`
