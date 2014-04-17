@@ -102,6 +102,27 @@ if (defined $query->param('barb') && $dir > -999) {
   }
 }
 
+if (defined $query->param('square') && $mag > -999) {
+  my $imageObs0 = Image::Magick->new;
+  $imageObs0->Set(size=>(sprintf("%dx%d",@sizeIco)));
+  $imageObs0->ReadImage('xc:transparent');
+  $imageObs0->Annotate(
+     text      => encode('utf-8',chr(167))
+    ,fill      => sprintf("rgb(%s)",getRGB($mag,$cptRange[0],$cptRange[1]))
+    ,stroke    => "rgb(0,0,0)"
+    ,pointsize => $sizeIco[0] * 0.70
+    ,x         => $sizeIco[0]/2 - 5 * cos(deg2rad($dir))
+    ,y         => $sizeIco[1]/2 - 5 * sin(deg2rad($dir))
+    ,font      => "$fonts_base/wingding.ttf"
+  );
+  $imageObs0->Trim();
+  $imageObs->Composite(
+     gravity => 'center'
+    ,image   => $imageObs0
+    ,compose => 'over'
+  );
+}
+
 # circle
 if (!$noCircle) {
   if ($mag > -999) {
