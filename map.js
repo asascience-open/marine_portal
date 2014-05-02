@@ -3993,7 +3993,12 @@ function varSummary(f,scaleFactor,ctl) {
   else if (activeObs.waterLevel && activeMode == 'observations') {
     var o = getWaterLevel(f);
     if (o) {
-      var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waterlevel'] + '&mag=' + (Math.round(o.mag * 10) / 10) + hilite;
+      // Great Lakes WL are special.
+      var wl = '';
+      if (f.attributes.provider == 'GLOS' && /water level/.test(f.attributes.descr)) {
+        wl = '&noCircle&square';
+      }
+      var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waterlevel'] + '&mag=' + (Math.round(o.mag * 10) / 10) + hilite + wl;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waterLevel ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waterLevel ? scaleFactor : 1);
       if (!o.mag) {

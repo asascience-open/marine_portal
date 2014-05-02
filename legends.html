@@ -1,0 +1,89 @@
+<html>
+<head>
+  <style>
+    table td {
+      vertical-align : top;
+      font : 12px/13px tahoma,helvetica,sans-serif;
+      padding: 10;
+      border : 1px solid gray;
+      min-width : 120px;
+    }
+    .rotate180 {
+       -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=2);
+      margin-left : -40px;
+    }
+  </style>
+</head>
+<body>
+  <table>
+    <tr>
+      <td>
+        Lake Superior<br>
+        Lake Michigan<br>
+        Lake Huron<br>
+        Lake Erie<br>
+        Lake Ontario
+      </td>
+      <td><img src="http://data.glos.us/boaters/sites/all/modules/custom/glos_boater/images/GLOS_legends_full/current_POM_legend.png"></td>
+      <td><img src="http://wms.glos.us/wms/superior_fcfmrc_2d/?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.1.1&LAYER=uc,vc&STYLES=unitvectors_average_jet_0_0.36_grid_8"></td>
+      <td>
+        0.36 m/s</br>
+        = 1.18 ft/sec<br>
+        = 0.7 kts
+      </td>
+      <td>
+        unitvectors_average_jet_0_0.36_grid_8
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Huron-Erie Corridor<br>
+        St. Lawrence River
+      </td>
+      <td><img src="http://data.glos.us/boaters/sites/all/modules/custom/glos_boater/images/GLOS_legends_full/current_SLR_legend.png"></td>
+      <td><img src="http://wms.glos.us/wms/superior_fcfmrc_2d/?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.1.1&LAYER=uc,vc&STYLES=vectors_average_jet_0_1.524_cell_True"></td>
+      <td>
+        1.524 m/s</br>
+        = 5 ft/sec<br>
+        = 3.0 kts
+      </td>
+      <td>
+        vectors_average_jet_0_1.524_cell_True
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Lake Superior <b>NONE!</b><br>
+        Lake Michigan<br>
+        Lake Huron<br>
+        Lake Erie<br>
+        Lake Ontario
+      </td>
+      <td><img src="http://data.glos.us/boaters/sites/all/modules/custom/glos_boater/images/GLOS_legends_full/depth_legend_POM.png"></td>
+      <td><img class="rotate180" src="http://wms.glos.us/wms/michigan_fcfmrc_2d/?SERVICE=WMS&REQUEST=GetLegendGraphic&VERSION=1.1.1&LAYER=depth+eta&STYLES=pcolor_average_Blues_0_220_grid_False"></td>
+      <td>
+        0.36 m/s</br>
+        = 1.18 ft/sec<br>
+        = 0.7 kts
+      </td>
+      <td>
+        <b>The WMS images's contours are being auto stretched! I.e. the color allocation is not consistent from region to regin!</b><br>
+        pcolor_average_Blues_None_None_grid_False
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Huron-Erie Corridor<br>
+        St. Lawrence River
+      </td>
+      <td><img src="http://data.glos.us/boaters/sites/all/modules/custom/glos_boater/images/GLOS_legends_full/depth_legend_SLR.png"></td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>
+        <b>The WMS images's contours are being auto stretched! I.e. the color allocation is not consistent from region to regin!</b>
+      </td>
+    </tr>
+  </table>
+</body>

@@ -71,6 +71,8 @@ EOHTML;
 
   $availableObs = array('Winds','Waves','WaterTemp','WaterLevel');
 
+  $chl = getChlorophyllTime();
+
   $greatLakesJSON = file_get_contents('xml/glosGreatLakes.json');
   $extraInitJS = <<< EOJS
     var features = new OpenLayers.Format.GeoJSON().read($greatLakesJSON);
@@ -1462,14 +1464,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeMichigan'
-      ,'http://tds.glos.us/thredds/wms/CHL/LakeMichiganCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'chl'
-      ,'boxfill/rainbow'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
+      ,'CHLLOW_Michigan_".$chl['times']['Lake Michigan']."'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
-      ,false
+      ,true
       ,'<a target=_blank href=\"http://www.mtri.org\"><img width=153 height=100 src=\"img/glos/mtri.png\" style=\"margin-top:5px;border:1px solid #8CA4CB;float:right\" title=\"MTRI\"></a> Water Color of inland and coastal zones results mainly from three different parameters known as color-producing agents (CPAs).  Chlorophyll (Chl) is a green pigment found in plant and phytoplankton cells.  Algal cells that are suspended in water produce a green-yellow color.  For more information, please visit <a target=_blank href=\"http://www.mtri.org\">www.mtri.org</a> and <a target=_blank href=\"http://www.greatlakesremotesensing.org\">www.greatlakesremotesensing.org</a> - data are provided by the Michigan Tech Research Institute (MTRI). Or visit the <a target=_blank href=\"http://glos.us/projects/observations\">GLOS projects page</a> for more information.'
       ,false
       ,{slope : 1,offset : 0,format : '%d',log : true}
@@ -1478,14 +1480,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeErie'
-      ,'http://tds.glos.us/thredds/wms/CHL/LakeErieCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'chl'
-      ,'boxfill/rainbow'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
+      ,'CHL_Erie_".$chl['times']['Lake Erie']."'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
-      ,false
+      ,true
       ,''
       ,false
       ,false
@@ -1494,14 +1496,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeHuron'
-      ,'http://tds.glos.us/thredds/wms/CHL/LakeHuronCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'chl'
-      ,'boxfill/rainbow'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
+      ,'CHLLOW_Huron_".$chl['times']['Lake Huron']."'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
-      ,false
+      ,true
       ,''
       ,false
       ,false
@@ -1510,14 +1512,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeOntario'
-      ,'http://tds.glos.us/thredds/wms/CHL/LakeOntarioCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'chl'
-      ,'boxfill/rainbow'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
+      ,'CHL_Ontario_".$chl['times']['Lake Ontario']."'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
-      ,false
+      ,true
       ,''
       ,false
       ,false
@@ -1526,14 +1528,14 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeSuperior'
-      ,'http://tds.glos.us/thredds/wms/CHL/LakeSuperiorCHL-Agg?GetMetadata=1&COLORSCALERANGE=0.01,20&'
-      ,'chl'
-      ,'boxfill/rainbow'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
+      ,'CHLLOW_Superior_".$chl['times']['Lake Superior']."'
+      ,''
       ,'image/png'
       ,false
       ,1
       ,false
-      ,false
+      ,true
       ,''
       ,false
       ,false
@@ -1813,7 +1815,7 @@ EOJS;
      ['RADAR']
     ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
-    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(ug/L)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getChlorophyllTime().",false,'','']
+    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(ug/L)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".$chl['legend'].",false,'','']
     ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(absorption/m @ 443nm)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
     ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(mgC/L)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getDissolvedOrganicCarbonTime().",false,'','']
     ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getNaturalColorTime().",false,'','']
@@ -1924,24 +1926,37 @@ EOJS;
   }
 
   function getChlorophyllTime() {
-    $lakes = array('Lake Erie','Lake Huron','Lake Michigan','Lake Ontario','Lake Superior');
-    $a = array();
-    for ($i = 0; $i < count($lakes); $i++) {
-      $l = $lakes[$i];
-      $xml = @simplexml_load_file('xml/glosChlorophyll'.str_replace(' ','',$l).'.getcaps.xml');
-      foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
-        foreach ($l0->{'Layer'} as $l1) {
-          if (sprintf("%s",$l1->{'Name'}) == 'chl') {
-            array_push($a,'["'.$l.'",new Date('.strtotime(sprintf("%s",$l1->{'Dimension'}[0]->attributes()->{'default'})).' * 1000)]');
-          }
+    $lyr2niceName = array(
+       'CHLLOW_Michigan' => 'Lake Michigan'
+      ,'CHL_Erie'        => 'Lake Erie'
+      ,'CHLLOW_Huron'    => 'Lake Huron'
+      ,'CHL_Ontario'     => 'Lake Ontario'
+      ,'CHLLOW_Superior' => 'Lake Superior'
+    );
+    $regex = implode('|',array_keys($lyr2niceName));
+    $times = array();
+    $xml = @simplexml_load_file('xml/glosChlorophyll.getcaps.xml');
+    foreach ($xml->{'Capability'}[0]->{'Layer'}[0]->{'Layer'} as $l0) {
+      if (preg_match("/^($regex)_(.*)/",sprintf("%s",$l0->{'Name'}),$matches)) {
+        if (!array_key_exists($lyr2niceName[$matches[1]],$times) || $times[$lyr2niceName[$matches[1]]] < $matches[2]) {
+          $times[$lyr2niceName[$matches[1]]] = $matches[2];
         }
       }
     }
+
+    $a = array();
+    $lut = array();
+    foreach ($times as $k => $v) {
+      $t = strtotime($v);
+      array_push($a,'["'.$k.'",new Date('.$t.' * 1000)]');
+      $lut[$k] = date("Ymd",$t);
+    }
+
     if (count($a) > 0) {
-      return '['.implode(',',$a).']';
+      return array('legend' => '['.implode(',',$a).']','times' => $lut);
     }
     else {
-      return false;
+      return array('legend' => false);
     }
   }
 
