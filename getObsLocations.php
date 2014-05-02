@@ -1119,8 +1119,8 @@
   }
 
   function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites) {
-    // $d = `ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
-    $d = file_get_contents('/tmp/v');
+    $d = `/usr/local/bin/ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    // $d = file_get_contents('/home/charlton/Temp/v');
     $stations = array();
     foreach(explode("\n",$d) as $row => $data) {
       if (preg_match("/station_name.*=\"(.*)\"/",$data,$matches)) {
@@ -1147,8 +1147,8 @@
     }
     $inTimeBlock = false;
     $done        = false;
-    // $d = `ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
-    $d = file_get_contents('/tmp/t');
+    $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    // $d = file_get_contents('/home/charlton/Temp/t');
     foreach(explode("\n",$d) as $row => $data) {
       if ($data == '' && $inTimeBlock) {
         $done = true;

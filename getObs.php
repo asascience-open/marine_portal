@@ -1,9 +1,11 @@
 <?php
+  ini_set('memory_limit', '512M');
   $dbUser = getenv('dbUser');
   $dbPass = getenv('dbPass');
   $dbName = getenv('dbName');
   $dbPort = getenv('dbPort');
   $providers = explode(',',getenv('providers'));
+  array_push($providers,'glosTDS');
 
   $data = array();
 
