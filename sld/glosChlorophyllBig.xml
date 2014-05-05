@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<StyledLayerDescriptor xmlns="http://www.opengis.net/sld" xmlns:ogc="http://www.opengis.net/ogc" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/sld http://schemas.opengis.net/sld/1.0.0/StyledLayerDescriptor.xsd" version="1.0.0">
+  <NamedLayer>
+    <Name>LAYER</Name>
+    <UserStyle>
+      <Title>Chlorophyll (Chl)</Title>
+      <Abstract></Abstract>
+      <FeatureTypeStyle>
+        <Rule>
+          <Name>rule1</Name>
+          <Title>Opaque Raster</Title>
+          <Abstract>A raster with 100% opacity</Abstract>
+          <RasterSymbolizer>
+            <Opacity>1.0</Opacity>
+            <ChannelSelection>
+              <GrayChannel>
+                <SourceChannelName>1</SourceChannelName>
+              </GrayChannel>
+            </ChannelSelection>
+            <ColorMap type="intervals" extended="false">
+              <ColorMapEntry color="#000000" label="NoData" quantity="0.0" opacity="0.0"/>
+              <ColorMapEntry color="#0000FF" label="" quantity="0.0001" opacity="1.0"/>
+              <ColorMapEntry color="#0000FF" label="&lt;1.0 ug/L" quantity="1.0" opacity="1.0"/>
+              <ColorMapEntry color="#386AFF" label="2.0 ug/L" quantity="2.0"/>
+              <ColorMapEntry color="#33C2FF" label="4.0 ug/L" quantity="4.0"/>
+              <ColorMapEntry color="#59FFE1" label="8.0 ug/L" quantity="8.0"/>
+              <ColorMapEntry color="#B6FF8F" label="12.0 ug/L" quantity="12.0"/>
+              <ColorMapEntry color="#EEFF38" label="16.0 ug/L" quantity="16.0"/>
+              <ColorMapEntry color="#FFC800" label="20.0 ug/L" quantity="20.0"/>
+              <ColorMapEntry color="#FF7700" label="30.0 ug/L" quantity="30.0"/>
+              <ColorMapEntry color="#FF0000" label="&gt;30.0 ug/L" quantity="150.0"/>
+            </ColorMap>
+          </RasterSymbolizer>
+        </Rule>
+      </FeatureTypeStyle>
+    </UserStyle>
+  </NamedLayer>
+</StyledLayerDescriptor>
