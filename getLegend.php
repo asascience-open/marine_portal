@@ -81,7 +81,13 @@
     echo $c;
   }
   else {
-    $c = @file_get_contents(urldecode($u));
+    $realU = urldecode($u);
+    // special case for sld -- don't decode it!
+    preg_match("/sld=[^&]*/",$u,$matches);
+    if (count($matches) == 1) {
+      $realU = urldecode(str_replace($matches[0],'',$u)).'&'.$matches[0];
+    }
+    $c = @file_get_contents($realU);
     $content_type = 'Content-Type: text/plain';
     for ($i = 0; $i < count($http_response_header); $i++) {
       if (preg_match('/content-type/i',$http_response_header[$i])) {
