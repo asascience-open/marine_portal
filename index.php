@@ -31,6 +31,7 @@
     <div id="loading">
       <span id="loading-message">Loading core API. Please wait...</span>
     </div>
+    <script type="text/javascript" src="./js/underscore-min.js"></script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
     <script type="text/javascript" src="./js/ext-3.4.1/adapter/ext/ext-base.js"></script>
     <script type="text/javascript" src="./js/ext-3.4.1/ext-all.js"></script>

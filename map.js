@@ -5191,8 +5191,20 @@ function syncMapLegends(cb,lp) {
     var ts = '';
     if (rec.get('historical')) {
       var a = [];
-      for (var i = 0; i < rec.get('historical').length; i++) {
-        a.push(rec.get('historical')[i][0] + ' : ' + dateToFriendlyString(rec.get('historical')[i][1]));
+      var h = rec.get('historical');
+      if (typeof(h) == 'object') {
+        h = h[i]['source'];
+      }
+      for (var j = 0; j < h.length; j++) {
+        if (typeof(h) == 'object' && _.indexOf(rec.get('historical')[i]['target'],h[j][0]) >= 0) {
+          a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
+        }
+      }
+      // fill in any blanks
+      if (typeof(h) == 'object') {
+        for (var j = a.length; j < rec.get('historical')[i]['target'].length; j++) {
+          a.push('&nbsp;<br>');
+        }
       }
       ts = '<br>' + a.join('<br>');
     }
