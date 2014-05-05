@@ -5192,18 +5192,21 @@ function syncMapLegends(cb,lp) {
     if (rec.get('historical')) {
       var a = [];
       var h = rec.get('historical');
-      if (typeof(h) == 'object') {
+      if (h && h[i]['source']) {
         h = h[i]['source'];
-      }
-      for (var j = 0; j < h.length; j++) {
-        if (typeof(h) == 'object' && _.indexOf(rec.get('historical')[i]['target'],h[j][0]) >= 0) {
-          a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
+        for (var j = 0; j < h.length; j++) {
+          if (_.indexOf(rec.get('historical')[i]['target'],h[j][0]) >= 0) {
+            a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
+          }
         }
-      }
-      // fill in any blanks
-      if (typeof(h) == 'object') {
+        // fill in any blanks
         for (var j = a.length; j < rec.get('historical')[i]['target'].length; j++) {
           a.push('&nbsp;<br>');
+        }
+      }
+      else if (h) {
+        for (var j = 0; j < h.length; j++) {
+          a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
         }
       }
       ts = '<br>' + a.join('<br>');
