@@ -142,7 +142,7 @@
       'varMap' => array(
         'water_level' => 'WaterLevel'
       )
-      ,'provUrl'   => 'http://tds.glos.us/thredds/water_levels.html?dataset=TheGreatLakesWaterLevels-Agg'
+      ,'provUrl'   => 'http://tds.glos.us/thredds/water_levels.html?dataset=GreatLakes-Agg'
       ,'siteType'  => 'station'
     )
   );
@@ -1119,11 +1119,11 @@
   }
 
   function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites) {
-    $d = `/usr/local/bin/ncks -a -v time,lon,lat,station_name,water_level 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    $d = `/usr/local/bin/ncks -a -v time,lon,lat,timeSeries,water_level 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
     // $d = file_get_contents('/home/charlton/Temp/v');
     $stations = array();
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/station_name.*=\"(.*)\"/",$data,$matches)) {
+      if (preg_match("/timeSeries.*=\"(.*)\"/",$data,$matches)) {
         array_push($stations,array('name' => rtrim($matches[1]),'v' => array()));
       }
     }
@@ -1140,14 +1140,14 @@
       }
     }
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/time\[(.*)\].*station\[(.*)\] water_level.*=(.*) (.*)/",$data,$matches)) {
-        $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]);
-        $stations[$matches[2]]['u'] = rtrim($matches[4]);
+      if (preg_match("/station\[(.*)\] time\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
+        $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]);
+        $stations[$matches[1]]['u'] = rtrim($matches[4]);
       }
     }
     $inTimeBlock = false;
     $done        = false;
-    $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/WaterLevels/TheGreatLakesWaterLevels-Agg'`;
+    $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
     // $d = file_get_contents('/home/charlton/Temp/t');
     foreach(explode("\n",$d) as $row => $data) {
       if ($data == '' && $inTimeBlock) {
