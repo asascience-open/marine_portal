@@ -1464,8 +1464,11 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeMichigan'
-      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
-      ,'CHLLOW_Michigan_".$chl['times']['Lake Michigan']."'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
+        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        + 'CHLLOW_Michigan_".$chl['times']['Lake Michigan']."'
+      )
+      ,''
       ,''
       ,'image/png'
       ,false
@@ -1480,8 +1483,11 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeErie'
-      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
-      ,'CHL_Erie_".$chl['times']['Lake Erie']."'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
+        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
+        + 'CHL_Erie_".$chl['times']['Lake Erie']."'
+      )
+      ,''
       ,''
       ,'image/png'
       ,false
@@ -1496,8 +1502,11 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeHuron'
-      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
-      ,'CHLLOW_Huron_".$chl['times']['Lake Huron']."'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
+        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        + 'CHLLOW_Huron_".$chl['times']['Lake Huron']."'
+      )
+      ,''
       ,''
       ,'image/png'
       ,false
@@ -1512,8 +1521,11 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeOntario'
-      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
-      ,'CHL_Ontario_".$chl['times']['Lake Ontario']."'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
+        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
+        + 'CHL_Ontario_".$chl['times']['Lake Ontario']."'
+      )
+      ,''
       ,''
       ,'image/png'
       ,false
@@ -1528,8 +1540,11 @@ EOJS;
        'weather'
       ,'wms'
       ,'Chlorophyll-LakeSuperior'
-      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms'
-      ,'CHLLOW_Superior_".$chl['times']['Lake Superior']."'
+      ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
+        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        + 'CHLLOW_Superior_".$chl['times']['Lake Superior']."'
+      )
+      ,''
       ,''
       ,'image/png'
       ,false
@@ -1815,7 +1830,7 @@ EOJS;
      ['RADAR']
     ,['Base reflectivity',['Base reflectivity'],['Base reflectivity'],false,false,false,false,'','']
     ,['Satellite']
-    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan'],['Chlorophyll concentration<br>(ug/L)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".$chl['legend'].",false,'','']
+    ,['Chlorophyll concentration',['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie','Chlorophyll-LakeHuron','Chlorophyll-LakeOntario','Chlorophyll-LakeSuperior'],['Chlorophyll-LakeMichigan','Chlorophyll-LakeErie'],['Chlorophyll concentration<br>(ug/L)','Chlorophyll concentration<br>(ug/L)'],false,[{source : ".$chl['legend'].",target : ['Lake Huron','Lake Michigan','Lake Superior']},{source : ".$chl['legend'].",target : ['Lake Erie','Lake Ontario','']}],false,'','']
     ,['Colored dissolved organic matter',['ColoredDissolvedOrganicMatter-LakeErie','ColoredDissolvedOrganicMatter-LakeHuron','ColoredDissolvedOrganicMatter-LakeMichigan','ColoredDissolvedOrganicMatter-LakeOntario','ColoredDissolvedOrganicMatter-LakeSuperior'],['ColoredDissolvedOrganicMatter-LakeMichigan'],['Colored dissolved organic matter<br>(absorption/m @ 443nm)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getColoredDissolvedOrganicMatterTime().",false,'','']
     ,['Dissolved organic carbon',['DissolvedOrganicCarbon-LakeErie','DissolvedOrganicCarbon-LakeHuron','DissolvedOrganicCarbon-LakeMichigan','DissolvedOrganicCarbon-LakeOntario','DissolvedOrganicCarbon-LakeSuperior'],['DissolvedOrganicCarbon-LakeMichigan'],['Dissolved organic carbon<br>(mgC/L)<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getDissolvedOrganicCarbonTime().",false,'','']
     ,['Natural color',['NaturalColor-LakeMichigan','NaturalColor-LakeErie','NaturalColor-LakeHuron','NaturalColor-LakeOntario','NaturalColor-LakeSuperior'],['NaturalColor-LakeMichigan'],['Natural color<br><b>Satellite data generally unavailable from early November to late March due to cloud cover.</b>'],false,".getNaturalColorTime().",false,'','']

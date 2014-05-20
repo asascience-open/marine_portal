@@ -474,6 +474,10 @@ div.olControlMousePosition {
 #weatherLegendPanel a:hover {
   color : rgb(255,0,0);
 }
+#weatherLegendPanel td {
+  padding-left  : 3px;
+  padding-right : 3px;
+}
 
 #showByCatchLegendPanel a:link {
   text-decoration : none;

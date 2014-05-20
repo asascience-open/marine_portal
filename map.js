@@ -5006,6 +5006,12 @@ function addWMS(rec) {
       ,legend           : rec.get('legend')
     }
   );
+
+  // Nuke the LAYERS param if passing along an SLD.
+  if (!lyr.params.LAYERS) {
+    delete lyr.params.LAYERS;
+  }
+
   return lyr;
 }
 
@@ -5173,11 +5179,35 @@ function syncMapLegends(cb,lp) {
     if (p['STYLES'] && p['STYLES'].indexOf('boxfill/') >= 0) {
       params['PALETTE'] = p['STYLES'].replace('boxfill/','');
     }
+    if (p['sld']) {
+      params['LAYER'] = OpenLayers.Util.getParameters(p.sld)['LAYER'];
+    }
+
+    var legImg = l.getFullRequestString(params);
+    if (p['sld']) {
+      legImg = legImg.replace(encodeURIComponent(p['sld']),encodeURIComponent(p['sld'] + '&LEGENDONLY'));
+    }
+
     var ts = '';
     if (rec.get('historical')) {
       var a = [];
-      for (var i = 0; i < rec.get('historical').length; i++) {
-        a.push(rec.get('historical')[i][0] + ' : ' + dateToFriendlyString(rec.get('historical')[i][1]));
+      var h = rec.get('historical');
+      if (h && h[i]['source']) {
+        h = h[i]['source'];
+        for (var j = 0; j < h.length; j++) {
+          if (_.indexOf(rec.get('historical')[i]['target'],h[j][0]) >= 0) {
+            a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
+          }
+        }
+        // fill in any blanks
+        for (var j = a.length; j < rec.get('historical')[i]['target'].length; j++) {
+          a.push('&nbsp;<br>');
+        }
+      }
+      else if (h) {
+        for (var j = 0; j < h.length; j++) {
+          a.push(h[j][0] + ' : ' + dateToFriendlyString(h[j][1]));
+        }
       }
       ts = '<br>' + a.join('<br>');
     }
@@ -5188,7 +5218,7 @@ function syncMapLegends(cb,lp) {
     if (getMetadata == '' && /NaturalColor/.test(l.name)) {
       getMetadata = '&GetMetadata=' + encodeURIComponent(Ext.encode(l.legend)) + '&';
     }
-    imgTd.push('<td style="text-align:center"><img src="' + baseUrl + 'getLegend.php?' + getMetadata + 'u=' + encodeURIComponent(l.getFullRequestString(params)) + '"></td>');
+    imgTd.push('<td style="text-align:center"><img src="' + baseUrl + 'getLegend.php?' + getMetadata + 'u=' + encodeURIComponent(legImg) + '"></td>');
     infoTd.push('<td style="text-align:center"><a class="cleanLink" id="moreInfo' + l.name + '" href="javascript:moreInfo(\'' + rec.get('id') + '\',\'' + l.name + '\')">Learn more<br>about this data</a></td>');
   }
   var el = Ext.getCmp(lp);
