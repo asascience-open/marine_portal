@@ -1141,8 +1141,10 @@
     }
     foreach(explode("\n",$d) as $row => $data) {
       if (preg_match("/station\[(.*)\] time\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
-        $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]);
-        $stations[$matches[1]]['u'] = rtrim($matches[4]);
+        if (rtrim($matches[3]) != 'nan') {
+          $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]);
+          $stations[$matches[1]]['u'] = rtrim($matches[4]);
+        }
       }
     }
     $inTimeBlock = false;
