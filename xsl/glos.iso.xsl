@@ -277,12 +277,14 @@ doctype to make everything work properly in IE:
   <!-- METADATA_ENTITY_SET_INFORMATION: ************************************--> 
 
   <xsl:template name="metadataEntitySetInfo">
+<!--
     <xsl:apply-templates select="gmd:fileIdentifier"/>
     <xsl:apply-templates select="gmd:language"/>
     <xsl:apply-templates select="gmd:characterSet"/>
     <xsl:apply-templates select="gmd:parentIdentifier"/>
     <xsl:apply-templates select="gmd:hierarchyLevel"/>
     <xsl:apply-templates select="gmd:hierarchyLevelName"/>
+-->
     <xsl:apply-templates select="gmd:contact"/>
     <xsl:apply-templates select="gmd:dateStamp"/>
     <xsl:apply-templates select="gmd:metadataMaintenance/gmd:MD_MaintenanceInformation"/>
