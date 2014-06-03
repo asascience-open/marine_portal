@@ -9,7 +9,7 @@ if (-e '/tmp/lock_ck_lock_files') {
 
 `touch /tmp/lock_ck_lock_files`;
 
-my $tol_min = 60;
+my $tol_min = 3 * 60;
 my $db_name = $ENV{dbName};
 my $db_user = $ENV{dbUser};
 my $db_pass = $ENV{dbPass};
