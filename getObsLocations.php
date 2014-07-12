@@ -45,7 +45,7 @@
       )
       ,'provUrl'   => 'http://www.ndbc.noaa.gov/station_page.php?station=___SITE___'
       ,'siteType'  => 'buoy'
-      ,'skipStations' => array('45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028')
+      ,'skipStations' => array('45167','45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028')
     )
     ,'COOPS' => array(
        'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
