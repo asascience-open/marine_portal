@@ -568,6 +568,15 @@ div.olControlMousePosition {
     margin: 0 4px;
 }
 
+#header_alert {
+  position: absolute;
+  top: 5px;
+  right: 15px;
+  width: 150px;
+  color: white;
+  font: 14px/1.3 Candara,Calibri,Segoe,"Segoe UI",Optima,Arial,sans-serif;
+}
+
 #splash td {
   font : 11px/13px tahoma,helvetica,sans-serif !important;
   text-align : justify;
