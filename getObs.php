@@ -19,6 +19,7 @@
 
   if (isset($_REQUEST['csv'])) {
     header('Content-type: text/csv');
+    header('Content-Disposition: attachment; filename="stations.csv"');
     $stdout = fopen('php://output','w');
     fputcsv($stdout,array(
        'provider'
