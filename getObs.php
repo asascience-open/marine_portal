@@ -33,6 +33,7 @@
         ,implode(',',array_keys($d['properties']['topObs']))
       ));
     }
+    fclose($stdout);
   }
   else {
     header('Content-type: application/json');
