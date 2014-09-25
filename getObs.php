@@ -8,8 +8,6 @@
   array_push($providers,'glosTDS');
 
   $data = array();
-
-  header('Content-type: application/json');
   $dbconn = pg_connect("host=localhost dbname=$dbName user=$dbUser password=$dbPass port=$dbPort");
   foreach ($providers as $p) {
     $result = pg_query("select f from json where providers = '$p' order by seq desc limit 1");
@@ -19,5 +17,24 @@
   }
   pg_close($dbconn);
 
-  echo json_encode($data);
+  if (isset($_REQUEST['csv'])) {
+    header('Content-type: text/csv');
+    $stdout = fopen('php://output','w');
+    fputcsv($stdout,array(
+       'provider'
+      ,'description'
+      ,'variables'
+    ));
+    foreach ($data as $d) {
+      fputcsv($stdout,array(
+         $d['properties']['provider']
+        ,$d['properties']['descr']
+        ,implode(',',array_keys($d['properties']['topObs']))
+      ));
+    }
+  }
+  else {
+    header('Content-type: application/json');
+    echo json_encode($data);
+  }
 ?>
