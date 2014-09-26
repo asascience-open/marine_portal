@@ -8,11 +8,6 @@
   $providers = explode(',',$argv[3]);
   $tUom      = 'english';
 
-  $dbUser = getenv('dbUser');
-  $dbPass = getenv('dbPass');
-  $dbName = getenv('dbName');
-  $dbPort = getenv('dbPort');
-
   $swe2Providers = array(
     'GLOS' => array(
       'sos'      => array(
@@ -1493,10 +1488,11 @@
 
   echo "assembling done\nfiniding out what to name the json...\n";
 
-  $dbconn = pg_connect("host=localhost dbname=$dbName user=$dbUser password=$dbPass port=$dbPort");
-  $id = 0;
-  $result = pg_query("select nextval('json_seq_seq')");
-  while ($line = pg_fetch_array($result)) {
+  $dbconn = new PDO('sqlite:db/json.sqlite3');
+  $f = time().rand();
+  $dbconn->query(sprintf("insert into json(f,providers,ready) values ('%s','%s',0)",$f,implode(',',$providers)));
+  $result = $dbconn->query(sprintf("select seq from json where f = '%s'",$f));
+  foreach ($result as $line) {
     $id = $line[0];
   }
 
@@ -1515,8 +1511,7 @@
 
   echo "json written\nupdating db...\n";
 
-  pg_query($dbconn,'insert into json (providers,f) values(\''.implode(',',$providers).'\',\''."json/obs.$id.json".'\')');
-  pg_close($dbconn);
+  $dbconn->query(sprintf("update json set ready = 1,f = 'json/obs.%d.json' where seq = %d",$id,$id));
 
   echo "all done!\n";
 
