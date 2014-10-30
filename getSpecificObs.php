@@ -2,10 +2,6 @@
   ini_set('memory_limit','256M');
   header('Content-type: application/json');
 
-  $dbUser = getenv('dbUser');
-  $dbPass = getenv('dbPass');
-  $dbName = getenv('dbName');
-  $dbPort = getenv('dbPort');
   $providers = explode(',',getenv('providers'));
 
   include_once('util.php');
@@ -16,14 +12,13 @@
   $json = null;
   if (!array_key_exists('fromSearch',$_REQUEST) || (array_key_exists('fromSearch',$_REQUEST) && $_REQUEST['fromSearch'] != 'true')) {
     $data   = array();
-    $dbconn = pg_connect("host=localhost dbname=$dbName user=$dbUser password=$dbPass port=$dbPort");
+    $dbconn = new PDO('sqlite:db/json.sqlite3');
     foreach ($providers as $p) {
-      $result = pg_query("select f from json where providers = '$p' order by seq desc limit 1");
-      while ($line = pg_fetch_array($result)) {
+      $result = $dbconn->query("select f from json where providers = '$p' and ready = 1 order by seq desc limit 1");
+      foreach ($result as $line) {
         $data = array_merge($data,json_decode(file_get_contents($line[0]),true));
       }
     }
-    pg_close($dbconn);
     if (count($data) > 0) {
       $json = $data;
     }
