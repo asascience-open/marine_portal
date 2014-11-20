@@ -1465,7 +1465,7 @@ EOJS;
       ,'wms'
       ,'Chlorophyll-LakeMichigan'
       ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
-        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        'http://data.glos.us/portal/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
         + 'CHLLOW_Michigan_".$chl['times']['Lake Michigan']."'
       )
       ,''
@@ -1484,7 +1484,7 @@ EOJS;
       ,'wms'
       ,'Chlorophyll-LakeErie'
       ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
-        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
+        'http://data.glos.us/portal/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
         + 'CHL_Erie_".$chl['times']['Lake Erie']."'
       )
       ,''
@@ -1503,7 +1503,7 @@ EOJS;
       ,'wms'
       ,'Chlorophyll-LakeHuron'
       ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
-        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        'http://data.glos.us/portal/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
         + 'CHLLOW_Huron_".$chl['times']['Lake Huron']."'
       )
       ,''
@@ -1522,7 +1522,7 @@ EOJS;
       ,'wms'
       ,'Chlorophyll-LakeOntario'
       ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
-        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
+        'http://data.glos.us/portal/sld/glosChlorophyllSld.php?REGION=Big&LAYER='
         + 'CHL_Ontario_".$chl['times']['Lake Ontario']."'
       )
       ,''
@@ -1541,7 +1541,7 @@ EOJS;
       ,'wms'
       ,'Chlorophyll-LakeSuperior'
       ,'http://geoserver2.mtri.org/geoserver/WaterRemoteSensing/wms?sld=' + encodeURIComponent(
-        'http://72.44.60.22/glos/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
+        'http://data.glos.us/portal/sld/glosChlorophyllSld.php?REGION=Small&LAYER='
         + 'CHLLOW_Superior_".$chl['times']['Lake Superior']."'
       )
       ,''
