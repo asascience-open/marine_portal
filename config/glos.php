@@ -1962,7 +1962,7 @@ EOJS;
     $a = array();
     $lut = array();
     foreach ($times as $k => $v) {
-      $t = strtotime($v);
+      $t = strtotime($v.' America/Detroit');
       array_push($a,'["'.$k.'",new Date('.$t.' * 1000)]');
       $lut[$k] = date("Ymd",$t);
     }
