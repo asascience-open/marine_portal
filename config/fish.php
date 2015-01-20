@@ -492,16 +492,16 @@ EOJS;
     ,array(
       'u'     => function($srs,$bbox,$x,$y,$w,$h) {
         return sprintf(
-          "http://wms.maracoos.org/wms/NAVY_HYCOM/?ELEVATION=0&LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/csv&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
-          ,'water_temp'
-          ,'pcolor_average_jet_5_20_node_False'
+          "http://coastmap.com/ecop/wms.aspx?LAYERS=%s&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=%s&SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&SRS=%s&EXCEPTIONS=application/vnd.ogc.se_xml&BBOX=%s&X=%d&Y=%d&INFO_FORMAT=text/xml&WIDTH=%d&HEIGHT=%d&QUERY_LAYERS=%s&TIME="
+          ,'HYCOM_GLOBAL_NAVY_SST'
+          ,''
           ,$srs,$bbox,$x,$y,$w,$h
-          ,'water_temp'
+          ,'HYCOM_GLOBAL_NAVY_SST'
         );
       }
-      ,'fmt' => 'csv'
+      ,'fmt' => 'xml'
       ,'vars' => array(
-        'water_temp' => array(
+        'Water Temperature' => array(
            'name' => 'Surface water temperature (C)'
           ,'fmt'  => "%0.1f"
           ,'f'    => function($val,$a,$t) {
@@ -543,15 +543,15 @@ EOJS;
        'forecasts'
       ,'wms'
       ,'Surface water temperature'      
-      ,'http://wms.maracoos.org/wms/NAVY_HYCOM/?ELEVATION=0&'
-      ,'water_temp'       
-      ,'pcolor_average_jet_0_27_grid_False'
+      ,'http://coastmap.com/ecop/wms.aspx'
+      ,'HYCOM_GLOBAL_NAVY_SST'       
+      ,'WATER_TEMP-0-35'
       ,'image/png'
       ,true
       ,1
       ,false
       ,true
-      ,'Sea surface temperature is from the HYbrid Coordinate Ocean Model (HYCOM), a generalized coordinate ocean model. HYCOM is maintained by a multi-institutional consortium sponsored by the National Ocean Partnership Program (NOPP). Sea surface temperature model is assimilated from in-situ XBTs, ARGO floats, and moored buoys.'
+      ,'Sea surface temperature is from the HYbrid Coordinate Ocean Model (HYCOM), a generalized coordinate ocean model. It is isopycnal in the open stratified ocean but reverts to a terrain-following coordinate in shallow coastal regions. The global system deployed by the US NAVY employs atmospheric forcing form the NAVy Global Environmental Model (NAVGEM). Refer to hycom.org for more information on the general model.'
       ,false
       ,false
     ]
