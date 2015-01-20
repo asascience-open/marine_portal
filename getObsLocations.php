@@ -1135,10 +1135,10 @@
       }
     }
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/station\[(.*)\] time\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
+      if (preg_match("/time\[(.*)\]=.* station\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
         if (rtrim($matches[3]) != 'nan') {
-          $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]);
-          $stations[$matches[1]]['u'] = rtrim($matches[4]);
+          $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]);
+          $stations[$matches[2]]['u'] = rtrim($matches[4]);
         }
       }
     }
