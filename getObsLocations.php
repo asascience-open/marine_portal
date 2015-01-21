@@ -1178,6 +1178,9 @@
         ,'siteType'     => $glosTDSProviders[$provider]['siteType']
       ));
       for ($j = 0; $j < count($stations[$i]['v']); $j++) {
+        if ($stations[$i]['v'][$j] <= 0) {
+          continue;
+        }
         $uom = $stations[$i]['u'];
         $a = convertUnits($stations[$i]['v'][$j],$uom,$tUom == 'english');
         $n = 'water_level';
