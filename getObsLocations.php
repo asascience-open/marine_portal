@@ -1136,21 +1136,14 @@
     }
     foreach(explode("\n",$d) as $row => $data) {
       if (preg_match("/time\[(.*)\]=.* station\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
-        if (rtrim($matches[3]) != 'nan') {
-          $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]);
-          $stations[$matches[2]]['u'] = rtrim($matches[4]);
-        }
+        $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]) == 'nan' ? 0 : rtrim($matches[3]);
+        $stations[$matches[2]]['u'] = rtrim($matches[4]);
       }
     }
-    $inTimeBlock = false;
-    $done        = false;
     $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
     // $d = file_get_contents('/home/charlton/Temp/t');
     foreach(explode("\n",$d) as $row => $data) {
-      if ($data == '' && $inTimeBlock) {
-        $done = true;
-      }
-      if ($inTimeBlock && !$done) {
+      if (preg_match("/^\d/",$data)) {
         for ($i = 0; $i < count($stations); $i++) {
           $dt = new DateTime('1970-01-01 00:00:00');
           date_add($dt,date_interval_create_from_date_string(sprintf("%d seconds",$data)));
@@ -1159,9 +1152,6 @@
           }
           array_push($stations[$i]['t'],date_format($dt,"U"));
         }
-      }
-      if ($data == '') {
-        $inTimeBlock = true;
       }
     }
 
