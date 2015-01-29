@@ -8,23 +8,24 @@
 
   function convertUnits($val,$uom,$toEnglish) {
     $english_category = array(
-       'C'      => 'temperature'
-      ,'deg C'  => 'temperature'
-      ,'degC'   => 'temperature'
-      ,'Cel'    => 'temperature'
-      ,'Celsius' => 'temperature'
-      ,'F'      => 'temperature'
-      ,'deg F'  => 'temperature'
-      ,'kelvin' => 'temperature'
-      ,'m/s'    => 'velocity'
-      ,'m.s-1'  => 'velocity'
-      ,'cm/s'   => 'velocity'
-      ,'kt'     => 'velocity'
-      ,'m'      => 'elevation'
-      ,'meters' => 'elevation'
-      ,'mm'     => 'elevation'
-      ,'bar'    => 'pressure'
-      ,'1.0E-9one' => 'pressure'
+       'C'              => 'temperature'
+      ,'deg C'          => 'temperature'
+      ,'degree_Celsuis' => 'temperature'
+      ,'degC'           => 'temperature'
+      ,'Cel'            => 'temperature'
+      ,'Celsius'        => 'temperature'
+      ,'F'              => 'temperature'
+      ,'deg F'          => 'temperature'
+      ,'kelvin'         => 'temperature'
+      ,'m/s'            => 'velocity'
+      ,'m.s-1'          => 'velocity'
+      ,'cm/s'           => 'velocity'
+      ,'kt'             => 'velocity'
+      ,'m'              => 'elevation'
+      ,'meters'         => 'elevation'
+      ,'mm'             => 'elevation'
+      ,'bar'            => 'pressure'
+      ,'1.0E-9one'      => 'pressure'
     );
     if ($val === '') {
       return Array(Array('val' => '','uom' => '','cat' => ''));
@@ -48,7 +49,7 @@
       else if ($uom == 'mm') {
         array_push($a,Array('val' => sprintf("%.02f",$val * 0.0393701),'uom' => 'in','cat' => $english_category[$uom]));
       }
-      else if ($uom == 'C' || $uom == 'deg C' || $uom == 'Cel' || $uom == 'degC' || $uom == 'Celsius') {
+      else if ($uom == 'C' || $uom == 'deg C' || $uom == 'Cel' || $uom == 'degC' || $uom == 'Celsius' || $uom == 'degree_Celsius') {
         array_push($a,Array('val' => sprintf("%.02f",9/5*$val + 32),'uom' => 'F','cat' => $english_category[$uom]));
       }
       else if ($uom == 'mm') {

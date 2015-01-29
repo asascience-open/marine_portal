@@ -25,8 +25,11 @@
       if ($isOpendap) {
         $u = $a[0];
         $varName = $a[1];
-        preg_match("/$varName\[.* = (.*)\]/",file_get_contents($u.'.dds'),$matches);
+        // check to see if this is indexed by 1 or 2 dims -- assume 1st is time
+        $secondDim = false;
+        preg_match("/$varName\[[^\]]* = ([^\]]*)\](\[([^\]]*) = [^\]]*\])*/",file_get_contents($u.'.dds'),$matches);
         $size = $matches[1];
+        $secondDim = count($matches) == 4 ? $matches[3] : '';
         $inVarBlock  = false;
         $inTimeBlock = false;
         $varUnits;
@@ -43,7 +46,7 @@
             $varUnits = $matches[1];
           }
           else if (!isset($varFillValue) && $inVarBlock && preg_match("/_FillValue (.*)/",$l,$matches) > 0) {
-            $varFillValue = $matches[1];
+            $varFillValue = (float)$matches[1];
           }
           else if (!isset($timeUnits) && $inTimeBlock && preg_match("/units \"(.*)\"/",$l,$matches) > 0) {
             $timeUnits = $matches[1];
@@ -54,29 +57,42 @@
         $interval = $a[0];
         $inVarBlock  = false;
         $inTimeBlock = false;
-        $varVals;
-        $timeVals;
+        $varVals = array();
+        $varCount;
+        $timeVals = array();
         // always attempt to pull back the last 200 vals
+        /*
+          EX 1: http://tds.glos.us/thredds/dodsC/MTRI-Ranger3-13.nc.ascii?time[32275:32474],air_temperature[32275:32474]
+          EX 2: http://tds.glos.us/thredds/dodsC/In-situ_temp/skw/MTRI-SKW_sea_water_temperature.nc.ascii?time[38078:38277],temperature[38078:38277][0],height[0]
+        */
         foreach (explode("\n",file_get_contents(sprintf(
-          "%s.ascii?time[%d:%d],%s[%d:%d]"
+          "%s.ascii?time[%d:%d],%s[%d:%d]%s"
           ,$u
           ,$size - 200
           ,$size - 1
           ,$varName
           ,$size - 200
           ,$size - 1
+          ,$secondDim != '' ? "[0],$secondDim".'[0]' : ''
         ))) as $l) {
-          if (preg_match("/^$varName\[.*\]/",$l) > 0) {
+          if (preg_match("/$varName\[([^\]]*)\][^;]*$/",$l,$matches) > 0) {
             $inVarBlock = true;
+            $varCount = (int)$matches[1];
           }
           else if (preg_match("/^time\[.*\]/",$l) > 0) {
             $inTimeBlock = true;
           }
-          else if (!isset($varVals) && $inVarBlock) {
-            $varVals = preg_split("/,( )*/",$l);
+          else if (count($varVals) < $varCount && $inVarBlock) {
+            // EX 1
+            if ($secondDim == '') {
+              $varVals = preg_split("/,( )*/",$l);
+            }
+            else {
+              $a = explode(' ',$l);
+              array_push($varVals,$a[1]);
+            }
           }
-          else if (!isset($timeVals) && $inTimeBlock) {
-            $timeVals = array();
+          else if (count($timeVals) == 0 && $inTimeBlock) {
             foreach (preg_split("/,( )*/",$l) as $t) {
               $dt = clone $baseDate;
               // Wow, date intervals and floats do not get along!  So truncate it for now.  :(
@@ -93,7 +109,11 @@
         for ($j = 0; $j < count($timeVals); $j++) {
           // might as well check for fill value, but it seems some precision is lost, so do a vulgar
           // check for an exponent match -- negative #'s magically pass thru!
-          if (floor(log10($varVals[$j])) != floor(log10($varFillValue))) {
+          if (
+            ($varFillValue <= 0 && (float)$varVals[$j] != $varFillValue)
+            || ($varFillValue > 0 && floor(log10($varVals[$j])) != floor(log10($varFillValue)))
+            || !isset($varFillValue)
+          ) {
             $d[sprintf("%s",$timeVals[$j])] = $varVals[$j]; 
           }
         }
