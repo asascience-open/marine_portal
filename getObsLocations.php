@@ -1146,7 +1146,7 @@
       if (preg_match("/^\d/",$data)) {
         for ($i = 0; $i < count($stations); $i++) {
           $dt = new DateTime('1970-01-01 00:00:00');
-          date_add($dt,date_interval_create_from_date_string(sprintf("%d seconds",$data)));
+          date_add($dt,date_interval_create_from_date_string(sprintf("%d seconds",$data + 3600 * 12)));
           if (!array_key_exists('t',$stations[$i])) {
             $stations[$i]['t'] = array();
           }
