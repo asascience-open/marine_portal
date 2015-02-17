@@ -3909,7 +3909,7 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['winds'] + '&mag=' + Math.round(o.spd) + '&dir=' + Math.round(o.dir) + '&barb&noCircle' + hilite;
       var w   = imgSize[0] * (map.getZoom() < minZoom.winds ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.winds ? scaleFactor : 1);
-      if (!o.spd) {
+      if (!o.spd || o.spd == 'all') {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
         h   = hilite != '' ? 40 : 20;
@@ -3938,7 +3938,7 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waves'] + '&mag=' + (Math.round(o.spd * 10) / 10) + '&dir=' + Math.round((Number(o.dir) - 180 < 0) ? Number(o.dir) + 180 : Number(o.dir) - 180) + '&arrow' + hilite;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waves ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waves ? scaleFactor : 1);
-      if (!o.spd) {
+      if (!o.spd || o.spd == 'all') {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
         h   = hilite != '' ? 40 : 20;
@@ -3967,7 +3967,7 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['watertemp'] + '&mag=' + Math.round(o.mag) + hilite;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waterTemp ? scaleFactor : 1);
-      if (!o.mag) {
+      if (!o.mag || o.mag == 'all') {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
         h   = hilite != '' ? 40 : 20;
@@ -4001,7 +4001,7 @@ function varSummary(f,scaleFactor,ctl) {
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waterlevel'] + '&mag=' + (Math.round(o.mag * 10) / 10) + hilite + wl;
       var w   = imgSize[0] * (map.getZoom() < minZoom.waterLevel ? scaleFactor : 1);
       var h   = imgSize[1] * (map.getZoom() < minZoom.waterLevel ? scaleFactor : 1);
-      if (!o.mag) {
+      if (!o.mag || o.mag == 'all') {
         url = 'img/noData' + hilite + '.png';
         w   = hilite != '' ? 40 : 20;
         h   = hilite != '' ? 40 : 20;
