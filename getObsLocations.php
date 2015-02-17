@@ -1216,7 +1216,7 @@
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
-      if ($platform['id'] != 357) {
+      if ($platform['id'] != 401) {
         // continue;
       }
       array_push($platforms,array(
@@ -1277,6 +1277,7 @@
             $platforms[$k]['sensors'][$j]['type'] .= ' '.$platforms[$k]['sensors'][$j]['descr'];
           }
           print $platforms[$k]['sensors'][$j]['type']."\n";
+          $hits = 0;
           foreach ($sensor as $obs) {
             $t = strtotime($obs['dateTime'].'Z');
             if ($t >= $t0) {
@@ -1314,7 +1315,14 @@
                   $sites[$i]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
                 }
               }
+              $hits++;
             }
+          }
+          // put in a stub for no-shows
+          if ($hits == 0) {
+            $sites[$i]['topObs'][$platforms[$k]['sensors'][$j]['type']]['t'] = false;
+            $sites[$i]['topObs'][$platforms[$k]['sensors'][$j]['type']]['v'] = array();
+            $sites[$i]['timeSeries'][$platforms[$k]['sensors'][$j]['type']]  = array();
           }
         }
       }
