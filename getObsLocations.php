@@ -114,7 +114,6 @@
   if (!in_array('ndbcText',$providers)) {
     $ndbcTextProviders = array();
   }
-
   $glosJsonProviders = array(
     'GLOS' => array(
        'varMap'   => array(
@@ -123,6 +122,7 @@
         ,'Air Temperature'              => 'AirTemperature'
         ,'Significant Wave Height'      => 'SignificantWaveHeight'
         ,'Water Temperature at Surface' => 'WaterTemperature'
+        ,'Dissolved Oxygen Saturation'  => 'DissolvedOxygen'
       )
       ,'siteType'  => 'buoy'
       ,'ndbcStations' => array()
