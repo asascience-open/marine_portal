@@ -2,6 +2,7 @@
   ini_set('memory_limit', '512M');
   $providers = explode(',',getenv('providers'));
   array_push($providers,'glosTDS');
+  array_push($providers,'kistersCsv');
 
   $data = array();
   $dbconn = new PDO('sqlite:db/json.sqlite3');
