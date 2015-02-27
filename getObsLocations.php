@@ -114,6 +114,7 @@
   if (!in_array('ndbcText',$providers)) {
     $ndbcTextProviders = array();
   }
+
   $glosJsonProviders = array(
     'GLOS' => array(
        'varMap'   => array(
@@ -187,6 +188,25 @@
     $soapProviders = array();
   }
 
+  $kistersCsvProviders = array(
+    'LakeSimcoe' => array(
+       'provUrl'   => 'http://www.lsrca.on.ca/'
+      ,'siteType'  => 'buoy'
+      ,'stations'  => array(
+        'LS0103' => array(
+          array(
+             'id'   => '12833042'
+            ,'name' => 'WaterLevel'
+            ,'uom'  => 'm'
+          )
+        )
+      )
+    )
+  );
+  if (!in_array('kistersCsv',$providers)) {
+    $kistersCsvProviders = array();
+  }
+
   date_default_timezone_set('UTC');
   $dNow   = time();
   $dEnd   = date('Y-m-d\TH:i:00\Z',$dNow);
@@ -215,6 +235,14 @@
     switch ($provider) {
       case 'Environment Canada' :
         getNDBCText($ndbcTextProviders,$provider,$dBegin,$tUom,$sites);
+      break;
+    }
+  }
+
+  foreach ($kistersCsvProviders as $provider => $v) {
+    switch ($provider) {
+      case 'LakeSimcoe' :
+        getKistersCsv($kistersCsvProviders,$provider,$dBegin,$tUom,$sites);
       break;
     }
   }
@@ -1106,6 +1134,67 @@
                   }
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  function getKistersCsv($kistersCsvProviders,$provider,$dBegin,$tUom,&$sites) {
+    foreach ($kistersCsvProviders[$provider]['stations'] as $k => $sta) {
+      print "$k\n";
+      // get station info
+      $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=getStationList&datasource=0&format=csv&station_no=%s",$k);
+      $csv = csv_to_array(file_get_contents($url),"/;/");
+      if (count($csv) > 0) {
+        array_push($sites,array(
+           'descr'        => $csv[0]['station_name']
+          ,'provider'     => $provider
+          ,'organization' => ''
+          ,'lon'          => $csv[0]['station_longitude']
+          ,'lat'          => $csv[0]['station_latitude']
+          ,'timeSeries'   => array()
+          ,'topObs'       => array()
+          ,'url'          => $kistersCsvProviders[$provider]['provUrl']
+          ,'siteType'     => $kistersCsvProviders[$provider]['siteType']
+        ));
+      }
+      $i = count($sites) - 1;
+      foreach ($sta as $sensor) {
+        $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=gettimeseriesvalues&datasource=0&format=csv&ts_id=%s&from=%s",$sensor['id'],$dBegin);
+        // get rid of 1st two lines of header info and leading # on the remaning one
+        $data = substr(implode("\n",array_slice(explode("\n",file_get_contents($url)),2)),1);
+        foreach (csv_to_array($data,"/;/") as $line) {
+          $t = strtotime($line['Timestamp']);
+          $a = convertUnits($line['Value'],$sensor['uom'],$tUom == 'english');
+          $n = $sensor['name'];
+          if (!array_key_exists($n,$sites[$i]['timeSeries'])) {
+            $v = array(
+              $a[0]['uom'] => array()
+            );
+            if (count($a) == 2) {
+              $v[$a[1]['uom']] = array();
+            }
+            $sites[$i]['timeSeries'][$n] = array(
+               'v' => $v
+              ,'t' => array()
+            );
+            $sites[$i]['topObs'][$n] = array(
+               'v' => array()
+              ,'t' => 0
+            );
+          }
+          array_push($sites[$i]['timeSeries'][$n]['v'][$a[0]['uom']],$a[0]['val']);
+          if (count($a) == 2) {
+            array_push($sites[$i]['timeSeries'][$n]['v'][$a[1]['uom']],$a[1]['val']);
+          }
+          array_push($sites[$i]['timeSeries'][$n]['t'],$t);
+          if ($t >= $sites[$i]['topObs'][$n]['t']) {
+            $sites[$i]['topObs'][$n]['t'] = $t;
+            $sites[$i]['topObs'][$n]['v'][$a[0]['uom']] = $a[0]['val'];
+            if (count($a) == 2) {
+              $sites[$i]['topObs'][$n]['v'][$a[1]['uom']] = $a[1]['val'];
             }
           }
         }
