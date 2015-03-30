@@ -26,6 +26,7 @@
       ,'mm'             => 'elevation'
       ,'bar'            => 'pressure'
       ,'1.0E-9one'      => 'pressure'
+      ,'cumec'          => 'flow'
     );
     if ($val === '') {
       return Array(Array('val' => '','uom' => '','cat' => ''));
@@ -66,6 +67,9 @@
       }
       else if ($uom == 'degT') {
         array_push($a,Array('val' => $val,'uom' => 'deg','cat' => ''));
+      }
+      else if ($uom == 'cumec') {
+        array_push($a,Array('val' => sprintf("%.01f",$val),'uom' => 'ft3/s','cat' => $english_category[$uom]));
       }
       else {
         return Array(Array('val' => $val,'uom' => $uom,'cat' => array_key_exists($uom,$english_category) ? $english_category[$uom] : ''));

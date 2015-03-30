@@ -193,11 +193,23 @@
        'provUrl'   => 'http://www.lsrca.on.ca/'
       ,'siteType'  => 'buoy'
       ,'stations'  => array(
-        'LS0103' => array(
+        'LS0402' => array(
           array(
-             'id'   => '12833042'
-            ,'name' => 'WaterLevel'
-            ,'uom'  => 'm'
+             'id'   => '13693042'
+            ,'name' => 'WaterTemperature'
+            ,'uom'  => 'C'
+          )
+          ,array(
+             'id'   => '15149042'
+            ,'name' => 'Streamflow'
+            ,'uom'  => 'cumec'
+          )
+        )
+        ,'LS0103' => array(
+          array(
+             'id'   => '15063042'
+            ,'name' => 'Streamflow'
+            ,'uom'  => 'cumec'
           )
         )
       )
