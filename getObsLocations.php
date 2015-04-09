@@ -1236,9 +1236,9 @@
       }
     }
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/time\[(.*)\]=.* station\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
-        $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]) == 'nan' ? 0 : rtrim($matches[3]);
-        $stations[$matches[2]]['u'] = rtrim($matches[4]);
+      if (preg_match("/station\[(.*)\] time\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
+        $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]) == 'nan' ? 0 : rtrim($matches[3]);
+        $stations[$matches[1]]['u'] = rtrim($matches[4]);
       }
     }
     $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
