@@ -3694,11 +3694,16 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
     }
   }
   rows.unshift('<td colspan=2 align=center><b>' + feature.attributes.provider + ': ' + feature.attributes.descr + '</b></td>');
-  if (feature.attributes.url != '') {
-    rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.url + '">here</a> for station information.</font></td></tr>');
+  if (feature.attributes.alternateHtml != '') {
+    rows.push(feature.attributes.alternateHtml);
   }
-  if (feature.attributes.alternateUrl && feature.attributes.alternateUrl != '') {
-    rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.alternateUrl + '">here</a> for alternate station information.</font></td></tr>');
+  else {
+    if (feature.attributes.url != '') {
+      rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.url + '">here</a> for station information.</font></td></tr>');
+    }
+    if (feature.attributes.alternateUrl && feature.attributes.alternateUrl != '') {
+      rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.alternateUrl + '">here</a> for alternate station information.</font></td></tr>');
+    }
   }
 
   rows.push('<tr><td align=center><img height=1 src="img/blank.png"></td></tr>');
