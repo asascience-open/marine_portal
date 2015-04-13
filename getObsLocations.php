@@ -134,7 +134,7 @@
   }
 
   $glosTDSProviders = array(
-    'GLOS' => array(
+    'Great Lakes Water Levels' => array(
       'varMap' => array(
         'water_level' => 'WaterLevel'
       )
@@ -189,7 +189,7 @@
   }
 
   $kistersCsvProviders = array(
-    'LakeSimcoe' => array(
+    'Lake Simcoe RCA' => array(
        'provUrl'   => 'http://www.lsrca.on.ca/'
       ,'siteType'  => 'buoy'
       ,'stations'  => array(
@@ -253,7 +253,7 @@
 
   foreach ($kistersCsvProviders as $provider => $v) {
     switch ($provider) {
-      case 'LakeSimcoe' :
+      case 'Lake Simcoe RCA' :
         getKistersCsv($kistersCsvProviders,$provider,$dBegin,$tUom,$sites);
       break;
     }
@@ -261,7 +261,7 @@
 
   foreach ($glosTDSProviders as $provider => $v) {
     switch ($provider) {
-      case 'GLOS' :
+      case 'Great Lakes Water Levels' :
         getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,$sites);
       break;
     }
@@ -1236,9 +1236,9 @@
       }
     }
     foreach(explode("\n",$d) as $row => $data) {
-      if (preg_match("/station\[(.*)\] time\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
-        $stations[$matches[1]]['v'][$matches[2]] = rtrim($matches[3]) == 'nan' ? 0 : rtrim($matches[3]);
-        $stations[$matches[1]]['u'] = rtrim($matches[4]);
+      if (preg_match("/time\[(.*)\]=.* station\[(.*)\].*water_level.*=(.*) (.*)/",$data,$matches)) {
+        $stations[$matches[2]]['v'][$matches[1]] = rtrim($matches[3]) == 'nan' ? 0 : rtrim($matches[3]);
+        $stations[$matches[2]]['u'] = rtrim($matches[4]);
       }
     }
     $d = `/usr/local/bin/ncks -a -v time -s "%f\n" 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
@@ -1258,7 +1258,7 @@
 
     for ($i = 0; $i < count($stations); $i++) {
       array_push($sites,array(
-         'descr'        => $stations[$i]['name'].' water level'
+         'descr'        => $stations[$i]['name']
         ,'provider'     => $provider
         ,'organization' => ''
         ,'lon'          => $stations[$i]['lon']

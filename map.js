@@ -3239,7 +3239,7 @@ function getIconData(lyr,buffer) {
               ,uiProvider : Ext.tree.IndentedTreeNodeUI
             });
             recs.push(new sto.recordType({
-               'lbl'      : f.attributes.provider + ' Station ' + f.attributes.descr
+               'lbl'      : f.attributes.provider + ': ' + f.attributes.descr
               ,'descr'    : f.attributes.descr
               ,'provider' : f.attributes.provider
             }));
@@ -3693,7 +3693,7 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
       rows.unshift('<td colspan=2 align=center>' + dateToFriendlyString(new Date(maxT * 1000)) + '</td>');
     }
   }
-  rows.unshift('<td colspan=2 align=center><b>' + feature.attributes.provider + ' Station ' + feature.attributes.descr + '</b></td>');
+  rows.unshift('<td colspan=2 align=center><b>' + feature.attributes.provider + ': ' + feature.attributes.descr + '</b></td>');
   if (feature.attributes.url != '') {
     rows.push('<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="' + feature.attributes.url + '">here</a> for station information.</font></td></tr>');
   }
@@ -3732,7 +3732,7 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
 
   var graphId = Ext.id();
   return {
-     title     : feature.attributes.provider + ' Station ' + feature.attributes.descr
+     title     : feature.attributes.provider + ': ' + feature.attributes.descr
     ,html      : '<table class="popup"><tr>' + rows.join('</tr><tr>') + '</tr></table>'
     ,summary   : '<table class="hilite">'
         + '<tr><td align=center><img height=2 src="img/blank.png"></td></tr>'
@@ -3995,7 +3995,7 @@ function varSummary(f,scaleFactor,ctl) {
     if (o) {
       // Great Lakes WL are special.
       var wl = '';
-      if (f.attributes.provider == 'GLOS' && /water level/.test(f.attributes.descr)) {
+      if (f.attributes.provider == 'Great Lakes Water Levels' && /water level/.test(f.attributes.descr)) {
         wl = '&noCircle&square';
       }
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waterlevel'] + '&mag=' + (Math.round(o.mag * 10) / 10) + hilite + wl;
@@ -4306,7 +4306,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
     ,y               : pos.top + 15
     ,autoHeight      : true
     ,width           : w + 30
-    ,title           : provider + ' Station ' + descr
+    ,title           : provider + ': ' + descr
     ,constrainHeader : true
     ,resizable       : false
     ,layout          : 'fit'
@@ -4394,7 +4394,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                    data  : Ext.encode(graphData)
                   ,'var'   : Ext.encode(varName)
                   ,uom     : Ext.encode(varUnits)
-                  ,site    : Ext.encode(provider + ' Station ' + descr)
+                  ,site    : Ext.encode(provider + ': ' + descr)
                   ,tz      : Ext.encode(new Date(graphData[0][0] * 1000).format('Z'))
                   ,sess    : sessionId
                   ,id      : Ext.id()
