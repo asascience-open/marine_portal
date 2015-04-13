@@ -1267,6 +1267,10 @@
         ,'topObs'       => array()
         ,'url'          => $glosTDSProviders[$provider]['provUrl']
         ,'siteType'     => $glosTDSProviders[$provider]['siteType']
+        ,'alternateHtml' => implode('',array(
+          '<tr><td colspan=2 align=center><font color=gray>These data are harvested with permission from the <a target=_blank href="http://www.lre.usace.army.mil/Missions/GreatLakesInformation/GreatLakesWaterLevels/CurrentConditions.aspx">U.S. Army Corps of Engineers\' Great Lakes Water Levels Reports</a>.</font></td></tr>'
+          ,'<tr><td colspan=2 align=center><font color=gray>Click <a target=_blank href="'.$glosTDSProviders[$provider]['provUrl'].'">here</a> for information about the harvested dataset, and visit <a target=_blank href="http://www.glerl.noaa.gov/data/dashboard/GLWLD.html">NOAA\'s Great Lakes Water Level Dashboard</a> for additional water level data.</font></td></tr>'
+        ))
       ));
       for ($j = 0; $j < count($stations[$i]['v']); $j++) {
         if ($stations[$i]['v'][$j] <= 0) {
@@ -1582,8 +1586,9 @@
         ,'topObs'       => !empty($sites[$i]['topObs']) ? $sites[$i]['topObs'] : null
         ,'url'          => $sites[$i]['url']
         ,'alternateUrl' => (array_key_exists('alternateUrl',$sites[$i]) ? $sites[$i]['alternateUrl'] : '')
-        ,'siteType'     => $sites[$i]['siteType']
-        ,'provider'     => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
+        ,'alternateHtml' => (array_key_exists('alternateHtml',$sites[$i]) ? $sites[$i]['alternateHtml'] : '')
+        ,'siteType'      => $sites[$i]['siteType']
+        ,'provider'      => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
       )
     ));
   }
