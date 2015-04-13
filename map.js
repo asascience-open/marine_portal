@@ -3995,7 +3995,7 @@ function varSummary(f,scaleFactor,ctl) {
     if (o) {
       // Great Lakes WL are special.
       var wl = '';
-      if (f.attributes.provider == 'Great Lakes Water Levels' && /water level/.test(f.attributes.descr)) {
+      if (f.attributes.provider == 'Great Lakes Water Levels') {
         wl = '&noCircle&square';
       }
       var url = 'icon.php?size=115,115&cpt=' + obsCptRanges['waterlevel'] + '&mag=' + (Math.round(o.mag * 10) / 10) + hilite + wl;
