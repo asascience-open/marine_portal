@@ -26,7 +26,7 @@
 
   $bannerHeight    = 75;
   $bannerHtml      = <<< EOHTML
-<div id="headwrapper"><div id="head"><a href="http://glos.us/"><img src="img/blank.png" width="168" height="75" alt="GLOS" /></a><a href="http://explorer.glos.us/"><img src="img/blank.png" width="632" height="75" alt="GLOS Observations Explorer" /></a> </div><div id="header_alert">Saint Lawrence River Forecasts Unavailable</div></div>
+<div id="headwrapper"><div id="head"><a href="http://glos.us/"><img src="img/blank.png" width="168" height="75" alt="GLOS" /></a><a href="http://explorer.glos.us/"><img src="img/blank.png" width="632" height="75" alt="GLOS Observations Explorer" /></a> </div><div id="header_alert"></div></div>
 EOHTML;
   $southPanelHeight    = 119;
   $southPanelHtml      = <<< EOHTML
