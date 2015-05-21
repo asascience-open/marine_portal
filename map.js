@@ -3842,19 +3842,14 @@ function dateToFriendlyString(e,opts) {
   if (!opts || !opts.daily) {
     c += (e.getHours() > 12 ? e.getHours() - 12 : (e.getHours() == 0 ? 12 : e.getHours()));
     c += ":" + (e.getMinutes() < 10 ? "0" : "") + e.getMinutes() + (e.getHours() > 11 ? " pm" : " am");
-    c += ' ';
-  }
-  c += strDay;
-  if (!opts || !opts.daily) {
-    c += ' (' + e.format('Z') + ')';
+    c += ' ' + e.format('Z');
   }
 
-  // show a real date if over a week old
-  if (e < new Date(a.getTime() - 1000 * 3600 * 24 * 7)) {
-    return month[e.getMonth()] + ' ' + e.getDate();
+  if (/today|tomorrow|yesterday/.test(strDay)) {
+    return c + ' ' + strDay;
   }
   else {
-    return c;
+    return c + ' ' + month[e.getMonth()] + ' ' + e.getDate();
   }
 }
 
@@ -4235,8 +4230,13 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
   }
 
   var graphData = [];
+  var exportData = [];
   for (var i = 0; i < t.length; i++) {
     graphData.push([new Date(t[i] * 1000),Number(v[i])]);
+    exportData.push([
+       new Date(t[i] * 1000).format(daily ? "yyyy-mm-dd" : "yyyy-mm-dd'T'HH:MM:ss")
+      ,Number(v[i])
+    ]);
   }
 
   var sto = new Ext.data.ArrayStore({
@@ -4405,7 +4405,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                 ,method   : 'POST'
                 ,headers  : {'Content-Type' : 'application/x-www-form-urlencoded'}
                 ,data     : OpenLayers.Util.getParameterString({
-                   data  : Ext.encode(graphData)
+                   data    : Ext.encode(exportData)
                   ,'var'   : Ext.encode(varName)
                   ,uom     : Ext.encode(varUnits)
                   ,site    : Ext.encode(provider + ': ' + descr)
