@@ -262,7 +262,18 @@
   foreach ($glosTDSProviders as $provider => $v) {
     switch ($provider) {
       case 'Great Lakes Water Levels' :
-        getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,$sites);
+        getGLOSTDS(
+           $glosTDSProviders
+          ,$provider
+          ,$dBegin
+          ,$tUom
+          ,$sites
+          ,implode('',array(
+            '<tr><td colspan=2><font color=gray>These data are harvested with permission from the <a target=_blank href="http://www.lre.usace.army.mil/Missions/GreatLakesInformation/GreatLakesWaterLevels/CurrentConditions.aspx">U.S. Army Corps of Engineers</a> and <a target=_blank href="https://www.ec.gc.ca/eau-water/default.asp?lang=En&n=79962112-1">Environment Canada</a>.</font></td></tr>'
+            ,'<tr><td colspan=2><font color=gray>Click <a target=_blank href="'.$glosTDSProviders[$provider]['provUrl'].'">here</a> for information about the harvested dataset, and visit <a target=_blank href="http://www.glerl.noaa.gov/data/dashboard/GLWLD.html">NOAA\'s Great Lakes Water Level Dashboard</a> for additional water level data.</font></td></tr>'
+          ))
+          ,true // daily
+        );
       break;
     }
   }
@@ -1214,7 +1225,7 @@
     }
   }
 
-  function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites) {
+  function getGLOSTDS($glosTDSProviders,$provider,$dBegin,$tUom,&$sites,$alternateHtml,$daily) {
     $d = `/usr/local/bin/ncks -a -v time,lon,lat,timeSeries,water_level 'http://tds.glos.us/thredds/dodsC/water_levels/TheGreatLakes-Agg'`;
     // $d = file_get_contents('/home/charlton/Temp/v');
     $stations = array();
@@ -1267,10 +1278,8 @@
         ,'topObs'       => array()
         ,'url'          => $glosTDSProviders[$provider]['provUrl']
         ,'siteType'     => $glosTDSProviders[$provider]['siteType']
-        ,'alternateHtml' => implode('',array(
-          '<tr><td colspan=2><font color=gray>These data are harvested with permission from the <a target=_blank href="http://www.lre.usace.army.mil/Missions/GreatLakesInformation/GreatLakesWaterLevels/CurrentConditions.aspx">U.S. Army Corps of Engineers</a> and <a target=_blank href="https://www.ec.gc.ca/eau-water/default.asp?lang=En&n=79962112-1">Environment Canada</a>.</font></td></tr>'
-          ,'<tr><td colspan=2><font color=gray>Click <a target=_blank href="'.$glosTDSProviders[$provider]['provUrl'].'">here</a> for information about the harvested dataset, and visit <a target=_blank href="http://www.glerl.noaa.gov/data/dashboard/GLWLD.html">NOAA\'s Great Lakes Water Level Dashboard</a> for additional water level data.</font></td></tr>'
-        ))
+        ,'alternateHtml' => $alternateHtml
+        ,'daily'         => $daily
       ));
       for ($j = 0; $j < count($stations[$i]['v']); $j++) {
         if ($stations[$i]['v'][$j] <= 0) {
@@ -1589,6 +1598,7 @@
         ,'alternateHtml' => (array_key_exists('alternateHtml',$sites[$i]) ? $sites[$i]['alternateHtml'] : '')
         ,'siteType'      => $sites[$i]['siteType']
         ,'provider'      => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
+        ,'daily'         => (array_key_exists('daily',$sites[$i]) ? $sites[$i]['daily'] : '')
       )
     ));
   }
