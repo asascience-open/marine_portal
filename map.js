@@ -3686,7 +3686,10 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
     nCols++;
   }
   if (maxT) {
-    if (new Date().getTime() - maxT * 1000 > 3600000 * 24 * 7) {
+    if (feature.attributes.daily) {
+      rows.unshift('<td colspan=2 align=center>' + dateToFriendlyString(new Date(maxT * 1000),{daily : true}) + '</td>');
+    }
+    else if (new Date().getTime() - maxT * 1000 > 3600000 * 24 * 7) {
       rows.unshift('<td colspan=2 align=center>' + new Date(maxT * 1000).format("mmm d, yyyy h:MM tt (Z)") + '</td>');
     }
     else {
@@ -3743,7 +3746,7 @@ function preparePopup(feature,regx,type,graph,graphTitle,fromSearch,pointsOnly) 
         + '<tr><td align=center><img height=2 src="img/blank.png"></td></tr>'
         + (graphTitle ? '<tr><td align=center><b>' + graphTitle + '</b></td></tr>' : '')
         + (graphData.length > 0 ? '<tr><td align=center><div style="width:250px;height:90px" id="' + graphId + '"></div></td></tr>' : '')
-        + (maxT && obs.length > 0 ? '<tr><td align=center>' + dateToFriendlyString(new Date(maxT * 1000)) + '</td></tr>' : '<tr><td align=center>No reported observations.</td></tr>')
+        + (maxT && obs.length > 0 ? '<tr><td align=center>' + dateToFriendlyString(new Date(maxT * 1000),{daily : feature.attributes.daily}) + '</td></tr>' : '<tr><td align=center>No reported observations.</td></tr>')
         + obs.join('')
         + '<tr><td align=center><font color=gray>Click the icon for more observations.</font></td></tr>'
         + '<tr><td align=center><img height=1 src="img/blank.png"></td></tr>'
@@ -3816,7 +3819,7 @@ function isoDateToDate(s) {
   }
 }
 
-function dateToFriendlyString(e) {
+function dateToFriendlyString(e,opts) {
   var c = "";
   var a = new Date();
   if (a.getDate() == e.getDate()) {
@@ -3835,10 +3838,16 @@ function dateToFriendlyString(e) {
       }
     }
   }
-  c += (e.getHours() > 12 ? e.getHours() - 12 : (e.getHours() == 0 ? 12 : e.getHours()));
-  c += ":" + (e.getMinutes() < 10 ? "0" : "") + e.getMinutes() + (e.getHours() > 11 ? " pm" : " am");
-  c += " " + strDay;
-  c += ' (' + e.format('Z') + ')';
+
+  if (!opts || !opts.daily) {
+    c += (e.getHours() > 12 ? e.getHours() - 12 : (e.getHours() == 0 ? 12 : e.getHours()));
+    c += ":" + (e.getMinutes() < 10 ? "0" : "") + e.getMinutes() + (e.getHours() > 11 ? " pm" : " am");
+    c += ' ';
+  }
+  c += strDay;
+  if (!opts || !opts.daily) {
+    c += ' (' + e.format('Z') + ')';
+  }
 
   // show a real date if over a week old
   if (e < new Date(a.getTime() - 1000 * 3600 * 24 * 7)) {
@@ -4129,7 +4138,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
         });
       }
       else if (json.v) {
-        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly,!profile ? false : {varName : varName,data : profile});
+        goGraph(json.id,json.provider,json.descr,json.varName,json.varUnits,json.t,json.v,null,500,200,pointsOnly,!profile ? false : {varName : varName,data : profile},json.daily);
       }
       else {
         if (selectPopup && !selectPopup.isDestroyed) {
@@ -4200,7 +4209,7 @@ function popupGraph(id,provider,descr,varName,varUnits,t,v,fromSearch,pointsOnly
   }
 }
 
-function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profile) {
+function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profile,daily) {
   if (selectPopup && !selectPopup.isDestroyed) {
     selectPopup.items.items[0].getEl().unmask();
   }
@@ -4236,7 +4245,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
   });
 
   var col = [
-     {header : 'Time',dataIndex : 'time',id : 'time',width : 200,type : 'date',sortable : true,renderer : function(val) {return !largeTimeSpan ? dateToFriendlyString(val) : new Date(val).format("mmm d, yyyy h:MM tt (Z)")}}
+     {header : 'Time',dataIndex : 'time',id : 'time',width : 200,type : 'date',sortable : true,renderer : function(val) {return !largeTimeSpan ? dateToFriendlyString(val,{daily : daily}) : new Date(val).format("mmm d, yyyy" + (!daily ? " h:MM tt (Z)" : ''))}}
     ,{header : varName + ' (' + varUnits + ')',dataIndex : 'value',id : 'value'}
   ];
 
@@ -4347,7 +4356,7 @@ function goGraph(id,provider,descr,varName,varUnits,t,v,img,w,h,pointsOnly,profi
                 var y = item.datapoint[1];
                 if (prevPoint != item.dataIndex) {
                   $('#tooltip').remove();
-                  showToolTip(item.pageX,item.pageY,y + '<br/>' + (!largeTimeSpan ? dateToFriendlyString(x) : new Date(x).format("mmm d, yyyy'<br>'h:MM tt (Z)")));
+                  showToolTip(item.pageX,item.pageY,y + '<br/>' + (!largeTimeSpan ? dateToFriendlyString(x,{daily : daily}) : new Date(x).format("mmm d, yyyy" + (!daily ? "'<br>'h:MM tt (Z)" : ''))));
                 }
                 prevPoint = item.dataIndex;
               }

@@ -63,6 +63,7 @@
         ,'descr'    => $_REQUEST['descr']
         ,'varName'  => $_REQUEST['varName']
         ,'varUnits' => $_REQUEST['varUnits']
+        ,'daily'    => array_key_exists('daily',$json[$i]['properties']) ? $json[$i]['properties']['daily'] : ''
       ));
       exit;
     } 
