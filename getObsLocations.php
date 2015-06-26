@@ -269,7 +269,7 @@
           ,$tUom
           ,$sites
           ,implode('',array(
-            '<tr><td colspan=2><font color=gray>These data are harvested with permission from the <a target=_blank href="http://www.lre.usace.army.mil/Missions/GreatLakesInformation/GreatLakesWaterLevels/CurrentConditions.aspx">U.S. Army Corps of Engineers</a> and <a target=_blank href="https://www.ec.gc.ca/eau-water/default.asp?lang=En&n=79962112-1">Environment Canada</a>.</font></td></tr>'
+            '<tr><td colspan=2><font color=gray>These data are harvested with permission from the <a target=_blank href="http://www.lre.usace.army.mil/Missions/GreatLakesInformation/GreatLakesWaterLevels/CurrentConditions.aspx">U.S. Army Corps of Engineers</a> and the <a target=_blank href="https://www.ec.gc.ca/eau-water/default.asp?lang=En&n=79962112-1">Canadian Hydrographic Service</a>.</font></td></tr>'
             ,'<tr><td colspan=2><font color=gray>Click <a target=_blank href="'.$glosTDSProviders[$provider]['provUrl'].'">here</a> for information about the harvested dataset, and visit <a target=_blank href="http://www.glerl.noaa.gov/data/dashboard/GLWLD.html">NOAA\'s Great Lakes Water Level Dashboard</a> for additional water level data.</font></td></tr>'
           ))
           ,true // daily
