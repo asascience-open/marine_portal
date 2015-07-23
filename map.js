@@ -3822,15 +3822,15 @@ function isoDateToDate(s) {
 function dateToFriendlyString(e,opts) {
   var c = "";
   var a = new Date();
-  if (a.getDate() == e.getDate()) {
+  if (a.format("yyyymmdd") == e.format("yyyymmdd")) {
     strDay = "today"
   } else {
     var b = new Date(a.getTime() + 86400000);
     var d = new Date(a.getTime() - 86400000);
-    if (b.getDate() == e.getDate()) {
+    if (b.format("yyyymmdd") == e.format("yyyymmdd")) {
       strDay = "tomorrow"
     } else {
-      if (d.getDate() == e.getDate()) {
+      if (d.format("yyyymmdd") == e.format("yyyymmdd")) {
         strDay = "yesterday"
       } else {
         aryDays = new Array("Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday");
