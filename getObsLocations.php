@@ -1330,7 +1330,7 @@
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
-      if ($platform['id'] != 401) {
+      if ($platform['id'] != 400) {
         // continue;
       }
       array_push($platforms,array(
@@ -1341,6 +1341,7 @@
         ,'provider' => $platform['org']['shortName']
         ,'url'      => !is_null($platform['stationUrl']) ? $platform['stationUrl'] : ''
         ,'sensors'  => array()
+        ,'abstract' => $platform['description']
       ));
       if (!is_null($platform['ndbcHandler'])) {
         $platforms[count($platforms) - 1]['alternateUrl'] = 'http://www.ndbc.noaa.gov/station_page.php?station='.$platform['ndbcHandler'];
@@ -1375,6 +1376,7 @@
         ,'topObs'       => array()
         ,'url'          => $platforms[$k]['url']
         ,'siteType'     => $glosJsonProviders[$provider]['siteType']
+        ,'abstract'     => $platforms[$k]['abstract']
       ));
       if (array_key_exists('alternateUrl',$platforms[$k])) {
         $sites[count($sites) - 1]['alternateUrl'] = $platforms[$k]['alternateUrl'];
@@ -1599,6 +1601,7 @@
         ,'siteType'      => $sites[$i]['siteType']
         ,'provider'      => $sites[$i]['organization'] != '' ? $sites[$i]['organization'] : $sites[$i]['provider']
         ,'daily'         => (array_key_exists('daily',$sites[$i]) ? $sites[$i]['daily'] : '')
+        ,'abstract'      => (array_key_exists('abstract',$sites[$i]) ? $sites[$i]['abstract'] : '')
       )
     ));
   }
