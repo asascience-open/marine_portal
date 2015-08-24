@@ -1,22 +1,35 @@
 <?php
   header('Content-type:text/javascript');
 
-  $data = array();
+  $cat_csv = array();
+  $data    = array();
   $dbconn = new PDO('sqlite:db/json.sqlite3');
   foreach (explode(',',$_REQUEST['providers']) as $p) {
     $pro = $p;
     if ($p == 'ndbc' || $p == 'coops') {
       $pro = 'sos';
     }
+    if ($p == 'glos') {
+      $cat_csv['glos'] = csv_to_array(explode("\n",file_get_contents('xml/glos_data_layers.csv')));
+    }
     $result = $dbconn->query("select f from json where providers = '$pro' and ready = 1 order by seq desc limit 1");
     foreach ($result as $line) {
       $json = json_decode(file_get_contents($line[0]),true);
       foreach ($json as $j) {
+        $descr = preg_replace("/[^a-z0-9.]+/i","",$j['properties']['descr']);
         $j['properties']['dataurl'] = sprintf(
            "http://data.glos.us/portal/getObsByPlatform.php?provider=%s&platform=%s"
           ,$p
           ,urlencode($j['properties']['descr'])
         );
+        if (array_key_exists($p,$cat_csv) && array_key_exists($descr,$cat_csv[$p])) {
+          $j['properties']['categories'] = array();
+          foreach ($cat_csv[$p][$descr] as $k => $v) {
+            if ($v != '') {
+              array_push($j['properties']['categories'],$k);
+            }
+          }
+        }
         if ($pro == 'sos') {
           if ($p == 'ndbc' && strpos($j['properties']['url'],'ndbc')) {
             array_push($data,$j);
@@ -72,8 +85,8 @@
       ,'tmin'         => null
       ,'tmax'         => $tmax
       ,'abstract'     => $p['abstract']
-      ,'keywords'     => implode(', ',array_keys($p['topObs']))
-      ,'categories'   => ''
+      ,'keywords'     => array_keys($p['topObs'])
+      ,'categories'   => $p['categories']
       ,'provider_url' => $p['url']
       ,'data_url'     => $p['dataurl']
     ));
@@ -87,4 +100,23 @@
   }
   fclose($fp);
 
+  function csv_to_array($input) {
+    $header  = null;
+    $data    = array();
+    foreach ($input as $csvLine) {
+      if (is_null($header)) {
+        $header = str_getcsv($csvLine,',','"');
+      }
+      else {
+        $items = str_getcsv($csvLine,',','"');
+        for ($n = 1,$m = count($header); $n < $m; $n++) {
+          if ($header[$n] != '') {
+            $prepareData[$header[$n]] = $items[$n];
+          }
+        }
+        $data[preg_replace("/[^a-z0-9.]+/i","",$items[0])] = $prepareData;
+      }
+    }
+    return $data;
+  }
 ?>
