@@ -25,10 +25,16 @@
         if (array_key_exists($p,$cat_csv) && array_key_exists($descr,$cat_csv[$p])) {
           $j['properties']['categories'] = array();
           foreach ($cat_csv[$p][$descr] as $k => $v) {
-            if ($v != '') {
-              array_push($j['properties']['categories'],$k);
+            $a = explode('CAT ',$k);
+            if (count($a) == 2 && $v != '') {
+              array_push($j['properties']['categories'],$a[1]);
             }
           }
+          if ($cat_csv[$p][$descr]['Abstract'] != '') {
+            $j['properties']['abstract'] = $cat_csv[$p][$descr]['Abstract'];
+          }
+          $j['properties']['keywords'] = explode('|',$cat_csv[$p][$descr]['Keywords']);
+          $j['properties']['imageurl'] = $cat_csv[$p][$descr]['Image'];
         }
         if ($pro == 'sos') {
           if ($p == 'ndbc' && strpos($j['properties']['url'],'ndbc')) {
@@ -68,6 +74,7 @@
     ,'Categories'
     ,'ProviderURL'
     ,'DataURL'
+    ,'ImageURL'
   ));
   foreach ($data as $k => $v) {
     $p = $v['properties'];
@@ -85,10 +92,12 @@
       ,'tmin'         => null
       ,'tmax'         => $tmax
       ,'abstract'     => $p['abstract']
-      ,'keywords'     => array_keys($p['topObs'])
+      ,'keywords'     => $p['keywords']
+      ,'parameters'   => array_keys($p['topObs'])
       ,'categories'   => $p['categories']
       ,'provider_url' => $p['url']
       ,'data_url'     => $p['dataurl']
+      ,'image_url'    => $p['imageurl']
     ));
   }
 
