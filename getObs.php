@@ -5,7 +5,7 @@
   array_push($providers,'kistersCsv');
 
   $data = array();
-  $dbconn = new PDO('sqlite:db/json.sqlite3');
+  $dbconn = new PDO('sqlite:db/json2.sqlite3');
   foreach ($providers as $p) {
     $result = $dbconn->query("select f from json where providers = '$p' and ready = 1 order by seq desc limit 1");
     foreach ($result as $line) {

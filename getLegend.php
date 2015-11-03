@@ -61,13 +61,17 @@
             $val = log($val);
             $fmt = '%0.1f';
           }
+          $lbl = '';
+          if (isset($legend['label']) && $i == 0) {
+            $lbl = ' '.$legend['label'];
+          }
           $draw->annotation(
              $barSize[0] + 5
             ,$barSize[1] * $i + 10
             ,sprintf(
                $fmt
               ,$val
-            )
+            ).$lbl
           );
         }
         $canvas->drawImage($draw);

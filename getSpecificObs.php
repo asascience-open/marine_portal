@@ -12,7 +12,7 @@
   $json = null;
   if (!array_key_exists('fromSearch',$_REQUEST) || (array_key_exists('fromSearch',$_REQUEST) && $_REQUEST['fromSearch'] != 'true')) {
     $data   = array();
-    $dbconn = new PDO('sqlite:db/json.sqlite3');
+    $dbconn = new PDO('sqlite:db/json2.sqlite3');
     foreach ($providers as $p) {
       $result = $dbconn->query("select f from json where providers = '$p' and ready = 1 order by seq desc limit 1");
       foreach ($result as $line) {

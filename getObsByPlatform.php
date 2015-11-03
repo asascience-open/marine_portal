@@ -2,7 +2,7 @@
   header('Content-type:text/javascript');
 
   $data = array();
-  $dbconn = new PDO('sqlite:db/json.sqlite3');
+  $dbconn = new PDO('sqlite:db/json2.sqlite3');
   foreach (explode(',',$_REQUEST['provider']) as $p) {
     $pro = $p;
     if ($p == 'ndbc' || $p == 'coops') {

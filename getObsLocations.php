@@ -1608,7 +1608,7 @@
 
   echo "assembling done\nfiniding out what to name the json...\n";
 
-  $dbconn = new PDO('sqlite:db/json.sqlite3');
+  $dbconn = new PDO('sqlite:db/json2.sqlite3');
   $f = time().rand();
   $dbconn->query(sprintf("insert into json(f,providers,ready) values ('%s','%s',0)",$f,implode(',',$providers)));
   $result = $dbconn->query(sprintf("select seq from json where f = '%s'",$f));
