@@ -33,8 +33,13 @@
           if ($cat_csv[$p][$descr]['Abstract'] != '') {
             $j['properties']['abstract'] = $cat_csv[$p][$descr]['Abstract'];
           }
-          $j['properties']['keywords'] = explode('|',$cat_csv[$p][$descr]['Keywords']);
-          $j['properties']['imageurl'] = $cat_csv[$p][$descr]['Image'];
+          $j['properties']['keywords']    = explode('|',$cat_csv[$p][$descr]['Keywords']);
+          $j['properties']['imageurl']    = $cat_csv[$p][$descr]['Image'];
+          $j['properties']['sourcedescr'] = $cat_csv[$p][$descr]['Source (organization)'];
+          $j['properties']['infourl']     = $cat_csv[$p][$descr]['GN permalink'];
+          if ($cat_csv[$p][$descr]['Alternate Name'] != '') {
+            $j['properties']['descr'] = $cat_csv[$p][$descr]['Alternate Name'];
+          }
         }
         if ($pro == 'sos') {
           if ($p == 'ndbc' && strpos($j['properties']['url'],'ndbc')) {
@@ -98,6 +103,8 @@
       ,'provider_url' => $p['url']
       ,'data_url'     => $p['dataurl']
       ,'image_url'    => $p['imageurl']
+      ,'source_name'  => $p['sourcedescr']
+      ,'info_url'     => $p['infourl']
     ));
   }
 
