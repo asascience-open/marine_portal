@@ -27,6 +27,7 @@
     </script>
   </head>
   <body onload="Ext.onReady(function(){init()})">
+    <?php echo isset($googleTag) ? $googleTag : '' ?>
     <div id="loading-mask"></div>
     <div id="loading">
       <span id="loading-message">Loading core API. Please wait...</span>
