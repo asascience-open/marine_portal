@@ -10,7 +10,7 @@
       $pro = 'sos';
     }
     if ($p == 'glos') {
-      $cat_csv['glos'] = csv_to_array(explode("\n",file_get_contents('xml/glos_data_layers.csv')));
+      $cat_csv['glos'] = csv_to_array(explode("\n",file_get_contents('https://docs.google.com/feeds/download/spreadsheets/Export?key=1bXkHu98EX6Tqkhz_9CSaopST27jZd9YvcotFTmJYl5o&exportFormat=csv&gid=0')));
     }
     $result = $dbconn->query("select f from json where providers = '$pro' and ready = 1 order by seq desc limit 1");
     foreach ($result as $line) {
