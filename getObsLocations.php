@@ -688,13 +688,32 @@
         echo $sites[$i]['dSensor'][$j]['url']."\n";
         $xml = @simplexml_load_string(@file_get_contents($sites[$i]['dSensor'][$j]['url']));
         if ($xml && $xml->children('http://www.opengis.net/sensorML/1.0.1')->{'member'}) {
-          $sites[$i]['organization'] = sprintf("%s",$xml
+          if (is_object(
+            $xml
               ->children('http://www.opengis.net/sensorML/1.0.1')->{'member'}[0]
               ->children('http://www.opengis.net/sensorML/1.0.1')->{'System'}[0]
               ->children('http://www.opengis.net/sensorML/1.0.1')->{'contact'}[0]
               ->children('http://www.opengis.net/sensorML/1.0.1')->{'ResponsibleParty'}[0]
-              ->children('http://www.opengis.net/sensorML/1.0.1')->{'organizationName'}
-          );
+          )) {
+            $sites[$i]['organization'] = sprintf("%s",$xml
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'member'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'System'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'contact'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'ResponsibleParty'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'organizationName'}
+            );
+          }
+          else {
+            $sites[$i]['organization'] = sprintf("%s",$xml
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'member'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'System'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'contact'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'ContactList'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'member'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'ResponsibleParty'}[0]
+                ->children('http://www.opengis.net/sensorML/1.0.1')->{'organizationName'}
+            );
+          }
         }
       }
       echo $sites[$i]['getObs'][$j]['url']."\n";
