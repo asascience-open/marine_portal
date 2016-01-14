@@ -31,8 +31,9 @@
 
   $sosProviders = array(
     'NDBC' => array(
-       'getCaps'   => 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
-      ,'varMap' => array(
+       'getCaps'      => 'http://sdf.ndbc.noaa.gov/sos/server.php?VERSION=1.0.0&SERVICE=SOS&REQUEST=GetCapabilities'
+      ,'outputFormat' => 'text/xml;subtype="sensorML/1.0.1"'
+      ,'varMap'       => array(
          'winds'                 => 'WindSpeed'
         ,'waves'                 => 'SignificantWaveHeight'
         ,'sea_water_temperature' => 'WaterTemperature'
@@ -43,8 +44,9 @@
       ,'skipStations' => array('45167','45162','45024','45165','45164','45020','45014','45029','45013','GTBM4','45163','45027','45023','45025','45161','45026','45028','45168')
     )
     ,'COOPS' => array(
-       'getCaps'   => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
-      ,'varMap' => array(
+       'getCaps'      => 'http://opendap.co-ops.nos.noaa.gov/ioos-dif-sos/SOS?service=SOS&request=GetCapabilities'
+      ,'outputFormat' => 'text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"'
+      ,'varMap'       => array(
          'winds'                                      => 'WindSpeed'
         ,'sea_water_temperature'                      => 'WaterTemperature'
         ,'water_surface_height_above_reference_datum' => 'WaterLevel'
@@ -613,7 +615,7 @@
                 .'?request=DescribeSensor&service=SOS&version=1.0.0'
                 .sprintf(
                    "&outputFormat=%s&procedure=%s"
-                  ,'text/xml;subtype="sensorML/1.0.1"'
+                  ,$sosProviders[$provider]['outputFormat']
                   ,sprintf("%s",$o->{'procedure'}[0]->attributes('http://www.w3.org/1999/xlink')->{'href'})
                 )
             ));
