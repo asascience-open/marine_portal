@@ -1441,7 +1441,9 @@
         print "$u\n";
         $json = json_decode(file_get_contents($u),true);
         foreach ($json as $sensor) {
-          $platforms[$k]['sensors'][$j]['type'] .= ' '.$platforms[$k]['sensors'][$j]['descr'];
+          if (preg_match('/^Thermistor/',$platforms[$k]['sensors'][$j]['type'])) {
+            $platforms[$k]['sensors'][$j]['type'] .= ' '.$platforms[$k]['sensors'][$j]['descr'];
+          }
           print $platforms[$k]['sensors'][$j]['type']."\n";
           $hits = 0;
           foreach ($sensor as $obs) {
