@@ -1,7 +1,7 @@
 <?php
   date_default_timezone_set('UTC');
 
-  $title     = 'Great Lakes Observing System Data Portal';
+  $title     = 'GLOS Data Portal (2013)';
   $googleId  = 'UA-32882439-1';
   $googleTag = <<< EOHTML
 <!-- Google Tag Manager -->
@@ -37,7 +37,7 @@ EOHTML;
 
   $bannerHeight    = 75;
   $bannerHtml      = <<< EOHTML
-<div id="headwrapper"> <div id="head"><a href="http://glos.us/"> <a href="http://glos.us"><img src="img/gloslogo_2x.png" style= width:195px; height: 75px; text-decoration: none; border:0"  alt="Great Lakes Observing System" /></a> <a href="http://data.glos.us/portal"><img src="img/dplogo_2x.png" style="width: 225px; height:75px; text-decoration: none; border:0" alt="Data Portal" /></a> </div></div>
+<div id="headwrapper"> <div id="head"><a href="http://glos.us/"> <a href="http://glos.us"><img src="img/gloslogo_2x.png" style= width:195px; height: 75px; text-decoration: none; border:0"  alt="Great Lakes Observing System" /></a> <a href="http://data.glos.us/portal"><img src="img/DataPortal_Legacy.png" style="width: 285px; height:75px; text-decoration: none; border:0" alt="Data Portal" /></a><div style="float:right;right:6px;top:6px;width:400px;font-size:12px;"><p style="margin-top:10px;margin-right:10px;font-size:18px;font-weight:bold;">The development and maintenance of this site have been discontinued. Please visit our new data portal at <a href="http://portal.glos.us">http://portal.glos.us</a></p></div> </div></div>
 EOHTML;
   $southPanelHeight    = 119;
   $southPanelHtml      = <<< EOHTML

@@ -1193,6 +1193,7 @@
       print "$k\n";
       // get station info
       $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=getStationList&datasource=0&format=csv&station_no=%s",$k);
+      print $url."\n";
       $csv = csv_to_array(file_get_contents($url),"/;/");
       if (count($csv) > 0) {
         array_push($sites,array(
@@ -1210,6 +1211,7 @@
       $i = count($sites) - 1;
       foreach ($sta as $sensor) {
         $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=gettimeseriesvalues&datasource=0&format=csv&ts_id=%s&from=%s",$sensor['id'],$dBegin);
+        print $url."\n";
         // get rid of 1st two lines of header info and leading # on the remaning one
         $data = substr(implode("\n",array_slice(explode("\n",file_get_contents($url)),2)),1);
         foreach (csv_to_array($data,"/;/") as $line) {

@@ -70,7 +70,7 @@
         array_push($a,Array('val' => $val,'uom' => 'deg','cat' => ''));
       }
       else if ($uom == 'cumec') {
-        array_push($a,Array('val' => sprintf("%.01f",$val),'uom' => 'ft3/s','cat' => $english_category[$uom]));
+        array_push($a,Array('val' => sprintf("%.01f",$val * 35.3147),'uom' => 'ft3/s','cat' => $english_category[$uom]));
       }
       else if ($uom == 'feet') {
         array_push($a,Array('val' => sprintf("%.01f",$val),'uom' => 'ft','cat' => $english_category[$uom]));
