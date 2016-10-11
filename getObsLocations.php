@@ -1409,14 +1409,12 @@
       $json = json_decode(file_get_contents($u),true);
       if ($json) {
         foreach ($json as $sensor) {
-          if (!preg_match('/^Thermistor/', $sensor['sensorType']['typeName'])) {
-            array_push($platforms[$i]['sensors'],array(
-               'id'    => $sensor['id']
-              ,'descr' => $sensor['sensorType']['description']
-              ,'type'  => $sensor['sensorType']['typeName']
-              ,'uom'   => $sensor['measureType']['uomDisplay']
-            ));
-          }
+          array_push($platforms[$i]['sensors'],array(
+             'id'    => $sensor['id']
+            ,'descr' => $sensor['sensorType']['description']
+            ,'type'  => $sensor['sensorType']['typeName']
+            ,'uom'   => $sensor['measureType']['uomDisplay']
+          ));
         }
       }
     }
