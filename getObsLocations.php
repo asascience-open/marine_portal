@@ -284,7 +284,16 @@
   foreach ($glosJsonProviders as $provider => $v) {
     switch ($provider) {
       case 'GLOS' :
-        getGLOSJson($glosJsonProviders,$provider,$dBegin,$hours,$tUom,$sites);
+        getGLOSJson(
+          $glosJsonProviders,
+          $provider,
+          // $dBegin,
+          date('Y-m-d\TH:i:00\Z',$dNow - 60 * 60 * (30 * 24 * 1 + 1)),
+          // $hours,
+          30 * 24,
+          $tUom,
+          $sites
+        );
       break;
     }
   }
@@ -1356,8 +1365,23 @@
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
-      if ($platform['id'] != 400) {
-        // continue;
+      if (!in_array($platform['shortName'], array(
+        "Holland Buoy",
+        "Station 45168 - South Haven, MI",
+        "U-GLOS Station 45024",
+        "45165 - Oregon, OH",
+        "RECON Erie-Cleveland(CLV)",
+        "RECON Huron-Saginaw Bay Buoy",
+        "Alpena-Thunder Bay Buoy",
+        "45172 - Grand Marais Buoy",
+        "45172 - Grand Marais Buoy",
+        "Station GRIM4 - Granite Island",
+        "Station STDM4 - Stannard Rock",
+        "MTU Buoy",
+        "ESF2",
+        "ESF4"
+      ))) {
+        continue;
       }
       array_push($platforms,array(
          'id'       => $platform['id']
@@ -1381,12 +1405,14 @@
       $json = json_decode(file_get_contents($u),true);
       if ($json) {
         foreach ($json as $sensor) {
-          array_push($platforms[$i]['sensors'],array(
-             'id'    => $sensor['id']
-            ,'descr' => $sensor['sensorType']['description']
-            ,'type'  => $sensor['sensorType']['typeName']
-            ,'uom'   => $sensor['measureType']['uomDisplay']
-          ));
+          if (!preg_match('/^Thermistor/', $sensor['sensorType']['typeName'])) {
+            array_push($platforms[$i]['sensors'],array(
+               'id'    => $sensor['id']
+              ,'descr' => $sensor['sensorType']['description']
+              ,'type'  => $sensor['sensorType']['typeName']
+              ,'uom'   => $sensor['measureType']['uomDisplay']
+            ));
+          }
         }
       }
     }
