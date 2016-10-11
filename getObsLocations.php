@@ -287,12 +287,11 @@
         getGLOSJson(
           $glosJsonProviders,
           $provider,
-          // $dBegin,
-          date('Y-m-d\TH:i:00\Z',$dNow - 60 * 60 * (30 * 24 * 1 + 1)),
-          // $hours,
-          30 * 24,
+          $dBegin,
+          $hours,
           $tUom,
-          $sites
+          $sites,
+          $dNow
         );
       break;
     }
@@ -1359,13 +1358,15 @@
     }
   }
 
-  function getGLOSJson(&$glosJsonProviders,$provider,$dBegin,$hours,$tUom,&$sites) {
+  function getGLOSJson(&$glosJsonProviders,$provider,$dBegin,$hours,$tUom,&$sites,$dNow) {
     $u = 'http://data.glos.us/glos_obs/platform.glos?tid=15';
     print "$u\n";
     $json = json_decode(file_get_contents($u),true);
     $platforms = array();
     foreach ($json as $platform) {
-      if (!in_array($platform['shortName'], array(
+      $h = $hours;
+      $t0 = $dBegin;
+      if (in_array($platform['shortName'], array(
         "Holland Buoy",
         "Station 45168 - South Haven, MI",
         "U-GLOS Station 45024",
@@ -1381,7 +1382,8 @@
         "ESF2",
         "ESF4"
       ))) {
-        continue;
+        // $h = 30 * 24;
+        // $t0 = date('Y-m-d\TH:i:00\Z',$dNow - 60 * 60 * ($h * 1 + 1));
       }
       array_push($platforms,array(
          'id'       => $platform['id']
@@ -1392,6 +1394,8 @@
         ,'url'      => !is_null($platform['stationUrl']) ? $platform['stationUrl'] : ''
         ,'sensors'  => array()
         ,'abstract' => $platform['description']
+        ,'hours'    => $h
+        ,'dBegin'   => $t0
       ));
       if (!is_null($platform['ndbcHandler'])) {
         $platforms[count($platforms) - 1]['alternateUrl'] = 'http://www.ndbc.noaa.gov/station_page.php?station='.$platform['ndbcHandler'];
@@ -1434,10 +1438,10 @@
         $sites[count($sites) - 1]['alternateUrl'] = $platforms[$k]['alternateUrl'];
       }
 
-      $t0 = strtotime($dBegin);
+      $t0 = strtotime($platforms[$k]['dBegin']);
       $i = count($sites) - 1;
       for ($j = 0; $j < count($platforms[$k]['sensors']); $j++) {
-        $u = 'http://data.glos.us/glos_obs/obs.glos?sids='.$platforms[$k]['sensors'][$j]['id'].'&pt=15&pid='.$platforms[$k]['id'].'&hours='.$hours;
+        $u = 'http://data.glos.us/glos_obs/obs.glos?sids='.$platforms[$k]['sensors'][$j]['id'].'&pt=15&pid='.$platforms[$k]['id'].'&hours='.$platforms[$k]['hours'];
         print "$u\n";
         $json = json_decode(file_get_contents($u),true);
         foreach ($json as $sensor) {
