@@ -194,6 +194,7 @@
   $kistersCsvProviders = array(
     'Lake Simcoe RCA' => array(
        'provUrl'   => 'http://www.lsrca.on.ca/'
+      ,'dataUrl'   => 'http://www.lsmaps.ca/KiWIS/KiWIS'
       ,'siteType'  => 'buoy'
       ,'stations'  => array(
         'LS0402' => array(
@@ -215,6 +216,91 @@
             ,'uom'  => 'cumec'
           )
         )
+      )
+    )
+    ,'Grand River Conservation Authority' => array(
+       'provUrl'   => 'http://grandriver.ca/'
+      ,'dataUrl'   => 'http://kiwis.grandriver.ca/KiWIS/KiWIS'
+      ,'siteType'  => 'buoy'
+      ,'stations'  => array(
+        '144' => array(array('id' => '9668042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '186' => array(array('id' => '12247042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8911042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '6' => array(array('id' => '12460042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12250042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '156' => array(array('id' => '12244042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8821042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '9' => array(array('id' => '11232042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12253042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '168' => array(array('id' => '12248042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8863042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '28' => array(array('id' => '12227042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8599042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '87' => array(array('id' => '12241042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8743042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '88' => array(array('id' => '12156042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11571042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '58' => array(array('id' => '12141042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11577042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '13' => array(array('id' => '11238042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12255042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '59' => array(array('id' => '12236042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '11594042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12138042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11579042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '60' => array(array('id' => '12235042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8659042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '61' => array(array('id' => '12237042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8665042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '68' => array(array('id' => '12240042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '11272042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8701042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12147042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11583042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '14' => array(array('id' => '11255042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12256042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '206' => array(array('id' => '12464042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '14178042', 'name' => 'WindDirection', 'uom' => 'deg'), array('id' => '14180042', 'name' => 'WindSpeed', 'uom' => 'km/h')), 
+        '15' => array(array('id' => '11257042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12258042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '160' => array(array('id' => '12243042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8845042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '33' => array(array('id' => '12229042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8617042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '37' => array(array('id' => '11265042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12262042', 'name' => 'AirTemperature', 'uom' => 'C'), array('id' => '14170042', 'name' => 'WindDirection', 'uom' => 'deg'), array('id' => '14172042', 'name' => 'WindSpeed', 'uom' => 'km/h')), 
+        '207' => array(array('id' => '12639042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '63' => array(array('id' => '12238042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8677042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '49' => array(array('id' => '12231042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8629042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '89' => array(array('id' => '12242042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '11300042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8749042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '90' => array(array('id' => '12278042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '64' => array(array('id' => '12239042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8683042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '16' => array(array('id' => '12226042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8593042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '54' => array(array('id' => '11267042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12655042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '55' => array(array('id' => '12234042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8647042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '131' => array(array('id' => '10119042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8785042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '201' => array(array('id' => '10141042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '12526042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '11383042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '202' => array(array('id' => '10140042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '9808042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '62' => array(array('id' => '10104042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8671042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '50' => array(array('id' => '10114042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8635042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '65' => array(array('id' => '11638042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12144042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '14140042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '178' => array(array('id' => '11220042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12293042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '169' => array(array('id' => '10065042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8869042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '170' => array(array('id' => '10134042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8875042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12159042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11589042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '145' => array(array('id' => '14162042', 'name' => 'AtmosphericPressure', 'uom' => 'Kpa'), array('id' => '11284042', 'name' => 'Precipitation', 'uom' => 'mm')), 
+        '66' => array(array('id' => '10073042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8695042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '193' => array(array('id' => '10017042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '93' => array(array('id' => '10123042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8767042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '132' => array(array('id' => '11282042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12280042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '91' => array(array('id' => '10124042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8755042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '11' => array(array('id' => '11253042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12254042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '92' => array(array('id' => '10060042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8761042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '143' => array(array('id' => '10077042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '9992042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '151' => array(array('id' => '10112042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8797042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '152' => array(array('id' => '11318042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12284042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '153' => array(array('id' => '10116042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8803042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '192' => array(array('id' => '12438042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8923042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '2' => array(array('id' => '12249042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '208' => array(array('id' => '12636042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '157' => array(array('id' => '10066042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8827042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '155' => array(array('id' => '10108042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '13946042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8815042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '67' => array(array('id' => '11327042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12269042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '159' => array(array('id' => '10109042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8839042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '162' => array(array('id' => '14174042', 'name' => 'WindDirection', 'uom' => 'deg'), array('id' => '14176042', 'name' => 'WindSpeed', 'uom' => 'km/h')), 
+        '183' => array(array('id' => '10135042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '11290042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8893042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12294042', 'name' => 'AirTemperature', 'uom' => 'C'), array('id' => '12162042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11591042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '129' => array(array('id' => '10106042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8773042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '167' => array(array('id' => '10121042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8857042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '149' => array(array('id' => '12285042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '72' => array(array('id' => '14161042', 'name' => 'AtmosphericPressure', 'uom' => 'Kpa'), array('id' => '11274042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12271042', 'name' => 'AirTemperature', 'uom' => 'C'), array('id' => '14166042', 'name' => 'WindDirection', 'uom' => 'deg'), array('id' => '14168042', 'name' => 'WindSpeed', 'uom' => 'km/h')), 
+        '51' => array(array('id' => '11157042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8641042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '188' => array(array('id' => '10101042', 'name' => 'RiverStage', 'uom' => 'm')), 
+        '81' => array(array('id' => '10061042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8707042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '35' => array(array('id' => '10113042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8623042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '184' => array(array('id' => '10118042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8899042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '82' => array(array('id' => '10136042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8713042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12150042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11585042', 'name' => 'pH', 'uom' => 'standard units')), 
+        '83' => array(array('id' => '10125042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8719042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '139' => array(array('id' => '10059042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8791042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '56' => array(array('id' => '11268042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12264042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '84' => array(array('id' => '10068042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8725042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '194' => array(array('id' => '8917042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '19' => array(array('id' => '11259042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12259042', 'name' => 'AirTemperature', 'uom' => 'C')), 
+        '85' => array(array('id' => '10105042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '12122042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8731042', 'name' => 'Stremflow', 'uom' => 'cumec')), 
+        '86' => array(array('id' => '10137042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8737042', 'name' => 'Stremflow', 'uom' => 'cumec'), array('id' => '12153042', 'name' => 'Dissolved Oxygen', 'uom' => 'mg/L'), array('id' => '11587042', 'name' => 'pH', 'uom' => 'standard units'))
       )
     )
   );
@@ -257,6 +343,7 @@
   foreach ($kistersCsvProviders as $provider => $v) {
     switch ($provider) {
       case 'Lake Simcoe RCA' :
+      case 'Grand River Conservation Authority' :
         getKistersCsv($kistersCsvProviders,$provider,$dBegin,$tUom,$sites);
       break;
     }
@@ -1200,7 +1287,11 @@
     foreach ($kistersCsvProviders[$provider]['stations'] as $k => $sta) {
       print "$k\n";
       // get station info
-      $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=getStationList&datasource=0&format=csv&station_no=%s",$k);
+      $url = sprintf(
+         "%s?service=kisters&type=queryServices&request=getStationList&datasource=0&format=csv&station_no=%s"
+        ,$kistersCsvProviders[$provider]['dataUrl']
+        ,$k
+      );
       print $url."\n";
       $csv = csv_to_array(file_get_contents($url),"/;/");
       if (count($csv) > 0) {
@@ -1218,7 +1309,12 @@
       }
       $i = count($sites) - 1;
       foreach ($sta as $sensor) {
-        $url = sprintf("http://www.lsmaps.ca/KiWIS/KiWIS?service=kisters&type=queryServices&request=gettimeseriesvalues&datasource=0&format=csv&ts_id=%s&from=%s",$sensor['id'],$dBegin);
+        $url = sprintf(
+           "%s?service=kisters&type=queryServices&request=gettimeseriesvalues&datasource=0&format=csv&ts_id=%s&from=%s"
+          ,$kistersCsvProviders[$provider]['dataUrl']
+          ,$sensor['id']
+          ,$dBegin
+        );
         print $url."\n";
         // get rid of 1st two lines of header info and leading # on the remaning one
         $data = substr(implode("\n",array_slice(explode("\n",file_get_contents($url)),2)),1);
