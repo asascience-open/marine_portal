@@ -22,7 +22,7 @@
 			'uom' => 'mm'
 		),
 		'QR' => array(
-			'name' => 'Stremflow',
+			'name' => 'Streamflow',
 			'uom' => 'cumec'
 		),
 		'TA' => array(
