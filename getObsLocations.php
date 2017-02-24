@@ -248,7 +248,6 @@
         '63' => array(array('id' => '12238042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8677042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
         '49' => array(array('id' => '12231042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8629042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
         '89' => array(array('id' => '12242042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '11300042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '8749042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
-        '90' => array(array('id' => '12278042', 'name' => 'AirTemperature', 'uom' => 'C')), 
         '64' => array(array('id' => '12239042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8683042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
         '16' => array(array('id' => '12226042', 'name' => 'RiverStage', 'uom' => 'm'), array('id' => '8593042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
         '54' => array(array('id' => '11267042', 'name' => 'Precipitation', 'uom' => 'mm'), array('id' => '12655042', 'name' => 'Streamflow', 'uom' => 'cumec')), 
